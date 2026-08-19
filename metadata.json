@@ -1,0 +1,6 @@
+{
+  "name": "Inbound Remittance Portal",
+  "description": "Enterprise customer & merchant portal for monitoring incoming international SWIFT remittances, financial FX analytics, and security settings.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

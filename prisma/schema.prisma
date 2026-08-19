@@ -1,0 +1,109 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum TwoFactorMethod {
+  EMAIL
+  GOOGLE_AUTH
+}
+
+enum TransactionStatus {
+  Completed
+  Pending
+  Failed
+}
+
+enum CurrencyCode {
+  USD
+  EUR
+  SGD
+  THB
+  GBP
+  JPY
+  CNY
+  MYR
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  name      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  twoFactorAuth TwoFactorAuth?
+  auditLogs     AuditLog[]
+}
+
+model TwoFactorAuth {
+  id             String          @id @default(uuid())
+  userId         String          @unique
+  user           User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  isEnabled      Boolean         @default(false)
+  method         TwoFactorMethod @default(EMAIL)
+
+  // For Google Authenticator
+  secret         String?
+  backupCodes    String[]
+
+  // For Email OTP
+  emailOtp       String?
+  emailOtpExpiry DateTime?
+
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+}
+
+model InboundTransaction {
+  id                 String            @id
+  transactionRef     String            @unique
+  senderName         String
+  senderCountry      String
+  sendingBank        String
+  sendingBankBic     String
+  currency           String
+  amount             Float
+  exchangeRate       Float
+  convertedAmountMmk Float
+  feeAmount          Float             @default(0)
+  netAmountMmk       Float
+  valueDate          DateTime          @default(now())
+  status             String            @default("Completed")
+  statusMessage      String?
+  purpose            String
+  beneficiaryAccount String
+  swiftMetadata      Json?
+  createdAt          DateTime          @default(now())
+  updatedAt          DateTime          @updatedAt
+
+  @@index([status])
+  @@index([currency])
+  @@index([valueDate])
+}
+
+model FxRate {
+  id         String   @id @default(uuid())
+  currency   String   @unique
+  buyRate    Float
+  sellRate   Float
+  middleRate Float
+  change24h  Float    @default(0)
+  updatedAt  DateTime @default(now())
+  createdAt  DateTime @default(now())
+}
+
+model AuditLog {
+  id        String   @id @default(uuid())
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  action    String
+  details   Json?
+  ipAddress String?
+  createdAt DateTime @default(now())
+}
