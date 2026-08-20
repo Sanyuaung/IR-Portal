@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node server.ts",
     "dev": "vite --port=3000 --host=0.0.0.0",
-    "build": "vite build && esbuild src/server/vercel-handler.ts --bundle --platform=node --format=esm --target=node18 --outfile=api/index.js --external:pg-native",
+    "build": "vite build && esbuild src/server/server.ts --bundle --platform=node --format=esm --packages=external --outfile=server.ts && esbuild src/server/vercel-handler.ts --bundle --platform=node --format=esm --target=node18 --outfile=api/index.js --external:pg-native",
     "preview": "vite preview",
     "clean": "rm -rf dist server.js",
     "lint": "tsc --noEmit"
@@ -46,7 +46,6 @@
     "speakeasy": "^2.0.0",
     "tsx": "^4.21.0",
     "typescript": "~5.8.2",
-    "vite": "^6.2.3",
     "zod": "^4.4.3",
     "zustand": "^5.0.15"
   },
