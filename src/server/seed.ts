@@ -24,25 +24,34 @@ export async function ensureDatabaseSchema(existingClient?: any) {
     // 2. User table
     await client.query(`
       CREATE TABLE IF NOT EXISTS "User" (
-        "id" TEXT NOT NULL,
+        "id" TEXT NOT NULL PRIMARY KEY,
         "email" TEXT NOT NULL,
         "password" TEXT NOT NULL,
         "name" TEXT,
         "companyName" TEXT,
         "phone" TEXT,
         "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        CONSTRAINT "User_pkey" PRIMARY KEY ("id")
+        "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
       );
     `);
 
     await client.query(`ALTER TABLE "User" ADD COLUMN IF NOT EXISTS "companyName" TEXT;`);
     await client.query(`ALTER TABLE "User" ADD COLUMN IF NOT EXISTS "phone" TEXT;`);
 
+    // Ensure UNIQUE constraint on email
+    await client.query(`
+      DO $$ BEGIN
+        ALTER TABLE "User" ADD CONSTRAINT "User_email_unique" UNIQUE ("email");
+      EXCEPTION
+        WHEN duplicate_object THEN null;
+        WHEN duplicate_table THEN null;
+      END $$;
+    `);
+
     // 3. TwoFactorAuth table
     await client.query(`
       CREATE TABLE IF NOT EXISTS "TwoFactorAuth" (
-        "id" TEXT NOT NULL,
+        "id" TEXT NOT NULL PRIMARY KEY,
         "userId" TEXT NOT NULL,
         "isEnabled" BOOLEAN NOT NULL DEFAULT false,
         "method" "TwoFactorMethod" NOT NULL DEFAULT 'EMAIL',
@@ -51,15 +60,23 @@ export async function ensureDatabaseSchema(existingClient?: any) {
         "emailOtp" TEXT,
         "emailOtpExpiry" TIMESTAMP(3),
         "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        CONSTRAINT "TwoFactorAuth_pkey" PRIMARY KEY ("id")
+        "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
       );
+    `);
+
+    await client.query(`
+      DO $$ BEGIN
+        ALTER TABLE "TwoFactorAuth" ADD CONSTRAINT "TwoFactorAuth_userId_unique" UNIQUE ("userId");
+      EXCEPTION
+        WHEN duplicate_object THEN null;
+        WHEN duplicate_table THEN null;
+      END $$;
     `);
 
     // 4. InboundTransaction table
     await client.query(`
       CREATE TABLE IF NOT EXISTS "InboundTransaction" (
-        "id" TEXT NOT NULL,
+        "id" TEXT NOT NULL PRIMARY KEY,
         "transactionRef" TEXT NOT NULL,
         "senderName" TEXT NOT NULL,
         "senderCountry" TEXT NOT NULL,
@@ -78,50 +95,62 @@ export async function ensureDatabaseSchema(existingClient?: any) {
         "beneficiaryAccount" TEXT NOT NULL,
         "swiftMetadata" JSONB,
         "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        CONSTRAINT "InboundTransaction_pkey" PRIMARY KEY ("id")
+        "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
       );
     `);
 
     // 5. FxRate table
     await client.query(`
       CREATE TABLE IF NOT EXISTS "FxRate" (
-        "id" TEXT NOT NULL,
+        "id" TEXT NOT NULL PRIMARY KEY,
         "currency" TEXT NOT NULL,
         "buyRate" DOUBLE PRECISION NOT NULL,
         "sellRate" DOUBLE PRECISION NOT NULL,
         "middleRate" DOUBLE PRECISION NOT NULL,
         "change24h" DOUBLE PRECISION NOT NULL DEFAULT 0,
         "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        CONSTRAINT "FxRate_pkey" PRIMARY KEY ("id")
+        "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
       );
+    `);
+
+    await client.query(`
+      DO $$ BEGIN
+        ALTER TABLE "FxRate" ADD CONSTRAINT "FxRate_currency_unique" UNIQUE ("currency");
+      EXCEPTION
+        WHEN duplicate_object THEN null;
+        WHEN duplicate_table THEN null;
+      END $$;
     `);
 
     // 6. AuditLog table
     await client.query(`
       CREATE TABLE IF NOT EXISTS "AuditLog" (
-        "id" TEXT NOT NULL,
+        "id" TEXT NOT NULL PRIMARY KEY,
         "userId" TEXT,
         "action" TEXT NOT NULL,
         "details" JSONB,
         "ipAddress" TEXT,
-        "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        CONSTRAINT "AuditLog_pkey" PRIMARY KEY ("id")
+        "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
       );
     `);
 
-    // Indexes
-    await client.query(`CREATE UNIQUE INDEX IF NOT EXISTS "User_email_key" ON "User"("email");`);
-    await client.query(`CREATE UNIQUE INDEX IF NOT EXISTS "TwoFactorAuth_userId_key" ON "TwoFactorAuth"("userId");`);
-    await client.query(`CREATE UNIQUE INDEX IF NOT EXISTS "InboundTransaction_transactionRef_key" ON "InboundTransaction"("transactionRef");`);
-    await client.query(`CREATE UNIQUE INDEX IF NOT EXISTS "FxRate_currency_key" ON "FxRate"("currency");`);
+    // Safe index creation
+    await client.query(`CREATE UNIQUE INDEX IF NOT EXISTS "User_email_idx" ON "User"("email");`);
+    await client.query(`CREATE UNIQUE INDEX IF NOT EXISTS "TwoFactorAuth_userId_idx" ON "TwoFactorAuth"("userId");`);
+    await client.query(`CREATE UNIQUE INDEX IF NOT EXISTS "InboundTransaction_txRef_idx" ON "InboundTransaction"("transactionRef");`);
+    await client.query(`CREATE UNIQUE INDEX IF NOT EXISTS "FxRate_curr_idx" ON "FxRate"("currency");`);
     await client.query(`CREATE INDEX IF NOT EXISTS "InboundTransaction_status_idx" ON "InboundTransaction"("status");`);
     await client.query(`CREATE INDEX IF NOT EXISTS "InboundTransaction_currency_idx" ON "InboundTransaction"("currency");`);
     await client.query(`CREATE INDEX IF NOT EXISTS "InboundTransaction_valueDate_idx" ON "InboundTransaction"("valueDate");`);
+  } catch (schemaErr: any) {
+    console.warn('[SCHEMA_ENSURE_WARN]', schemaErr?.message || schemaErr);
   } finally {
     if (!existingClient) {
-      client.release();
+      try {
+        client.release();
+      } catch (relErr) {
+        // ignore
+      }
     }
   }
 }

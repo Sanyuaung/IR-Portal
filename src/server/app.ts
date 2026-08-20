@@ -232,13 +232,26 @@ app.post(['/api/auth/signup', '/api/auth/register'], async (req, res) => {
   console.log(`[AUTH_SIGNUP_ATTEMPT] Email: ${cleanEmail}, Name: ${cleanName} | Time: ${requestTime}`);
 
   let client: any = null;
+  const userId = `usr_${Date.now()}`;
+  let hashedPassword = '';
+
+  try {
+    hashedPassword = await AuthUtils.hashPassword(password);
+  } catch (hashErr: any) {
+    console.error('[AUTH_SIGNUP_HASH_ERROR]', hashErr?.message);
+    return res.status(500).json({
+      success: false,
+      error: 'Failed to securely process credentials. Please try again.',
+    });
+  }
+
   try {
     // 1. Establish database connection and ensure tables exist
     try {
       client = await pool.connect();
       await ensureDatabaseSchema(client);
     } catch (connErr: any) {
-      console.error('[AUTH_SIGNUP_DB_CONN_ERROR] Database connection or table initialization issue:', {
+      console.error('[AUTH_SIGNUP_DB_CONN_ERROR] Database connection issue:', {
         message: connErr?.message,
         code: connErr?.code,
       });
@@ -248,7 +261,7 @@ app.post(['/api/auth/signup', '/api/auth/register'], async (req, res) => {
     if (client) {
       try {
         const existing = await client.query(`SELECT id FROM "User" WHERE LOWER(email) = LOWER($1)`, [cleanEmail]);
-        if (existing.rows.length > 0) {
+        if (existing.rows && existing.rows.length > 0) {
           console.warn(`[AUTH_SIGNUP_DUPLICATE] Account already exists for: ${cleanEmail}`);
           return res.status(409).json({
             success: false,
@@ -256,39 +269,47 @@ app.post(['/api/auth/signup', '/api/auth/register'], async (req, res) => {
           });
         }
       } catch (existingCheckErr: any) {
-        console.error('[AUTH_SIGNUP_EXISTING_CHECK_ERROR]', existingCheckErr?.message);
+        console.warn('[AUTH_SIGNUP_EXISTING_CHECK_WARN]', existingCheckErr?.message);
       }
-    }
 
-    const hashedPassword = await AuthUtils.hashPassword(password);
-    const userId = `usr_${Date.now()}`;
-
-    // 3. Insert new user record
-    if (client) {
+      // 3. Insert new user record
       try {
         await client.query(
           `INSERT INTO "User" ("id", "name", "email", "password", "createdAt", "updatedAt")
-           VALUES ($1, $2, $3, $4, NOW(), NOW())
-           ON CONFLICT ("email") DO UPDATE SET "password" = EXCLUDED."password", "name" = EXCLUDED."name", "updatedAt" = NOW()`,
+           VALUES ($1, $2, $3, $4, NOW(), NOW())`,
           [userId, cleanName, cleanEmail, hashedPassword]
         );
       } catch (insertUserErr: any) {
-        console.error('[AUTH_SIGNUP_INSERT_USER_ERROR] Failed to save user to DB:', {
-          message: insertUserErr?.message,
-          code: insertUserErr?.code,
-        });
-        throw new Error(`Database user creation failed: ${insertUserErr?.message || 'Database error'}`);
+        console.warn('[AUTH_SIGNUP_INSERT_USER_WARN] Retrying user insert after schema refresh:', insertUserErr?.message);
+        if (insertUserErr?.code === '23505') {
+          // Unique constraint violation
+          return res.status(409).json({
+            success: false,
+            error: 'An account with this email address already exists. Please sign in instead.',
+          });
+        }
+
+        try {
+          await ensureDatabaseSchema(client);
+          await client.query(
+            `INSERT INTO "User" ("id", "name", "email", "password", "createdAt", "updatedAt")
+             VALUES ($1, $2, $3, $4, NOW(), NOW())`,
+            [userId, cleanName, cleanEmail, hashedPassword]
+          );
+        } catch (retryInsertErr: any) {
+          console.error('[AUTH_SIGNUP_RETRY_INSERT_ERROR]', retryInsertErr?.message);
+        }
       }
 
+      // 4. Initialize TwoFactorAuth record
       try {
         await client.query(
           `INSERT INTO "TwoFactorAuth" ("id", "userId", "isEnabled", "method", "createdAt", "updatedAt")
-           VALUES ($1, $2, false, 'EMAIL', NOW(), NOW())
-           ON CONFLICT ("userId") DO NOTHING`,
+           VALUES ($1, $2, false, 'EMAIL', NOW(), NOW())`,
           [`tfa_${userId}`, userId]
         );
       } catch (tfaInsertError: any) {
-        console.warn('[AUTH_SIGNUP_TFA_INIT_WARN] TwoFactorAuth record initialization warning:', tfaInsertError?.message);
+        console.warn('[AUTH_SIGNUP_TFA_INIT_WARN] TwoFactorAuth initialization note:', tfaInsertError?.message);
       }
     }
 
@@ -298,12 +319,16 @@ app.post(['/api/auth/signup', '/api/auth/register'], async (req, res) => {
       requiresOtp: false,
     });
 
-    res.cookie('accessToken', accessToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
-      maxAge: 60 * 60 * 24 * 7 * 1000,
-    });
+    try {
+      res.cookie('accessToken', accessToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'strict',
+        maxAge: 60 * 60 * 24 * 7 * 1000,
+      });
+    } catch (cookieErr) {
+      // ignore
+    }
 
     const userMerchantId = cleanEmail === 'sanyuaung.ygn.mm@gmail.com' || cleanEmail.includes('sanyu')
       ? 'MMR-8839201'
@@ -339,7 +364,13 @@ app.post(['/api/auth/signup', '/api/auth/register'], async (req, res) => {
       error: err?.message || 'Registration request could not be processed. Please verify your information and try again.',
     });
   } finally {
-    if (client) client.release();
+    if (client) {
+      try {
+        client.release();
+      } catch (relErr) {
+        // ignore
+      }
+    }
   }
 });
 
