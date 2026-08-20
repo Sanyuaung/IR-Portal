@@ -1,5 +1,5 @@
 import { pool } from '../server/db.ts';
-import { seedDatabase, hashPassword } from '../server/seed.ts';
+import { ensureDatabaseSchema, hashPassword } from '../server/seed.ts';
 
 let isSeedingPromise: Promise<any> | null = null;
 let tablesInitialized = false;
@@ -7,12 +7,12 @@ let tablesInitialized = false;
 async function ensureTablesReady() {
   if (tablesInitialized) return;
   if (!isSeedingPromise) {
-    isSeedingPromise = seedDatabase()
+    isSeedingPromise = ensureDatabaseSchema()
       .then(() => {
         tablesInitialized = true;
       })
       .catch((err) => {
-        console.error('Warning during auto table initialization:', err);
+        console.error('[PRISMA_INIT_WARN] Warning during auto table initialization:', err?.message || err);
       })
       .finally(() => {
         isSeedingPromise = null;

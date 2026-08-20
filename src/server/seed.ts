@@ -9,11 +9,9 @@ export function hashPassword(password: string): string {
   return crypto.createHash('sha256').update(password + ENCRYPTION_SALT).digest('hex');
 }
 
-export async function seedDatabase() {
-  const client = await pool.connect();
+export async function ensureDatabaseSchema(existingClient?: any) {
+  const client = existingClient || (await pool.connect());
   try {
-    console.log('⚡ Initializing and migrating PostgreSQL database tables...');
-
     // 1. Enum types
     await client.query(`
       DO $$ BEGIN
@@ -121,6 +119,18 @@ export async function seedDatabase() {
     await client.query(`CREATE INDEX IF NOT EXISTS "InboundTransaction_status_idx" ON "InboundTransaction"("status");`);
     await client.query(`CREATE INDEX IF NOT EXISTS "InboundTransaction_currency_idx" ON "InboundTransaction"("currency");`);
     await client.query(`CREATE INDEX IF NOT EXISTS "InboundTransaction_valueDate_idx" ON "InboundTransaction"("valueDate");`);
+  } finally {
+    if (!existingClient) {
+      client.release();
+    }
+  }
+}
+
+export async function seedDatabase() {
+  const client = await pool.connect();
+  try {
+    console.log('⚡ Initializing and migrating PostgreSQL database tables...');
+    await ensureDatabaseSchema(client);
 
     // 7. Seed Default Users
     const encryptedPassword = hashPassword('password');

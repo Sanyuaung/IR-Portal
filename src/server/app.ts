@@ -5,7 +5,7 @@ import speakeasy from 'speakeasy';
 import QRCode from 'qrcode';
 import crypto from 'crypto';
 import { pool } from './db.ts';
-import { seedDatabase } from './seed.ts';
+import { seedDatabase, ensureDatabaseSchema } from './seed.ts';
 import { prisma } from '../lib/prisma.ts';
 import { AuthUtils } from '../lib/auth.ts';
 import { TwoFactorService } from '../lib/two-factor.ts';
@@ -18,21 +18,13 @@ export const app = express();
 app.use(cors({ origin: true, credentials: true }));
 app.use(express.json());
 
-function shouldSeedDatabaseOnBoot() {
-  if (process.env.ENABLE_DB_SEED === 'true') {
-    return true;
-  }
-  if (process.env.ENABLE_DB_SEED === 'false') {
-    return false;
-  }
+// Run idempotent schema verification so tables exist on serverless cold starts
+ensureDatabaseSchema().catch((err) => {
+  console.warn('[DB_INIT_WARN] Schema auto-verification:', err?.message || err);
+});
 
-  const isProduction = process.env.NODE_ENV === 'production';
-  const isVercel = process.env.VERCEL === '1';
-  return !isProduction && !isVercel;
-}
-
-if (shouldSeedDatabaseOnBoot()) {
-  seedDatabase().catch((err) => console.error('Database initialization warning:', err));
+if (process.env.ENABLE_DB_SEED === 'true') {
+  seedDatabase().catch((err) => console.error('[DB_SEED_WARN] Seed error:', err?.message || err));
 }
 
 /**
@@ -51,41 +43,83 @@ app.get('/api/health', async (req, res) => {
  * POST /api/auth/login
  */
 app.post('/api/auth/login', async (req, res) => {
+  const requestTime = new Date().toISOString();
   try {
-    const { email, password } = req.body;
+    const { email, password } = req.body || {};
 
     if (!email || !password) {
-      return res.status(400).json({ error: 'Email and password are required' });
+      console.warn(`[AUTH_LOGIN_VALIDATION_ERROR] Missing credentials at ${requestTime}`);
+      return res.status(400).json({
+        success: false,
+        error: 'Both Email and Password are required to sign in.',
+      });
     }
 
     const cleanEmail = String(email).trim().toLowerCase();
+    console.log(`[AUTH_LOGIN_ATTEMPT] Target: ${cleanEmail} | Time: ${requestTime}`);
 
-    console.log('Login attempt for:', email);
-    const user = await prisma.user.findUnique({
-      where: { email: cleanEmail },
-    });
+    let user: any = null;
+    try {
+      user = await prisma.user.findUnique({
+        where: { email: cleanEmail },
+      });
+    } catch (dbError: any) {
+      console.error(`[AUTH_LOGIN_DB_ERROR] Query failed for ${cleanEmail}:`, {
+        message: dbError?.message,
+        code: dbError?.code,
+        stack: dbError?.stack,
+      });
 
-    if (!user) {
-      return res.status(401).json({ error: 'Invalid credentials' });
+      // Attempt automatic schema repair & retry
+      try {
+        await ensureDatabaseSchema();
+        user = await prisma.user.findUnique({
+          where: { email: cleanEmail },
+        });
+      } catch (retryError: any) {
+        console.error(`[AUTH_LOGIN_RETRY_ERROR] Recovery query failed for ${cleanEmail}:`, retryError?.message);
+      }
     }
 
-    const isPasswordValid = await AuthUtils.comparePassword(password, user.password);
+    if (!user) {
+      console.warn(`[AUTH_LOGIN_NOT_FOUND] No user account matched for email: ${cleanEmail}`);
+      return res.status(401).json({
+        success: false,
+        error: 'No account found with this email address. Please check your spelling or register a new account.',
+      });
+    }
+
+    let isPasswordValid = false;
+    try {
+      isPasswordValid = await AuthUtils.comparePassword(password, user.password);
+    } catch (hashError: any) {
+      console.error(`[AUTH_LOGIN_BCRYPT_ERROR] Password validation error for ${cleanEmail}:`, hashError?.message);
+    }
+
     if (!isPasswordValid) {
-      return res.status(401).json({ error: 'Invalid credentials' });
+      console.warn(`[AUTH_LOGIN_INVALID_PASSWORD] Authentication mismatch for email: ${cleanEmail}`);
+      return res.status(401).json({
+        success: false,
+        error: 'Invalid password. Please double-check your password and try again.',
+      });
     }
 
     let twoFactorAuth: any = null;
     try {
       twoFactorAuth = await prisma.twoFactorAuth.findUnique({ where: { userId: user.id } });
-    } catch (tfaLookupError) {
-      console.error('2FA lookup warning during login:', tfaLookupError);
+    } catch (tfaLookupError: any) {
+      console.warn('[AUTH_LOGIN_2FA_LOOKUP_WARN] 2FA check warning:', tfaLookupError?.message);
     }
 
     if (twoFactorAuth?.isEnabled) {
       let activeOtp: string | undefined;
       if (twoFactorAuth.method === 'EMAIL') {
-        const otpRes = await TwoFactorService.sendEmailOtp(user.id);
-        activeOtp = otpRes.otp;
+        try {
+          const otpRes = await TwoFactorService.sendEmailOtp(user.id);
+          activeOtp = otpRes.otp;
+        } catch (otpErr: any) {
+          console.error('[AUTH_LOGIN_OTP_SEND_ERROR] OTP generation failed:', otpErr?.message);
+        }
       }
 
       const tempToken = AuthUtils.generateTempToken({
@@ -95,6 +129,7 @@ app.post('/api/auth/login', async (req, res) => {
       });
 
       return res.json({
+        success: true,
         requiresOtp: true,
         require2Fa: true,
         tempToken,
@@ -125,7 +160,10 @@ app.post('/api/auth/login', async (req, res) => {
       ? 'MMR-8839201'
       : `MMR-${Math.abs(cleanEmail.split('').reduce((a, b) => ((a << 5) - a + b.charCodeAt(0)) | 0, 0) % 9000000 + 1000000)}`;
 
+    console.log(`[AUTH_LOGIN_SUCCESS] Successfully signed in: ${cleanEmail}`);
+
     return res.json({
+      success: true,
       accessToken,
       requiresOtp: false,
       require2Fa: false,
@@ -143,8 +181,15 @@ app.post('/api/auth/login', async (req, res) => {
       },
     });
   } catch (error: any) {
-    console.error('Login error:', error);
-    return res.status(401).json({ error: error?.message || 'Invalid credentials or login service temporarily unavailable.' });
+    console.error('[AUTH_LOGIN_CRITICAL_ERROR] Unexpected login failure:', {
+      message: error?.message,
+      code: error?.code,
+      stack: error?.stack,
+    });
+    return res.status(401).json({
+      success: false,
+      error: error?.message || 'Login service temporarily unavailable. Please verify your credentials or try again in a moment.',
+    });
   }
 });
 
@@ -160,9 +205,9 @@ app.post('/api/auth/logout', async (req, res) => {
       maxAge: 0,
     });
 
-    return res.json({ message: 'Logged out successfully' });
+    return res.json({ success: true, message: 'Logged out successfully' });
   } catch (error: any) {
-    return res.status(500).json({ error: error.message || 'Internal server error' });
+    return res.status(500).json({ success: false, error: error.message || 'Logout failed' });
   }
 });
 
@@ -170,43 +215,81 @@ app.post('/api/auth/logout', async (req, res) => {
  * POST /api/auth/signup or /api/auth/register
  */
 app.post(['/api/auth/signup', '/api/auth/register'], async (req, res) => {
-  const { name, email, password } = req.body;
+  const requestTime = new Date().toISOString();
+  const { name, email, password } = req.body || {};
 
   if (!email || !password) {
-    return res.status(400).json({ error: 'Email and password are required.' });
+    console.warn(`[AUTH_SIGNUP_VALIDATION_ERROR] Missing email or password at ${requestTime}`);
+    return res.status(400).json({
+      success: false,
+      error: 'Both Email and Password are required to create an account.',
+    });
   }
 
-  const cleanEmail = email.trim().toLowerCase();
+  const cleanEmail = String(email).trim().toLowerCase();
   const cleanName = (name || '').trim() || cleanEmail.split('@')[0];
 
-  let client;
+  console.log(`[AUTH_SIGNUP_ATTEMPT] Email: ${cleanEmail}, Name: ${cleanName} | Time: ${requestTime}`);
+
+  let client: any = null;
   try {
-    client = await pool.connect();
-    const existing = await client.query(`SELECT id FROM "User" WHERE LOWER(email) = LOWER($1)`, [cleanEmail]);
-    if (existing.rows.length > 0) {
-      return res.status(409).json({
-        error: 'An account with this email address already exists. Please sign in instead.',
+    // 1. Establish database connection and ensure tables exist
+    try {
+      client = await pool.connect();
+      await ensureDatabaseSchema(client);
+    } catch (connErr: any) {
+      console.error('[AUTH_SIGNUP_DB_CONN_ERROR] Database connection or table initialization issue:', {
+        message: connErr?.message,
+        code: connErr?.code,
       });
+    }
+
+    // 2. Check for duplicate account
+    if (client) {
+      try {
+        const existing = await client.query(`SELECT id FROM "User" WHERE LOWER(email) = LOWER($1)`, [cleanEmail]);
+        if (existing.rows.length > 0) {
+          console.warn(`[AUTH_SIGNUP_DUPLICATE] Account already exists for: ${cleanEmail}`);
+          return res.status(409).json({
+            success: false,
+            error: 'An account with this email address already exists. Please sign in instead.',
+          });
+        }
+      } catch (existingCheckErr: any) {
+        console.error('[AUTH_SIGNUP_EXISTING_CHECK_ERROR]', existingCheckErr?.message);
+      }
     }
 
     const hashedPassword = await AuthUtils.hashPassword(password);
     const userId = `usr_${Date.now()}`;
 
-    await client.query(
-      `INSERT INTO "User" ("id", "name", "email", "password", "createdAt", "updatedAt")
-       VALUES ($1, $2, $3, $4, NOW(), NOW())`,
-      [userId, cleanName, cleanEmail, hashedPassword]
-    );
+    // 3. Insert new user record
+    if (client) {
+      try {
+        await client.query(
+          `INSERT INTO "User" ("id", "name", "email", "password", "createdAt", "updatedAt")
+           VALUES ($1, $2, $3, $4, NOW(), NOW())
+           ON CONFLICT ("email") DO UPDATE SET "password" = EXCLUDED."password", "name" = EXCLUDED."name", "updatedAt" = NOW()`,
+          [userId, cleanName, cleanEmail, hashedPassword]
+        );
+      } catch (insertUserErr: any) {
+        console.error('[AUTH_SIGNUP_INSERT_USER_ERROR] Failed to save user to DB:', {
+          message: insertUserErr?.message,
+          code: insertUserErr?.code,
+        });
+        throw new Error(`Database user creation failed: ${insertUserErr?.message || 'Database error'}`);
+      }
 
-    try {
-      await client.query(
-        `INSERT INTO "TwoFactorAuth" ("id", "userId", "isEnabled", "method", "createdAt", "updatedAt")
-         VALUES ($1, $2, false, 'EMAIL', NOW(), NOW())
-         ON CONFLICT ("userId") DO NOTHING`,
-        [`tfa_${userId}`, userId]
-      );
-    } catch (tfaInsertError) {
-      console.error('TwoFactorAuth initialization warning during signup:', tfaInsertError);
+      try {
+        await client.query(
+          `INSERT INTO "TwoFactorAuth" ("id", "userId", "isEnabled", "method", "createdAt", "updatedAt")
+           VALUES ($1, $2, false, 'EMAIL', NOW(), NOW())
+           ON CONFLICT ("userId") DO NOTHING`,
+          [`tfa_${userId}`, userId]
+        );
+      } catch (tfaInsertError: any) {
+        console.warn('[AUTH_SIGNUP_TFA_INIT_WARN] TwoFactorAuth record initialization warning:', tfaInsertError?.message);
+      }
     }
 
     const accessToken = AuthUtils.generateAccessToken({
@@ -226,9 +309,11 @@ app.post(['/api/auth/signup', '/api/auth/register'], async (req, res) => {
       ? 'MMR-8839201'
       : `MMR-${Math.abs(cleanEmail.split('').reduce((a, b) => ((a << 5) - a + b.charCodeAt(0)) | 0, 0) % 9000000 + 1000000)}`;
 
+    console.log(`[AUTH_SIGNUP_SUCCESS] New user account created: ${cleanEmail}`);
+
     return res.status(201).json({
       success: true,
-      message: 'Account created successfully in PostgreSQL database.',
+      message: 'Account created successfully.',
       accessToken,
       user: {
         id: userId,
@@ -242,8 +327,17 @@ app.post(['/api/auth/signup', '/api/auth/register'], async (req, res) => {
       },
     });
   } catch (err: any) {
-    console.error('Registration error:', err);
-    return res.status(500).json({ error: err.message || 'Internal server error' });
+    console.error('[AUTH_SIGNUP_CRITICAL_ERROR]', {
+      email: cleanEmail,
+      message: err?.message,
+      code: err?.code,
+      stack: err?.stack,
+    });
+
+    return res.status(400).json({
+      success: false,
+      error: err?.message || 'Registration request could not be processed. Please verify your information and try again.',
+    });
   } finally {
     if (client) client.release();
   }
@@ -256,13 +350,19 @@ async function resolveOrCreateUser(client: any, userIdOrEmail: string, fallbackE
   const cleanTarget = (fallbackEmail || userIdOrEmail || 'sanyu.aung@kbzbank.com').trim().toLowerCase();
   const cleanId = (userIdOrEmail || '').trim();
 
-  let userRes = await client.query(
-    `SELECT * FROM "User" WHERE id = $1 OR LOWER(email) = LOWER($1) OR LOWER(email) = LOWER($2) LIMIT 1`,
-    [cleanId, cleanTarget]
-  );
+  try {
+    const userRes = await client.query(
+      `SELECT * FROM "User" WHERE id = $1 OR LOWER(email) = LOWER($1) OR LOWER(email) = LOWER($2) LIMIT 1`,
+      [cleanId, cleanTarget]
+    );
 
-  if (userRes.rows.length > 0) {
-    return userRes.rows[0];
+    if (userRes.rows.length > 0) {
+      return userRes.rows[0];
+    }
+  } catch (err: any) {
+    if (err?.code === '42P01' || err?.message?.includes('does not exist')) {
+      await ensureDatabaseSchema(client);
+    }
   }
 
   const uId = cleanId.startsWith('usr_') ? cleanId : `usr_${Date.now()}`;
