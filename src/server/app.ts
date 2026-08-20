@@ -4,13 +4,13 @@ import dotenv from 'dotenv';
 import speakeasy from 'speakeasy';
 import QRCode from 'qrcode';
 import crypto from 'crypto';
-import { pool } from './db.ts';
-import { seedDatabase, ensureDatabaseSchema } from './seed.ts';
-import { prisma } from '../lib/prisma.ts';
-import { AuthUtils } from '../lib/auth.ts';
-import { TwoFactorService } from '../lib/two-factor.ts';
-import { sendOtpEmail } from './email.ts';
-import { mockTransactions, mockFxRates } from '../data/mockTransactions.ts';
+import { pool } from './db';
+import { seedDatabase, ensureDatabaseSchema } from './seed';
+import { prisma } from '../lib/prisma';
+import { AuthUtils } from '../lib/auth';
+import { TwoFactorService } from '../lib/two-factor';
+import { sendOtpEmail } from './email';
+import { mockTransactions, mockFxRates } from '../data/mockTransactions';
 
 dotenv.config();
 

@@ -1,5 +1,5 @@
-import { pool } from '../server/db.ts';
-import { ensureDatabaseSchema, hashPassword } from '../server/seed.ts';
+import { pool } from '../server/db';
+import { ensureDatabaseSchema, hashPassword } from '../server/seed';
 
 let isSeedingPromise: Promise<any> | null = null;
 let tablesInitialized = false;

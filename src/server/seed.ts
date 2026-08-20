@@ -1,6 +1,6 @@
-import { pool } from './db.ts';
+import { pool } from './db';
 import crypto from 'crypto';
-import { mockTransactions, mockFxRates } from '../data/mockTransactions.ts';
+import { mockTransactions, mockFxRates } from '../data/mockTransactions';
 
 // Salt matching client-side encryption
 const ENCRYPTION_SALT = 'KBZ_IR_PORTAL_SECURE_SALT_2026';

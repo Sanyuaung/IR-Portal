@@ -1,6 +1,6 @@
 import path from 'path';
 import fs from 'fs';
-import { app } from './src/server/app.ts';
+import { app } from './src/server/app';
 
 const PORT = process.env.PORT || 3000;
 

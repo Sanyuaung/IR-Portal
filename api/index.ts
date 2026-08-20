@@ -1,4 +1,4 @@
-import { app } from '../src/server/app.ts';
+import { app } from '../src/server/app';
 
 export default function handler(req: any, res: any) {
   // If original URL or matched path is present, normalize req.url

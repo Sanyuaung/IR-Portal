@@ -1,8 +1,8 @@
-import { pool } from '../server/db.ts';
+import { pool } from '../server/db';
 import speakeasy from 'speakeasy';
 import QRCode from 'qrcode';
 import crypto from 'crypto';
-import { sendOtpEmail } from '../server/email.ts';
+import { sendOtpEmail } from '../server/email';
 
 export class TwoFactorService {
   /**
