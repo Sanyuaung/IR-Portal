@@ -42,12 +42,12 @@ export const RecentTransactionsTable: React.FC<RecentTransactionsTableProps> = (
               <th className="px-5 py-3 border border-slate-200">Amount</th>
               <th className="px-5 py-3 border border-slate-200">Converted (MMK)</th>
               <th className="px-5 py-3 border border-slate-200 text-center">Status</th>
-              <th className="px-5 py-3 border border-slate-200 text-right">Action</th>
+              <th className="px-5 py-3 border border-slate-200 text-right sticky right-0 z-20 bg-slate-50">Action</th>
             </tr>
           </thead>
           <tbody className="text-sm">
             {recent.map((tx) => (
-              <tr key={tx.id} className="hover:bg-slate-50/80 transition-colors">
+              <tr key={tx.id} className="group hover:bg-slate-50/80 transition-colors">
                 <td className="px-5 py-3.5 border border-slate-200 font-mono text-xs font-semibold text-[#0B2B66]">
                   <div>{tx.transactionRef}</div>
                   <div className="text-[10px] text-slate-400 font-normal flex items-center gap-1 mt-0.5">
@@ -83,7 +83,7 @@ export const RecentTransactionsTable: React.FC<RecentTransactionsTableProps> = (
                   <StatusBadge status={tx.status} />
                 </td>
 
-                <td className="px-5 py-3.5 border border-slate-200 text-right sticky">
+                <td className="px-5 py-3.5 border border-slate-200 text-right sticky right-0 z-10 bg-white group-hover:bg-slate-50/80">
                   <button
                     onClick={() => handleViewDetails(tx)}
                     className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold text-[#0B2B66] bg-blue-50 hover:bg-blue-100 rounded-md transition-colors cursor-pointer"

@@ -63,9 +63,6 @@ app.post('/api/auth/login', async (req, res) => {
     console.log('Login attempt for:', email);
     const user = await prisma.user.findUnique({
       where: { email: cleanEmail },
-      include: {
-        twoFactorAuth: true,
-      },
     });
 
     if (!user) {
@@ -77,9 +74,16 @@ app.post('/api/auth/login', async (req, res) => {
       return res.status(401).json({ error: 'Invalid credentials' });
     }
 
-    if (user.twoFactorAuth?.isEnabled) {
+    let twoFactorAuth: any = null;
+    try {
+      twoFactorAuth = await prisma.twoFactorAuth.findUnique({ where: { userId: user.id } });
+    } catch (tfaLookupError) {
+      console.error('2FA lookup warning during login:', tfaLookupError);
+    }
+
+    if (twoFactorAuth?.isEnabled) {
       let activeOtp: string | undefined;
-      if (user.twoFactorAuth.method === 'EMAIL') {
+      if (twoFactorAuth.method === 'EMAIL') {
         const otpRes = await TwoFactorService.sendEmailOtp(user.id);
         activeOtp = otpRes.otp;
       }
@@ -94,7 +98,7 @@ app.post('/api/auth/login', async (req, res) => {
         requiresOtp: true,
         require2Fa: true,
         tempToken,
-        method: user.twoFactorAuth.method,
+        method: twoFactorAuth.method,
         userId: user.id,
         userEmail: user.email,
         activeOtp,
@@ -194,12 +198,16 @@ app.post(['/api/auth/signup', '/api/auth/register'], async (req, res) => {
       [userId, cleanName, cleanEmail, hashedPassword]
     );
 
-    await client.query(
-      `INSERT INTO "TwoFactorAuth" ("id", "userId", "isEnabled", "method", "createdAt", "updatedAt")
-       VALUES ($1, $2, false, 'EMAIL', NOW(), NOW())
-       ON CONFLICT ("userId") DO NOTHING`,
-      [`tfa_${userId}`, userId]
-    );
+    try {
+      await client.query(
+        `INSERT INTO "TwoFactorAuth" ("id", "userId", "isEnabled", "method", "createdAt", "updatedAt")
+         VALUES ($1, $2, false, 'EMAIL', NOW(), NOW())
+         ON CONFLICT ("userId") DO NOTHING`,
+        [`tfa_${userId}`, userId]
+      );
+    } catch (tfaInsertError) {
+      console.error('TwoFactorAuth initialization warning during signup:', tfaInsertError);
+    }
 
     const accessToken = AuthUtils.generateAccessToken({
       sub: userId,
