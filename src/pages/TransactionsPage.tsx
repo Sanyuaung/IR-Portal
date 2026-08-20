@@ -91,12 +91,27 @@ export const TransactionsPage: React.FC = () => {
     );
   };
 
-  const handleDateRangeChange = (value: [Date | null, Date | null] | null) => {
-    if (value && (value[0] || value[1])) {
+  const toSafeIsoString = (val: any): string | null => {
+    if (!val) return null;
+    if (val instanceof Date) {
+      return !isNaN(val.getTime()) ? val.toISOString() : null;
+    }
+    if (typeof val === 'string' || typeof val === 'number') {
+      const d = new Date(val);
+      return !isNaN(d.getTime()) ? d.toISOString() : null;
+    }
+    if (typeof val === 'object' && typeof val.toISOString === 'function') {
+      return val.toISOString();
+    }
+    return null;
+  };
+
+  const handleDateRangeChange = (value: any) => {
+    if (Array.isArray(value) && (value[0] || value[1])) {
       setDatePreset('custom');
       setCustomDateRange(
-        value[0] ? value[0].toISOString() : null,
-        value[1] ? value[1].toISOString() : null
+        toSafeIsoString(value[0]),
+        toSafeIsoString(value[1])
       );
     } else {
       setDatePreset('all');
@@ -218,7 +233,8 @@ export const TransactionsPage: React.FC = () => {
                 })),
               ]}
               value={currencyFilter}
-              onChange={(val) => val && setCurrencyFilter(val as any)}
+              onChange={(val) => setCurrencyFilter((val || 'ALL') as any)}
+              clearable
               size="sm"
               radius="md"
             />
@@ -236,7 +252,8 @@ export const TransactionsPage: React.FC = () => {
                 { value: 'MFR', label: 'MFR (Timeout Case)' },
               ]}
               value={statusFilter}
-              onChange={(val) => val && setStatusFilter(val as any)}
+              onChange={(val) => setStatusFilter((val || 'ALL') as any)}
+              clearable
               size="sm"
               radius="md"
             />

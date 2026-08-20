@@ -104,7 +104,8 @@ export const NewInboundSimulationModal: React.FC = () => {
               { value: 'Malaysia', label: '🇲🇾 Malaysia' },
             ]}
             value={senderCountry}
-            onChange={(val) => val && setSenderCountry(val)}
+            onChange={(val) => setSenderCountry(val || 'Singapore')}
+            clearable
           />
 
           <Select
@@ -119,7 +120,8 @@ export const NewInboundSimulationModal: React.FC = () => {
               { value: 'Bank of China', label: 'Bank of China' },
             ]}
             value={sendingBank}
-            onChange={(val) => val && setSendingBank(val)}
+            onChange={(val) => setSendingBank(val || 'DBS Bank Singapore')}
+            clearable
           />
         </div>
 
@@ -137,7 +139,8 @@ export const NewInboundSimulationModal: React.FC = () => {
               { value: 'MYR', label: 'MYR (RM)' },
             ]}
             value={currency}
-            onChange={(val) => val && setCurrency(val as CurrencyCode)}
+            onChange={(val) => setCurrency((val || 'USD') as CurrencyCode)}
+            clearable
           />
 
           <NumberInput
@@ -158,7 +161,8 @@ export const NewInboundSimulationModal: React.FC = () => {
             { value: 'failed', label: '❌ Failed (Discrepancy / Rejected)' },
           ]}
           value={status}
-          onChange={(val) => val && setStatus(val as TransactionStatus)}
+          onChange={(val) => setStatus((val || 'success') as TransactionStatus)}
+          clearable
         />
 
         <TextInput

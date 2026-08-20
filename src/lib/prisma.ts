@@ -181,31 +181,42 @@ export const prisma = {
           const params: any[] = [];
           let idx = 1;
           Object.keys(data).forEach((key) => {
-            updates.push(`"${key}" = ${idx}`);
+            updates.push(`"${key}" = $${idx}`);
             params.push(data[key]);
             idx++;
           });
           updates.push(`"updatedAt" = NOW()`);
           let whereClause = '';
           if (where.email) {
-            whereClause = `LOWER("email") = LOWER(${idx})`;
+            whereClause = `LOWER("email") = LOWER($${idx})`;
             params.push(where.email.trim());
           } else if (where.id) {
-            whereClause = `"id" = ${idx}`;
+            whereClause = `"id" = $${idx}`;
             params.push(where.id);
           }
           const res = await client.query(
             `UPDATE "User" SET ${updates.join(', ')} WHERE ${whereClause} RETURNING *`,
             params
           );
-          return res.rows[0];
+          if (res.rows[0]) {
+            return res.rows[0];
+          }
         } finally {
           client.release();
         }
       } catch (err: any) {
-        console.warn('user.update error:', err?.message);
-        throw err;
+        console.warn('user.update error, using in-memory store fallback:', err?.message);
       }
+
+      // Memory store fallback
+      const targetUser = FALLBACK_USERS.find(
+        (u) => (where.email && u.email.toLowerCase() === where.email.trim().toLowerCase()) || (where.id && u.id === where.id)
+      );
+      if (targetUser) {
+        Object.assign(targetUser, data);
+        return targetUser;
+      }
+      return null;
     },
   },
 

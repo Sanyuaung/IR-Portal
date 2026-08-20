@@ -59,6 +59,7 @@ export const LoginPage: React.FC = () => {
 
   const [authMode, setAuthMode] = useState<'signin' | 'signup' | 'forgot'>('signin');
   const [forgotEmail, setForgotEmail] = useState('');
+  const [forgotEmailSent, setForgotEmailSent] = useState(false);
 
   // Sign In Form States
   const [loginEmail, setLoginEmail] = useState(savedMerchantId || '');
@@ -446,111 +447,168 @@ export const LoginPage: React.FC = () => {
           {/* MAIN AUTHENTICATION CARD */}
           {!is2FaStep ? (
             <div className="bg-white border border-[#d9dbe9] rounded-xl p-6 sm:p-8 shadow-xs">
-              {/* Tab Selector: Sign In vs Sign Up */}
-              <div className="flex bg-[#eff0f6] p-1 rounded-lg mb-6">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setAuthMode('signin');
-                    setLoginErrors({});
-                  }}
-                  className={`flex-1 py-2 rounded-md text-xs sm:text-sm font-semibold transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
-                    authMode === 'signin'
-                      ? 'bg-white text-[#002C76] shadow-xs'
-                      : 'text-[#6e7191] hover:text-[#14142b]'
-                  }`}
-                >
-                  <LogIn size={15} />
-                  <span>Sign In</span>
-                </button>
+              {/* Tab Selector: Sign In vs Sign Up - only show when not in forgot password flow */}
+              {authMode !== 'forgot' && (
+                <div className="flex bg-[#eff0f6] p-1 rounded-lg mb-6">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setAuthMode('signin');
+                      setLoginErrors({});
+                    }}
+                    className={`flex-1 py-2 rounded-md text-xs sm:text-sm font-semibold transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
+                      authMode === 'signin'
+                        ? 'bg-white text-[#002C76] shadow-xs'
+                        : 'text-[#6e7191] hover:text-[#14142b]'
+                    }`}
+                  >
+                    <LogIn size={15} />
+                    <span>Sign In</span>
+                  </button>
 
-                <button
-                  type="button"
-                  onClick={() => {
-                    setAuthMode('signup');
-                    setSignupErrors({});
-                  }}
-                  className={`flex-1 py-2 rounded-md text-xs sm:text-sm font-semibold transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
-                    authMode === 'signup'
-                      ? 'bg-white text-[#002C76] shadow-xs'
-                      : 'text-[#6e7191] hover:text-[#14142b]'
-                  }`}
-                >
-                  <UserPlus size={15} />
-                  <span>Sign Up</span>
-                </button>
-              </div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setAuthMode('signup');
+                      setSignupErrors({});
+                    }}
+                    className={`flex-1 py-2 rounded-md text-xs sm:text-sm font-semibold transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
+                      authMode === 'signup'
+                        ? 'bg-white text-[#002C76] shadow-xs'
+                        : 'text-[#6e7191] hover:text-[#14142b]'
+                    }`}
+                  >
+                    <UserPlus size={15} />
+                    <span>Sign Up</span>
+                  </button>
+                </div>
+              )}
 
               {/* VIEW A: SIGN IN FORM */}
               
               {authMode === 'forgot' ? (
                 <div className="space-y-6">
-                  <div className="space-y-2">
-                    <h2 className="text-2xl font-bold text-[#0F4C81]">Reset Password</h2>
-                    <p className="text-[#6e7191] text-sm">
-                      Enter your email address and we'll send you a link to reset your password.
-                    </p>
-                  </div>
-                  
-                  <form 
-                    onSubmit={async (e) => {
-                      e.preventDefault();
-                      if (!forgotEmail) {
-                        notifications.show({ title: 'Error', message: 'Please enter your email', color: 'red' });
-                        return;
-                      }
-                      setIsLoading(true);
-                      try {
-                        const res = await fetch('/api/auth/forgot-password', {
-                          method: 'POST',
-                          headers: { 'Content-Type': 'application/json' },
-                          body: JSON.stringify({ email: forgotEmail })
-                        });
-                        const data = await res.json();
-                        if (data.success) {
-                          notifications.show({ title: 'Email Sent', message: 'Check your email for the reset link.', color: 'green' });
-                          console.log('Demo Reset Link:', data.resetLink);
-                          // For demo purposes, we automatically redirect after 2s
-                          setTimeout(() => {
-                             window.location.href = data.resetLink;
-                          }, 2000);
-                        } else {
-                          notifications.show({ title: 'Error', message: data.error || 'Failed to send link', color: 'red' });
-                        }
-                      } catch (err) {
-                        notifications.show({ title: 'Error', message: 'Network error', color: 'red' });
-                      } finally {
-                        setIsLoading(false);
-                      }
-                    }} 
-                    className="space-y-4"
-                  >
-                    <TextInput
-                      label="Email Address"
-                      placeholder="Enter your email address"
-                      value={forgotEmail}
-                      onChange={(e) => setForgotEmail(e.currentTarget.value)}
-                      required
-                    />
-                    
-                    <button
-                      type="submit"
-                      disabled={isLoading}
-                      className="w-full py-2.5 px-4 bg-[#0F4C81] hover:bg-[#0A365D] font-semibold text-white text-sm rounded-lg shadow-md transition-colors flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
-                    >
-                      {isLoading ? 'Sending...' : 'Send Reset Link'}
-                    </button>
-                    
-                    <div className="text-center mt-4">
-                      <button 
-                        type="button" 
-                        onClick={() => setAuthMode('signin')} 
-                        className="text-sm font-semibold text-[#0F4C81] hover:underline"
-                      >
-                        Back to Login
-                      </button>
+                  {forgotEmailSent ? (
+                    <div className="text-center py-2 space-y-4">
+                      <div className="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-full flex items-center justify-center mx-auto border border-emerald-200 shadow-xs">
+                        <CheckCircle2 size={24} />
+                      </div>
+                      <div className="space-y-1.5">
+                        <h2 className="text-xl font-bold text-[#0F4C81]">Check Your Email</h2>
+                        <p className="text-[#6e7191] text-xs leading-relaxed max-w-sm mx-auto">
+                          If an account exists for <strong className="text-[#14142b]">{forgotEmail}</strong>, a password reset link has been sent.
+                        </p>
+                      </div>
+                      
+                      <div className="p-3.5 bg-[#f8f9fa] rounded-lg border border-[#e9ecef] text-left text-xs text-[#4e4b66] space-y-1">
+                        <div className="font-semibold text-[#0F4C81] flex items-center gap-1.5">
+                          <Mail size={14} />
+                          <span>Next steps:</span>
+                        </div>
+                        <ul className="list-disc list-inside space-y-1 text-[11px] text-[#6e7191]">
+                          <li>Open the email received from MM Global Remit</li>
+                          <li>Click the secure password reset link</li>
+                          <li>The link is valid for 15 minutes</li>
+                        </ul>
+                      </div>
+
+                      <div className="pt-2 space-y-2">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setForgotEmailSent(false);
+                          }}
+                          className="w-full py-2 px-3 border border-[#d9dbe9] hover:bg-[#f8f9fa] font-medium text-[#4e4b66] text-xs rounded-lg transition-colors cursor-pointer"
+                        >
+                          Did not receive email? Try again
+                        </button>
+                        <button 
+                          type="button" 
+                          onClick={() => {
+                            setAuthMode('signin');
+                            setForgotEmailSent(false);
+                          }} 
+                          className="w-full py-2 text-xs font-semibold text-[#0F4C81] hover:underline cursor-pointer"
+                        >
+                          Back to Sign In
+                        </button>
+                      </div>
                     </div>
-                  </form>
+                  ) : (
+                    <>
+                      <div className="space-y-2">
+                        <h2 className="text-2xl font-bold text-[#0F4C81]">Reset Password</h2>
+                        <p className="text-[#6e7191] text-sm">
+                          Enter your registered email address and we'll send you a password reset link.
+                        </p>
+                      </div>
+                      
+                      <form 
+                        onSubmit={async (e) => {
+                          e.preventDefault();
+                          if (!forgotEmail) {
+                            notifications.show({ title: 'Error', message: 'Please enter your email', color: 'red' });
+                            return;
+                          }
+                          setIsLoading(true);
+                          try {
+                            const res = await fetch('/api/auth/forgot-password', {
+                              method: 'POST',
+                              headers: { 'Content-Type': 'application/json' },
+                              body: JSON.stringify({ email: forgotEmail })
+                            });
+                            const data = await res.json();
+                            if (data.success) {
+                              setForgotEmailSent(true);
+                              notifications.show({ 
+                                title: 'Reset Link Sent', 
+                                message: 'Please check your email inbox to reset your password.', 
+                                color: 'green' 
+                              });
+                            } else {
+                              notifications.show({ title: 'Error', message: data.error || 'Failed to send link', color: 'red' });
+                            }
+                          } catch (err) {
+                            notifications.show({ title: 'Error', message: 'Network error occurred. Please try again.', color: 'red' });
+                          } finally {
+                            setIsLoading(false);
+                          }
+                        }} 
+                        className="space-y-4"
+                      >
+                        <TextInput
+                          label="Email Address"
+                          placeholder="Enter your email address"
+                          value={forgotEmail}
+                          onChange={(e) => setForgotEmail(e.currentTarget.value)}
+                          required
+                          size="sm"
+                          leftSection={<Mail size={16} className="text-[#a0a3bd]" />}
+                        />
+                        
+                        <button
+                          type="submit"
+                          disabled={isLoading}
+                          className="w-full py-2.5 px-4 bg-[#0F4C81] hover:bg-[#0A365D] font-semibold text-white text-sm rounded-lg shadow-md transition-colors flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+                        >
+                          {isLoading ? 'Sending...' : 'Send Reset Link'}
+                        </button>
+                        
+                        <div className="text-center mt-4">
+                          <button 
+                            type="button" 
+                            onClick={() => {
+                              setAuthMode('signin');
+                              setForgotEmailSent(false);
+                            }} 
+                            className="text-sm font-semibold text-[#0F4C81] hover:underline cursor-pointer"
+                          >
+                            Back to Sign In
+                          </button>
+                        </div>
+                      </form>
+                    </>
+                  )}
                 </div>
               ) : authMode === 'signin' ? (
 

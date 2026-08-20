@@ -236,10 +236,10 @@ app.post(['/api/auth/forgot-password', '/auth/forgot-password'], async (req, res
     const cleanEmail = email.trim().toLowerCase();
     const user = await prisma.user.findUnique({ where: { email: cleanEmail } });
     if (!user) {
-      return res.status(404).json({ success: false, error: 'User not found' });
+      return res.status(404).json({ success: false, error: 'User not found with this email address.' });
     }
     const token = crypto.randomBytes(32).toString('hex');
-    const expires = new Date(Date.now() + 60 * 1000); // 1 minute
+    const expires = new Date(Date.now() + 15 * 60 * 1000); // 15 minutes
     await prisma.user.update({
       where: { email: cleanEmail },
       data: { resetToken: token, resetTokenExpires: expires }

@@ -43,12 +43,27 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onNavigate }) => {
     });
   };
 
-  const handleDateRangeChange = (value: [Date | null, Date | null] | null) => {
-    if (value && (value[0] || value[1])) {
+  const toSafeIsoString = (val: any): string | null => {
+    if (!val) return null;
+    if (val instanceof Date) {
+      return !isNaN(val.getTime()) ? val.toISOString() : null;
+    }
+    if (typeof val === 'string' || typeof val === 'number') {
+      const d = new Date(val);
+      return !isNaN(d.getTime()) ? d.toISOString() : null;
+    }
+    if (typeof val === 'object' && typeof val.toISOString === 'function') {
+      return val.toISOString();
+    }
+    return null;
+  };
+
+  const handleDateRangeChange = (value: any) => {
+    if (Array.isArray(value) && (value[0] || value[1])) {
       setDatePreset('custom');
       setCustomDateRange(
-        value[0] ? value[0].toISOString() : null,
-        value[1] ? value[1].toISOString() : null
+        toSafeIsoString(value[0]),
+        toSafeIsoString(value[1])
       );
     } else {
       setDatePreset('all');
