@@ -208,7 +208,7 @@ app.post(['/api/auth/login', '/auth/login', '/login'], async (req, res) => {
 /**
  * POST /api/auth/logout
  */
-app.post('/api/auth/logout', async (req, res) => {
+app.post(['/api/auth/logout', '/auth/logout', '/logout'], async (req, res) => {
   try {
     res.cookie('accessToken', '', {
       httpOnly: true,
@@ -219,7 +219,7 @@ app.post('/api/auth/logout', async (req, res) => {
 
     return res.json({ success: true, message: 'Logged out successfully' });
   } catch (error: any) {
-    return res.status(500).json({ success: false, error: error.message || 'Logout failed' });
+    return res.json({ success: true, message: 'Logged out' });
   }
 });
 
@@ -542,7 +542,7 @@ app.post(['/api/auth/verify-2fa', '/auth/verify-2fa', '/verify-2fa'], async (req
 /**
  * POST /api/2fa/enable
  */
-app.post('/api/2fa/enable', async (req, res) => {
+app.post(['/api/2fa/enable', '/2fa/enable'], async (req, res) => {
   const { userId, method, email } = req.body;
   if (!userId && !email) return res.status(400).json({ error: 'User ID or Email is required' });
 
@@ -663,7 +663,7 @@ app.post(['/api/2fa/send-email-otp', '/api/auth/resend-otp'], async (req, res) =
 /**
  * GET /api/2fa/status/:userId
  */
-app.get('/api/2fa/status/:userId', async (req, res) => {
+app.get(['/api/2fa/status/:userId', '/2fa/status/:userId'], async (req, res) => {
   const { userId } = req.params;
   let client;
   try {
@@ -682,16 +682,22 @@ app.get('/api/2fa/status/:userId', async (req, res) => {
       method: userRes.rows[0].method,
     });
   } catch (err: any) {
-    return res.status(500).json({ error: err.message });
+    return res.status(200).json({ isEnabled: false, method: null, error: err?.message });
   } finally {
-    if (client) client.release();
+    if (client) {
+      try {
+        client.release();
+      } catch (relErr) {
+        // ignore
+      }
+    }
   }
 });
 
 /**
  * POST /api/2fa/verify-and-enable
  */
-app.post('/api/2fa/verify-and-enable', async (req, res) => {
+app.post(['/api/2fa/verify-and-enable', '/2fa/verify-and-enable'], async (req, res) => {
   const { userId, code } = req.body;
   if (!userId || !code) return res.status(400).json({ error: 'User ID and code are required' });
 
@@ -748,14 +754,20 @@ app.post('/api/2fa/verify-and-enable', async (req, res) => {
     console.error('2FA verify-and-enable error:', err);
     res.status(500).json({ error: err.message });
   } finally {
-    if (client) client.release();
+    if (client) {
+      try {
+        client.release();
+      } catch (relErr) {
+        // ignore
+      }
+    }
   }
 });
 
 /**
  * POST /api/2fa/disable
  */
-app.post('/api/2fa/disable', async (req, res) => {
+app.post(['/api/2fa/disable', '/2fa/disable'], async (req, res) => {
   const { userId, password } = req.body;
   if (!userId || !password) return res.status(400).json({ error: 'Password is required' });
 
@@ -777,14 +789,20 @@ app.post('/api/2fa/disable', async (req, res) => {
   } catch (err: any) {
     res.status(500).json({ error: err.message });
   } finally {
-    if (client) client.release();
+    if (client) {
+      try {
+        client.release();
+      } catch (relErr) {
+        // ignore
+      }
+    }
   }
 });
 
 /**
  * POST /api/auth/change-password
  */
-app.post('/api/auth/change-password', async (req, res) => {
+app.post(['/api/auth/change-password', '/auth/change-password', '/change-password'], async (req, res) => {
   const { userId, currentPassword, newPassword } = req.body;
   if (!userId || !currentPassword || !newPassword) {
     return res.status(400).json({ error: 'User ID, current password, and new password are required.' });

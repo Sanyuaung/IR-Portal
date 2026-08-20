@@ -1,9 +1,10 @@
 import { app } from '../src/server/app.ts';
 
 export default function handler(req: any, res: any) {
-  // Normalize URL in case Vercel rewrites changed req.url
-  if (req.headers && req.headers['x-matched-path']) {
-    req.url = req.headers['x-matched-path'];
+  // If original URL or matched path is present, normalize req.url
+  const originalUrl = req.headers['x-matched-path'] || req.url || '';
+  if (originalUrl && !originalUrl.startsWith('/api') && originalUrl !== '/') {
+    req.url = '/api' + (originalUrl.startsWith('/') ? originalUrl : '/' + originalUrl);
   }
   return app(req, res);
 }
