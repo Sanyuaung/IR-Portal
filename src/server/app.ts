@@ -178,9 +178,6 @@ app.post(['/api/auth/signup', '/api/auth/register'], async (req, res) => {
   let client;
   try {
     client = await pool.connect();
-    await client.query(`ALTER TABLE "User" ADD COLUMN IF NOT EXISTS "companyName" TEXT;`);
-    await client.query(`ALTER TABLE "User" ADD COLUMN IF NOT EXISTS "phone" TEXT;`);
-
     const existing = await client.query(`SELECT id FROM "User" WHERE LOWER(email) = LOWER($1)`, [cleanEmail]);
     if (existing.rows.length > 0) {
       return res.status(409).json({
@@ -192,9 +189,9 @@ app.post(['/api/auth/signup', '/api/auth/register'], async (req, res) => {
     const userId = `usr_${Date.now()}`;
 
     await client.query(
-      `INSERT INTO "User" ("id", "name", "email", "password", "companyName", "phone", "createdAt", "updatedAt")
-       VALUES ($1, $2, $3, $4, $5, $6, NOW(), NOW())`,
-      [userId, cleanName, cleanEmail, hashedPassword, null, null]
+      `INSERT INTO "User" ("id", "name", "email", "password", "createdAt", "updatedAt")
+       VALUES ($1, $2, $3, $4, NOW(), NOW())`,
+      [userId, cleanName, cleanEmail, hashedPassword]
     );
 
     await client.query(
