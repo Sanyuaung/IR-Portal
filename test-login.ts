@@ -1,5 +1,5 @@
-import { prisma } from './src/lib/prisma.ts';
-import { AuthUtils } from './src/lib/auth.ts';
+import { prisma } from './src/lib/prisma';
+import { AuthUtils } from './src/lib/auth';
 
 async function test() {
   const email = 'sanyu.aung@kbzbank.com';

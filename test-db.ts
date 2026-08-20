@@ -1,5 +1,5 @@
-import { pool } from './src/server/db.ts';
-import { AuthUtils } from './src/lib/auth.ts';
+import { pool } from './src/server/db';
+import { AuthUtils } from './src/lib/auth';
 
 async function test() {
   const client = await pool.connect();

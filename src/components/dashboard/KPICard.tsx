@@ -34,9 +34,9 @@ export const KPICard: React.FC<KPICardProps> = ({
   };
 
   return (
-    <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-xs hover:shadow-sm transition-shadow">
+    <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-xs hover:shadow-md hover:-translate-y-0.5 transition-all duration-200">
       <div className="flex justify-between items-start mb-3">
-        <div className={`p-2 rounded-lg ${iconBgMap[iconVariant]}`}>
+        <div className={`p-2.5 rounded-xl ${iconBgMap[iconVariant]}`}>
           {icon}
         </div>
 
@@ -57,8 +57,8 @@ export const KPICard: React.FC<KPICardProps> = ({
         )}
       </div>
 
-      <p className="text-xs text-slate-500 font-medium">{title}</p>
-      <p className="text-2xl font-bold text-slate-900 mt-0.5 tracking-tight font-mono sm:font-sans">{value}</p>
+      <p className="text-xs text-slate-500 font-semibold uppercase tracking-wide">{title}</p>
+      <p className="text-2xl font-extrabold text-slate-900 mt-1 tracking-tight font-mono sm:font-sans">{value}</p>
 
       {subValue && (
         <p className="text-[11px] text-slate-400 mt-1 font-medium truncate">

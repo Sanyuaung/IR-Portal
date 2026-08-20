@@ -99,6 +99,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
         {/* Top Nav Items */}
         <nav className="flex-1 py-6 px-4 space-y-2 overflow-y-auto">
+          {isOpen && (
+            <p className="px-2 pb-2 text-[10px] uppercase tracking-widest font-bold text-slate-400">
+              Main Navigation
+            </p>
+          )}
           {menuItems.map((item) => {
             const isActive = activePage === item.id;
             const isExpanded = isOpen;
@@ -147,7 +152,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           {isOpen ? (
             <div className="bg-white/5 rounded-xl p-4 border border-white/10 shadow-inner">
               <p className="text-[10px] text-slate-400 uppercase tracking-widest font-bold mb-3 flex items-center justify-between">
-                <span>Live FX Rates</span>
+                <span>Live FX Quick View</span>
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
               </p>
               <div className="space-y-2.5">

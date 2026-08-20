@@ -52,6 +52,8 @@ export const Header: React.FC<HeaderProps> = ({
 
   const pendingCount = transactions.filter((t) => t.status === 'Pending').length;
   const recentAlerts = transactions.slice(0, 4);
+  const activePageLabel =
+    activePage === 'ir-transactions' ? 'IR Transactions' : activePage === 'settings' ? 'Settings' : 'Dashboard';
 
   return (
     <header className="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-3 sm:px-6 flex-shrink-0 z-30 shadow-xs sticky top-0">
@@ -77,6 +79,9 @@ export const Header: React.FC<HeaderProps> = ({
         >
           <KbzHorizontalLogo height={36} showPortalBadge={true} />
         </div>
+        <span className="hidden xl:inline-flex px-2.5 py-1 rounded-md bg-slate-100 text-slate-600 text-[11px] font-semibold">
+          {activePageLabel}
+        </span>
       </div>
 
       {/* Right side: Simulation button + FX Calc + Notifications + User Avatar */}

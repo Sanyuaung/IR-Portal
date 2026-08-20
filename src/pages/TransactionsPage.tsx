@@ -99,7 +99,7 @@ export const TransactionsPage: React.FC = () => {
             IR Transactions
           </h1>
           <p className="text-sm text-slate-500 mt-0.5">
-            Monitor incoming international SWIFT transfers & real-time settlement
+            Simple searchable list of all inbound remittance records and statuses
           </p>
         </div>
 

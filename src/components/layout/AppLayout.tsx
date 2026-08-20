@@ -5,6 +5,8 @@ import { TransactionDetailsModal } from '../transactions/TransactionDetailsModal
 import { NewInboundSimulationModal } from '../transactions/NewInboundSimulationModal';
 import { CurrencyConverterModal } from '../common/CurrencyConverterModal';
 import { useTransactionStore } from '../../store/useTransactionStore';
+import { useSettingsStore } from '../../store/useSettingsStore';
+import { ShieldAlert, ShieldCheck } from '../common/ui-icons';
 
 interface AppLayoutProps {
   children: React.ReactNode;
@@ -18,6 +20,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
   onNavigate,
 }) => {
   const { fetchTransactionsFromDb, fetchFxRatesFromDb } = useTransactionStore();
+  const { settings } = useSettingsStore();
   // Default sidebar open on large screens, closed on mobile/tablet
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
@@ -43,8 +46,25 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  const pageTitleMap: Record<string, { title: string; subtitle: string }> = {
+    dashboard: {
+      title: 'Dashboard',
+      subtitle: 'Quick overview of inbound remittance performance',
+    },
+    'ir-transactions': {
+      title: 'IR Transactions',
+      subtitle: 'Search, track, and review every inbound transfer clearly',
+    },
+    settings: {
+      title: 'Settings',
+      subtitle: 'Manage account profile and security preferences',
+    },
+  };
+
+  const activeMeta = pageTitleMap[activePage] || pageTitleMap.dashboard;
+
   return (
-    <div className="min-h-screen bg-[#F8FAFC] flex flex-col font-sans text-[#1E293B] overflow-x-hidden">
+    <div className="min-h-screen bg-gradient-to-b from-[#F8FAFC] to-[#F1F5F9] flex flex-col font-sans text-[#1E293B] overflow-x-hidden">
       {/* Header Bar */}
       <Header
         sidebarOpen={sidebarOpen}
@@ -64,8 +84,41 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
         />
 
         {/* Content Area */}
-        <main className="flex-1 p-3 sm:p-6 lg:p-8 space-y-6 overflow-y-auto max-w-7xl mx-auto w-full min-w-0">
-          {children}
+        <main className="flex-1 p-3 sm:p-6 lg:p-8 overflow-y-auto w-full min-w-0">
+          <div className="max-w-7xl mx-auto w-full space-y-5">
+            {!settings.is2FaEnabled && (
+              <section className="bg-amber-50 border border-amber-300 rounded-xl px-4 py-3.5 shadow-xs">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                  <div className="flex items-start gap-2.5">
+                    <span className="mt-0.5 text-amber-700">
+                      <ShieldAlert size={18} />
+                    </span>
+                    <div>
+                      <h3 className="text-sm font-bold text-amber-900 tracking-tight">2FA Not Enabled</h3>
+                      <p className="text-xs sm:text-sm text-amber-800 mt-0.5">
+                        Please enable Two-Factor Authentication to secure your account and remittance access.
+                      </p>
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => onNavigate('settings')}
+                    className="inline-flex items-center justify-center gap-2 rounded-lg bg-amber-600 hover:bg-amber-700 text-white text-xs sm:text-sm font-semibold px-3.5 py-2 transition-colors"
+                  >
+                    <ShieldCheck size={14} />
+                    Enable 2FA
+                  </button>
+                </div>
+              </section>
+            )}
+            {/* 
+            <section className="bg-white border border-slate-200 rounded-xl px-4 sm:px-5 py-3.5 shadow-xs">
+              <h2 className="text-base sm:text-lg font-bold text-slate-900 tracking-tight">{activeMeta.title}</h2>
+              <p className="text-xs sm:text-sm text-slate-500 mt-0.5">{activeMeta.subtitle}</p>
+            </section>
+             */}
+            {children}
+          </div>
         </main>
       </div>
 

@@ -301,21 +301,117 @@ export const SettingsPage: React.FC = () => {
           Portal Settings & Security
         </h1>
         <p className="text-xs text-slate-500 mt-1">
-          Manage Multi-Factor Authentication (2FA) and corporate security credentials
+          Manage account protection and profile settings in one simple place.
         </p>
       </div>
+
+      {/* At-a-glance status cards */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <Paper withBorder p="md" radius="md" className="bg-white border-slate-200 shadow-xs">
+          <div className="flex items-start gap-2.5">
+            <div className="w-8 h-8 rounded-lg bg-blue-50 text-[#0F4C81] flex items-center justify-center">
+              <User size={16} />
+            </div>
+            <div>
+              <Text size="xs" fw={700} c="dimmed" className="uppercase tracking-wide">
+                Account Identity
+              </Text>
+              <Text size="sm" fw={700} c="#0F4C81">
+                {user?.name || 'Customer'}
+              </Text>
+              <Text size="xs" c="dimmed" className="font-mono">
+                {user?.email || 'customer@mmglobalremit.com'}
+              </Text>
+            </div>
+          </div>
+        </Paper>
+
+        <Paper withBorder p="md" radius="md" className="bg-white border-slate-200 shadow-xs">
+          <div className="flex items-start gap-2.5">
+            <div
+              className={`w-8 h-8 rounded-lg flex items-center justify-center ${
+                settings.is2FaEnabled ? 'bg-emerald-50 text-emerald-700' : 'bg-amber-50 text-amber-700'
+              }`}
+            >
+              {settings.is2FaEnabled ? <ShieldCheck size={16} /> : <ShieldAlert size={16} />}
+            </div>
+            <div>
+              <Text size="xs" fw={700} c="dimmed" className="uppercase tracking-wide">
+                2FA Protection
+              </Text>
+              <Text size="sm" fw={700} c={settings.is2FaEnabled ? 'teal' : 'orange'}>
+                {settings.is2FaEnabled ? 'Enabled' : 'Not Enabled'}
+              </Text>
+              <Text size="xs" c="dimmed">
+                {settings.is2FaEnabled
+                  ? `${settings.twoFactorMethod === 'totp' ? 'Google Authenticator' : 'Email OTP'} is active`
+                  : 'Enable 2FA for stronger account security'}
+              </Text>
+            </div>
+          </div>
+        </Paper>
+
+        <Paper withBorder p="md" radius="md" className="bg-white border-slate-200 shadow-xs">
+          <div className="flex items-start gap-2.5">
+            <div className="w-8 h-8 rounded-lg bg-violet-50 text-violet-700 flex items-center justify-center">
+              <Lock size={16} />
+            </div>
+            <div>
+              <Text size="xs" fw={700} c="dimmed" className="uppercase tracking-wide">
+                Password Hygiene
+              </Text>
+              <Text size="sm" fw={700} c="#0F4C81">
+                Strong Password Recommended
+              </Text>
+              <Text size="xs" c="dimmed">
+                Update regularly and avoid reusing old passwords.
+              </Text>
+            </div>
+          </div>
+        </Paper>
+      </div>
+
+      {/* {!settings.is2FaEnabled && (
+        <Alert
+          icon={<ShieldAlert size={18} />}
+          color="orange"
+          variant="light"
+          radius="md"
+          title="2FA Not Enabled"
+        >
+          <div className="space-y-2">
+            <Text size="sm" c="orange.9">
+              Your account is currently less secure. Please enable Two-Factor Authentication to protect logins and
+              remittance access.
+            </Text>
+            <Group gap="xs">
+              <Button
+                size="xs"
+                color="orange"
+                leftSection={<ShieldCheck size={14} />}
+                onClick={() => {
+                  setActiveTab('security');
+                  handleEnable2FaClick();
+                }}
+              >
+                Enable 2FA Now
+              </Button>
+            </Group>
+          </div>
+        </Alert>
+      )} */}
 
       <Tabs value={activeTab} onChange={setActiveTab}>
         <div className="overflow-x-auto pb-1 mb-6">
           <Tabs.List className="bg-white p-1 rounded-lg border border-slate-200 flex-nowrap min-w-max">
             <Tabs.Tab value="security" leftSection={<ShieldCheck size={16} />}>
-              Two-Factor Auth (2FA) & Security
+              Security & 2FA
             </Tabs.Tab>
             <Tabs.Tab value="password" leftSection={<KeyRound size={16} />}>
-              Password Change
+              Password
             </Tabs.Tab>
             <Tabs.Tab value="merchant" leftSection={<Building size={16} />}>
-              Customer Account Profile
+              Profile
             </Tabs.Tab>
           </Tabs.List>
         </div>
@@ -439,25 +535,25 @@ export const SettingsPage: React.FC = () => {
               )}
             </div>
 
-            {/* Right Column: Enterprise Security Policy */}
+            {/* Right Column: Security Checklist */}
             <div className="space-y-4">
               <Paper withBorder p="md" radius="md" className="bg-slate-50 border-slate-200">
                 <div className="flex items-center gap-2 text-[#0F4C81] font-bold text-sm mb-2">
                   <ShieldCheck size={18} />
-                  <span>Enterprise Security Policy</span>
+                  <span>Security Checklist</span>
                 </div>
                 <div className="space-y-2.5 text-xs text-slate-600">
                   <p>
-                    • According to Central Bank of Myanmar (CBM) regulatory requirements, corporate inbound remittance accounts must maintain active 2FA.
+                    • Keep 2FA enabled to protect remittance access from unauthorized login attempts.
                   </p>
                   <p>
-                    • Disabling 2FA requires strict password authentication.
+                    • If you disable 2FA, password confirmation is required immediately.
                   </p>
                   <p>
-                    • Session tokens automatically expire after 15 minutes of inactivity.
+                    • Security sessions automatically expire after inactivity.
                   </p>
                   <p>
-                    • Password hashes are pre-encrypted with client-side SHA-256 before transmission.
+                    • Use a strong password with letters, numbers, and special characters.
                   </p>
                 </div>
               </Paper>

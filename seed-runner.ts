@@ -1,4 +1,4 @@
-import { seedDatabase } from './src/server/seed.ts';
+import { seedDatabase } from './src/server/seed';
 import dotenv from 'dotenv';
 dotenv.config();
 
