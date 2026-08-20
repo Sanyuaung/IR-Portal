@@ -1,3 +1,4 @@
+import { createRequire } from 'module'; const require = createRequire(import.meta.url);
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -35214,8 +35215,4 @@ var require_client = __commonJS({
           value: this.connectionParameters.password
         });
         this.replication = this.connectionParameters.replication;
-        const c = config || {};
-        if (c.Promise) {
-          byoPromiseDeprecationNotice();
-        }
-        t
+        const c = config || {
