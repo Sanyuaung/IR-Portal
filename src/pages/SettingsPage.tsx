@@ -564,83 +564,88 @@ export const SettingsPage: React.FC = () => {
 
         {/* Tab 2: Password Change Module */}
         <Tabs.Panel value="password">
-          <div className="w-full">
-            <Paper withBorder p="lg" radius="md" className="bg-white border-slate-200">
-              <form onSubmit={handlePasswordSubmit} className="space-y-4">
-                <div>
-                  <Text fw={700} size="md" c="#0F4C81">
-                    Change Portal Password
-                  </Text>
-                  <Text size="xs" c="dimmed">
-                    Ensure your account uses a strong password with letters, numbers, and symbols.
-                  </Text>
-                </div>
-
-                <PasswordInput
-                  label="Current Password"
-                  placeholder="Enter current password"
-                  value={currentPassword}
-                  onChange={(e) => setCurrentPassword(e.currentTarget.value)}
-                  error={passwordErrors.currentPassword}
-                  required
-                  size="sm"
-                />
-
-                <PasswordInput
-                  label="New Password"
-                  placeholder="Enter new password"
-                  value={newPassword}
-                  onChange={(e) => setNewPassword(e.currentTarget.value)}
-                  error={passwordErrors.newPassword}
-                  required
-                  size="sm"
-                />
-
-                {newPassword && (
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+            <div className="lg:col-span-2">
+              <Paper withBorder p="lg" radius="md" className="bg-white border-slate-200 h-full">
+                <form onSubmit={handlePasswordSubmit} className="space-y-4">
                   <div>
-                    <div className="flex justify-between items-center mb-1 text-xs">
-                      <span className="text-slate-500">Password Strength:</span>
-                      <span className="font-semibold" style={{ color: getStrengthColor(strength) }}>
-                        {strength < 50 ? 'Weak' : strength < 75 ? 'Good' : 'Strong'}
-                      </span>
+                    <Text fw={700} size="md" c="#0F4C81">
+                      Change Portal Password
+                    </Text>
+                    <Text size="xs" c="dimmed">
+                      Ensure your account uses a strong password with letters, numbers, and symbols.
+                    </Text>
+                  </div>
+
+                  <PasswordInput
+                    label="Current Password"
+                    placeholder="Enter current password"
+                    value={currentPassword}
+                    onChange={(e) => setCurrentPassword(e.currentTarget.value)}
+                    error={passwordErrors.currentPassword}
+                    required
+                    size="sm"
+                  />
+
+                  <PasswordInput
+                    label="New Password"
+                    placeholder="Enter new password"
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.currentTarget.value)}
+                    error={passwordErrors.newPassword}
+                    required
+                    size="sm"
+                  />
+
+                  {newPassword && (
+                    <div>
+                      <div className="flex justify-between items-center mb-1 text-xs">
+                        <span className="text-slate-500">Password Strength:</span>
+                        <span className="font-semibold" style={{ color: getStrengthColor(strength) }}>
+                          {strength < 50 ? 'Weak' : strength < 75 ? 'Good' : 'Strong'}
+                        </span>
+                      </div>
+                      <Progress value={strength} color={getStrengthColor(strength)} size="xs" radius="xl" />
                     </div>
-                    <Progress value={strength} color={getStrengthColor(strength)} size="xs" radius="xl" />
-                  </div>
-                )}
+                  )}
 
-                <PasswordInput
-                  label="Confirm New Password"
-                  placeholder="Re-enter new password"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.currentTarget.value)}
-                  error={passwordErrors.confirmPassword}
-                  required
-                  size="sm"
-                />
+                  <PasswordInput
+                    label="Confirm New Password"
+                    placeholder="Re-enter new password"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.currentTarget.value)}
+                    error={passwordErrors.confirmPassword}
+                    required
+                    size="sm"
+                  />
 
-                <Paper withBorder p="md" radius="md" className="bg-slate-50 border-slate-200">
-                  <div className="flex items-center gap-2 text-[#0F4C81] font-bold text-sm mb-2">
-                    <ShieldCheck size={18} />
-                    <span>Password Requirements</span>
-                  </div>
-                  <div className="space-y-2.5 text-xs text-slate-600">
-                    <p>• At least 8 characters</p>
-                    <p>• At least 1 uppercase & 1 lowercase letter</p>
-                    <p>• At least 1 number and 1 special symbol (!@#$%^&*)</p>
-                  </div>
-                </Paper>
+                  <Button
+                    type="submit"
+                    color="corporateBlue"
+                    className="bg-[#0F4C81] hover:bg-[#0A365D]"
+                    loading={isChangingPass}
+                    leftSection={<ShieldCheck size={16} />}
+                  >
+                    Update & Encrypt Password
+                  </Button>
+                </form>
+              </Paper>
+            </div>
 
-                <Button
-                  type="submit"
-                  color="corporateBlue"
-                  className="bg-[#0F4C81] hover:bg-[#0A365D]"
-                  loading={isChangingPass}
-                  leftSection={<ShieldCheck size={16} />}
-                >
-                  Update & Encrypt Password
-                </Button>
-              </form>
-            </Paper>
+            <div className="lg:col-span-1">
+              <Paper withBorder p="md" radius="md" className="bg-slate-50 border-slate-200">
+                <div className="flex items-center gap-2 text-[#0F4C81] font-bold text-sm mb-2">
+                  <ShieldCheck size={18} />
+                  <span>Password Requirements</span>
+                </div>
+                <div className="space-y-2.5 text-xs text-slate-600">
+                  <p>• At least 8 characters</p>
+                  <p>• At least 1 uppercase & 1 lowercase letter</p>
+                  <p>• At least 1 number and 1 special symbol (!@#$%^&*)</p>
+                  <p>• Confirm password must match new password</p>
+                </div>
+              </Paper>
+            </div>
           </div>
         </Tabs.Panel>
 
