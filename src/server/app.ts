@@ -9,7 +9,7 @@ import { seedDatabase, ensureDatabaseSchema } from './seed';
 import { prisma } from '../lib/prisma';
 import { AuthUtils } from '../lib/auth';
 import { TwoFactorService } from '../lib/two-factor';
-import { sendOtpEmail } from './email';
+import { sendOtpEmail, sendResetPasswordEmail } from './email';
 import { mockTransactions, mockFxRates } from '../data/mockTransactions';
 
 dotenv.config();
@@ -244,9 +244,23 @@ app.post(['/api/auth/forgot-password', '/auth/forgot-password'], async (req, res
       where: { email: cleanEmail },
       data: { resetToken: token, resetTokenExpires: expires }
     });
-    // Return the reset link for demo purposes
-    const resetLink = `/reset-password?email=${encodeURIComponent(cleanEmail)}&token=${token}`;
-    return res.json({ success: true, message: 'Password reset link sent to your email.', resetLink });
+
+    // Construct full reset URL
+    const origin = req.headers.origin || (req.headers.host ? `${req.protocol || 'https'}://${req.headers.host}` : 'https://ir-portal-taupe.vercel.app');
+    const relativePath = `/reset-password?email=${encodeURIComponent(cleanEmail)}&token=${token}`;
+    const fullResetUrl = `${origin}${relativePath}`;
+
+    // Send actual email via SMTP
+    const emailResult = await sendResetPasswordEmail(cleanEmail, fullResetUrl, user.name);
+    console.log(`[FORGOT_PASSWORD] Email dispatch result for ${cleanEmail}:`, emailResult);
+
+    return res.json({ 
+      success: true, 
+      message: 'Password reset link sent to your email.', 
+      resetLink: relativePath,
+      emailSent: emailResult.success,
+      smtpError: emailResult.success ? undefined : emailResult.error
+    });
   } catch (err) {
     console.error('[FORGOT_PASSWORD_ERROR]', err);
     return res.status(500).json({ success: false, error: 'Internal server error' });

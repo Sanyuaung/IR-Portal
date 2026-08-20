@@ -100,3 +100,85 @@ export async function sendOtpEmail(toEmail: string, otpCode: string, recipientNa
     return { success: false, error: err.message };
   }
 }
+
+export async function sendResetPasswordEmail(toEmail: string, resetUrl: string, recipientName?: string) {
+  const cleanRecipient = (toEmail || '').trim();
+  if (!cleanRecipient) {
+    console.error('[SMTP] No recipient email specified');
+    return { success: false, error: 'Recipient email is required' };
+  }
+
+  const name = recipientName || cleanRecipient.split('@')[0] || 'Valued Customer';
+  const subject = `[KBZ Bank IR Portal] Password Reset Request`;
+
+  const html = `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta charset="utf-8">
+      <style>
+        body { font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #f1f5f9; margin: 0; padding: 20px; color: #1e293b; }
+        .container { max-width: 560px; margin: 0 auto; background: #ffffff; border-radius: 12px; overflow: hidden; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
+        .header { background: #0B2B66; padding: 28px 24px; text-align: center; color: white; }
+        .header h1 { margin: 0; font-size: 22px; font-weight: 800; letter-spacing: 0.5px; }
+        .header p { margin: 4px 0 0 0; font-size: 12px; color: #93c5fd; text-transform: uppercase; letter-spacing: 1px; }
+        .content { padding: 32px 28px; }
+        .greeting { font-size: 16px; font-weight: 600; color: #0f172a; margin-bottom: 12px; }
+        .text { font-size: 14px; line-height: 1.6; color: #475569; margin-bottom: 24px; }
+        .btn-container { text-align: center; margin: 30px 0; }
+        .reset-btn { display: inline-block; background-color: #0F4C81; color: #ffffff !important; padding: 14px 32px; font-size: 15px; font-weight: 700; text-decoration: none; border-radius: 8px; box-shadow: 0 4px 6px -1px rgba(15, 76, 129, 0.3); }
+        .link-alt { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 12px; word-break: break-all; font-size: 12px; color: #0F4C81; margin: 20px 0; }
+        .warning { background: #fffbeb; border-left: 4px solid #f59e0b; padding: 12px 16px; border-radius: 4px; font-size: 12px; color: #92400e; margin-bottom: 24px; }
+        .footer { background: #f8fafc; padding: 20px; text-align: center; border-top: 1px solid #e2e8f0; font-size: 11px; color: #94a3b8; line-height: 1.5; }
+      </style>
+    </head>
+    <body>
+      <div class="container">
+        <div class="header">
+          <h1>KBZ BANK</h1>
+          <p>Inbound Remittance Portal</p>
+        </div>
+        <div class="content">
+          <div class="greeting">Hello, ${name}</div>
+          <div class="text">
+            We received a request to reset the password for your KBZ Bank Inbound Remittance Portal account associated with <strong>${cleanRecipient}</strong>.
+          </div>
+          <div class="btn-container">
+            <a href="${resetUrl}" target="_blank" class="reset-btn">Reset My Password</a>
+          </div>
+          <div class="text" style="font-size: 13px; margin-bottom: 8px;">
+            If the button above does not work, copy and paste the following link into your web browser:
+          </div>
+          <div class="link-alt">
+            <a href="${resetUrl}" style="color: #0F4C81; text-decoration: underline;">${resetUrl}</a>
+          </div>
+          <div class="warning">
+            <strong>Security Notice:</strong> This password reset link is valid for <strong>15 minutes</strong>. If you did not make this request, please ignore this email or contact the Security Operations Center immediately.
+          </div>
+        </div>
+        <div class="footer">
+          © ${new Date().getFullYear()} Kanbawza Bank Limited (KBZ Bank). All rights reserved.<br>
+          Yangon Main Corporate Branch • Security & Compliance Dept
+        </div>
+      </div>
+    </body>
+    </html>
+  `;
+
+  const text = `KBZ BANK - Inbound Remittance Portal\n\nPassword Reset Request\n\nHello ${name},\nWe received a request to reset your password. Use the following link to choose a new password:\n\n${resetUrl}\n\nThis link is valid for 15 minutes.\nIf you did not request this, please ignore this email.\nSent to: ${cleanRecipient}`;
+
+  try {
+    const info = await transporter.sendMail({
+      from: `"${fromName}" <${fromAddress}>`,
+      to: cleanRecipient,
+      subject,
+      text,
+      html,
+    });
+    console.log(`[SMTP] Reset password email sent successfully to ${cleanRecipient}. MessageId: ${info.messageId}`);
+    return { success: true, messageId: info.messageId, recipients: cleanRecipient };
+  } catch (err: any) {
+    console.error(`[SMTP] Failed to send reset email to ${cleanRecipient}:`, err);
+    return { success: false, error: err.message };
+  }
+}

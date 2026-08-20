@@ -60,6 +60,7 @@ export const LoginPage: React.FC = () => {
   const [authMode, setAuthMode] = useState<'signin' | 'signup' | 'forgot'>('signin');
   const [forgotEmail, setForgotEmail] = useState('');
   const [forgotEmailSent, setForgotEmailSent] = useState(false);
+  const [generatedResetLink, setGeneratedResetLink] = useState('');
 
   // Sign In Form States
   const [loginEmail, setLoginEmail] = useState(savedMerchantId || '');
@@ -496,21 +497,52 @@ export const LoginPage: React.FC = () => {
                       <div className="space-y-1.5">
                         <h2 className="text-xl font-bold text-[#0F4C81]">Check Your Email</h2>
                         <p className="text-[#6e7191] text-xs leading-relaxed max-w-sm mx-auto">
-                          If an account exists for <strong className="text-[#14142b]">{forgotEmail}</strong>, a password reset link has been sent.
+                          A password reset link has been dispatched to <strong className="text-[#14142b]">{forgotEmail}</strong>.
                         </p>
                       </div>
                       
-                      <div className="p-3.5 bg-[#f8f9fa] rounded-lg border border-[#e9ecef] text-left text-xs text-[#4e4b66] space-y-1">
+                      <div className="p-3.5 bg-[#f8f9fa] rounded-lg border border-[#e9ecef] text-left text-xs text-[#4e4b66] space-y-1.5">
                         <div className="font-semibold text-[#0F4C81] flex items-center gap-1.5">
                           <Mail size={14} />
                           <span>Next steps:</span>
                         </div>
                         <ul className="list-disc list-inside space-y-1 text-[11px] text-[#6e7191]">
-                          <li>Open the email received from MM Global Remit</li>
-                          <li>Click the secure password reset link</li>
-                          <li>The link is valid for 15 minutes</li>
+                          <li>Open your email inbox (and check spam/junk or quarantine folder)</li>
+                          <li>Click the secure link in the email from <strong>KBZ Bank IR Portal</strong></li>
+                          <li>The link will expire in <strong>15 minutes</strong></li>
                         </ul>
                       </div>
+
+                      {/* Developer & Sandbox Quick Helper */}
+                      {generatedResetLink && (
+                        <div className="p-3 bg-amber-50/80 border border-amber-200 rounded-lg text-left text-xs text-amber-900 space-y-2">
+                          <div className="font-semibold text-amber-800 flex items-center justify-between">
+                            <span>⚡ Quick Test / Sandbox Access</span>
+                            <span className="text-[10px] bg-amber-200/80 text-amber-900 px-1.5 py-0.5 rounded font-mono">Dev Helper</span>
+                          </div>
+                          <p className="text-[11px] text-amber-700 leading-tight">
+                            If your company spam filter blocks external SMTP test emails, you can also open the generated reset link directly:
+                          </p>
+                          <div className="flex gap-2 pt-1">
+                            <a
+                              href={generatedResetLink}
+                              className="flex-1 py-1.5 px-2.5 bg-amber-600 hover:bg-amber-700 text-white font-medium text-xs rounded text-center transition-colors shadow-xs"
+                            >
+                              Open Reset Form
+                            </a>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                navigator.clipboard.writeText(window.location.origin + generatedResetLink);
+                                notifications.show({ title: 'Copied!', message: 'Reset link copied to clipboard', color: 'blue' });
+                              }}
+                              className="py-1.5 px-2.5 bg-white border border-amber-300 hover:bg-amber-100/50 text-amber-900 font-medium text-xs rounded transition-colors cursor-pointer"
+                            >
+                              Copy Link
+                            </button>
+                          </div>
+                        </div>
+                      )}
 
                       <div className="pt-2 space-y-2">
                         <button
@@ -559,6 +591,7 @@ export const LoginPage: React.FC = () => {
                             });
                             const data = await res.json();
                             if (data.success) {
+                              setGeneratedResetLink(data.resetLink || '');
                               setForgotEmailSent(true);
                               notifications.show({ 
                                 title: 'Reset Link Sent', 
