@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Paper, Text, Button, Group, Badge, Tooltip } from '@mantine/core';
-import { RefreshCw, Calculator, TrendingUp, TrendingDown, ChevronDown, ChevronUp } from 'lucide-react';
+import { RefreshCw, Calculator, TrendingUp, TrendingDown, ChevronDown, ChevronUp } from '../common/ui-icons';
 import { useTransactionStore } from '../../store/useTransactionStore';
 import { formatNumber, getCurrencyFlag } from '../../utils/formatters';
 

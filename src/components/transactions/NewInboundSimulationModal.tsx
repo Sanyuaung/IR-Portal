@@ -10,7 +10,7 @@ import {
   Text,
   Paper,
 } from '@mantine/core';
-import { PlusCircle, Sparkles, Check } from 'lucide-react';
+import { PlusCircle, Sparkles, Check } from '../common/ui-icons';
 import { useTransactionStore } from '../../store/useTransactionStore';
 import { CurrencyCode, TransactionStatus } from '../../types';
 import { notifications } from '@mantine/notifications';

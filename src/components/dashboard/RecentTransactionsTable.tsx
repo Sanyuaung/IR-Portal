@@ -1,5 +1,5 @@
 import React from 'react';
-import { Eye, ShieldCheck } from 'lucide-react';
+import { Eye, ShieldCheck } from '../common/ui-icons';
 import { useTransactionStore } from '../../store/useTransactionStore';
 import { StatusBadge } from '../common/StatusBadge';
 import { formatCurrency, formatNumber } from '../../utils/formatters';
@@ -33,22 +33,22 @@ export const RecentTransactionsTable: React.FC<RecentTransactionsTableProps> = (
       </div>
 
       <div className="overflow-x-auto">
-        <table className="w-full text-left border-collapse">
+        <table className="w-full text-left border-separate border-spacing-0">
           <thead className="bg-slate-50 text-[10px] uppercase font-bold text-slate-500">
             <tr>
-              <th className="px-5 py-3 border-b border-slate-100">Reference No</th>
-              <th className="px-5 py-3 border-b border-slate-100">Sender</th>
-              <th className="px-5 py-3 border-b border-slate-100">Source Bank</th>
-              <th className="px-5 py-3 border-b border-slate-100">Amount</th>
-              <th className="px-5 py-3 border-b border-slate-100">Converted (MMK)</th>
-              <th className="px-5 py-3 border-b border-slate-100 text-center">Status</th>
-              <th className="px-5 py-3 border-b border-slate-100 text-right">Action</th>
+              <th className="px-5 py-3 border border-slate-200">Reference No</th>
+              <th className="px-5 py-3 border border-slate-200">Sender</th>
+              <th className="px-5 py-3 border border-slate-200">Source Bank</th>
+              <th className="px-5 py-3 border border-slate-200">Amount</th>
+              <th className="px-5 py-3 border border-slate-200">Converted (MMK)</th>
+              <th className="px-5 py-3 border border-slate-200 text-center">Status</th>
+              <th className="px-5 py-3 border border-slate-200 text-right">Action</th>
             </tr>
           </thead>
-          <tbody className="text-sm divide-y divide-slate-100">
+          <tbody className="text-sm">
             {recent.map((tx) => (
               <tr key={tx.id} className="hover:bg-slate-50/80 transition-colors">
-                <td className="px-5 py-3.5 font-mono text-xs font-semibold text-[#0B2B66]">
+                <td className="px-5 py-3.5 border border-slate-200 font-mono text-xs font-semibold text-[#0B2B66]">
                   <div>{tx.transactionRef}</div>
                   <div className="text-[10px] text-slate-400 font-normal flex items-center gap-1 mt-0.5">
                     <ShieldCheck size={10} className="text-blue-500 shrink-0" />
@@ -56,34 +56,34 @@ export const RecentTransactionsTable: React.FC<RecentTransactionsTableProps> = (
                   </div>
                 </td>
 
-                <td className="px-5 py-3.5">
+                <td className="px-5 py-3.5 border border-slate-200">
                   <div className="font-medium text-slate-800 max-w-[190px] truncate" title={tx.senderName}>
                     {tx.senderName}
                   </div>
                   <div className="text-[10px] text-slate-400">{tx.senderCountry}</div>
                 </td>
 
-                <td className="px-5 py-3.5 text-slate-600 text-xs">
+                <td className="px-5 py-3.5 border border-slate-200 text-slate-600 text-xs">
                   <div className="max-w-[170px] truncate" title={tx.sendingBank}>
                     {tx.sendingBank}
                   </div>
                   <div className="text-[10px] font-mono text-slate-400">{tx.sendingBankBic}</div>
                 </td>
 
-                <td className="px-5 py-3.5 font-bold font-mono text-slate-900 text-xs">
+                <td className="px-5 py-3.5 border border-slate-200 font-bold font-mono text-slate-900 text-xs">
                   {formatNumber(tx.amount)}{' '}
                   <span className="text-slate-400 font-normal">{tx.currency}</span>
                 </td>
 
-                <td className="px-5 py-3.5 text-slate-600 font-mono text-xs font-medium">
+                <td className="px-5 py-3.5 border border-slate-200 text-slate-600 font-mono text-xs font-medium">
                   {formatNumber(tx.netAmountMmk)} MMK
                 </td>
 
-                <td className="px-5 py-3.5 text-center">
+                <td className="px-5 py-3.5 border border-slate-200 text-center">
                   <StatusBadge status={tx.status} />
                 </td>
 
-                <td className="px-5 py-3.5 text-right">
+                <td className="px-5 py-3.5 border border-slate-200 text-right sticky">
                   <button
                     onClick={() => handleViewDetails(tx)}
                     className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold text-[#0B2B66] bg-blue-50 hover:bg-blue-100 rounded-md transition-colors cursor-pointer"

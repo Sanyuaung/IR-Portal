@@ -29,7 +29,7 @@ import {
   ExternalLink,
   Clock,
   Sparkles,
-} from 'lucide-react';
+} from '../common/ui-icons';
 import { useTransactionStore } from '../../store/useTransactionStore';
 import { StatusBadge } from '../common/StatusBadge';
 import { formatCurrency, formatDate, formatNumber } from '../../utils/formatters';

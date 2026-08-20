@@ -10,7 +10,7 @@ import {
   Button,
 } from '@mantine/core';
 import {
-  Menu as MenuIcon,
+  MenuIcon,
   Bell,
   LogOut,
   User,
@@ -20,7 +20,7 @@ import {
   Clock,
   Sparkles,
   Calculator,
-} from 'lucide-react';
+} from '../common/ui-icons';
 import { useAuthStore } from '../../store/useAuthStore';
 import { useTransactionStore } from '../../store/useTransactionStore';
 import { formatDate } from '../../utils/formatters';
@@ -82,7 +82,7 @@ export const Header: React.FC<HeaderProps> = ({
       {/* Right side: Simulation button + FX Calc + Notifications + User Avatar */}
       <div className="flex items-center gap-1.5 sm:gap-3">
         {/* Quick Simulation Trigger */}
-        <Button
+        {/* <Button
           variant="light"
           size="xs"
           color="corporateBlue"
@@ -91,7 +91,7 @@ export const Header: React.FC<HeaderProps> = ({
           onClick={() => setIsSimulateModalOpen(true)}
         >
           Simulate Wire
-        </Button>
+        </Button> */}
 
         {/* Currency Converter Quick Tool */}
         <ActionIcon
@@ -195,18 +195,18 @@ export const Header: React.FC<HeaderProps> = ({
               aria-label="Open user profile menu"
             >
               <div className="w-8 h-8 rounded-full bg-[#0F4C81] text-white flex items-center justify-center font-bold text-xs shadow-xs border border-white">
-                {user?.fullName
-                  ? user.fullName.substring(0, 2).toUpperCase()
-                  : user?.merchantName
-                  ? user.merchantName.substring(0, 2).toUpperCase()
+                {user?.name
+                  ? user.name.substring(0, 2).toUpperCase()
+                  : user?.email
+                  ? user.email.substring(0, 2).toUpperCase()
                   : 'MM'}
               </div>
               <div className="hidden lg:flex flex-col text-left">
                 <span className="text-xs font-semibold text-[#0F4C81] leading-tight">
-                  {user?.fullName || user?.merchantName || 'San Yu Aung'}
+                  {user?.name || 'San Yu Aung'}
                 </span>
                 <span className="text-[10px] text-slate-400 leading-tight">
-                  {user?.merchantId || 'MMR-8839201'}
+                  {user?.email || 'customer@mmglobalremit.com'}
                 </span>
               </div>
             </button>
@@ -217,33 +217,19 @@ export const Header: React.FC<HeaderProps> = ({
             <div className="p-3.5 bg-gradient-to-br from-blue-50 to-slate-50 border-b border-blue-100">
               <div className="flex items-center gap-2.5 mb-2">
                 <div className="w-10 h-10 rounded-full bg-[#0F4C81] text-white flex items-center justify-center font-bold text-sm shadow-xs shrink-0">
-                  {user?.fullName
-                    ? user.fullName.substring(0, 2).toUpperCase()
-                    : user?.merchantName
-                    ? user.merchantName.substring(0, 2).toUpperCase()
+                  {user?.name
+                    ? user.name.substring(0, 2).toUpperCase()
+                    : user?.email
+                    ? user.email.substring(0, 2).toUpperCase()
                     : 'MM'}
                 </div>
                 <div className="overflow-hidden">
                   <Text size="xs" fw={700} c="#0F4C81" truncate>
-                    {user?.fullName || user?.name || 'San Yu Aung'}
-                  </Text>
-                  <Text size="11px" fw={500} c="slate.7" truncate>
-                    {user?.companyName || user?.merchantName || 'Myanmar Horizon Trading Co., Ltd.'}
+                    {user?.name || 'San Yu Aung'}
                   </Text>
                   <Text size="10px" c="dimmed" truncate>
-                    {user?.email || 'sanyuaung.ygn.mm@gmail.com'}
+                    {user?.email || 'customer@mmglobalremit.com'}
                   </Text>
-                </div>
-              </div>
-
-              <div className="space-y-1.5 mt-2.5 pt-2.5 border-t border-blue-200/60 text-[11px]">
-                <div className="flex items-center justify-between">
-                  <span className="text-slate-500">Account ID:</span>
-                  <span className="font-mono font-bold text-[#0F4C81]">{user?.merchantId || 'MMR-8839201'}</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-slate-500">Phone:</span>
-                  <span className="text-slate-700 font-medium">{user?.phone || '+95 9 798 112 889'}</span>
                 </div>
               </div>
             </div>
@@ -256,7 +242,7 @@ export const Header: React.FC<HeaderProps> = ({
                 className="w-full flex items-center justify-center gap-2 px-3 py-2 text-xs font-semibold text-rose-700 bg-rose-50 hover:bg-rose-100 rounded-lg transition-colors cursor-pointer border border-rose-200/70"
               >
                 <LogOut size={14} />
-                <span>Sign Out / Lock Portal</span>
+                <span>Sign Out</span>
               </button>
             </div>
           </Menu.Dropdown>

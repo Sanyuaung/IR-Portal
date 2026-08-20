@@ -21,6 +21,7 @@ interface AuthState {
 }
 
 const DEFAULT_USER: UserProfile = {
+  id: 'usr_sanyuaung_01',
   fullName: 'San Yu Aung',
   name: 'San Yu Aung',
   companyName: 'Myanmar Horizon Trading Co., Ltd.',
@@ -49,11 +50,15 @@ export const useAuthStore = create<AuthState>()(
         const passwordHash = hashPassword(plainPassword);
         const cleanEmail = loginEmail.trim().toLowerCase();
         const baseName = cleanEmail.includes('@') ? cleanEmail.split('@')[0] : cleanEmail;
-        const displayName =
+        const cleanFullName = (serverUserData?.fullName || serverUserData?.name || baseName).toString();
+        const cleanCompanyName =
+          serverUserData?.companyName ||
           serverUserData?.merchantName ||
           (cleanEmail === 'sanyuaung.ygn.mm@gmail.com'
             ? 'Myanmar Horizon Trading Co., Ltd.'
             : `${baseName.charAt(0).toUpperCase() + baseName.slice(1)} Trading Co., Ltd.`);
+        const displayName =
+          cleanCompanyName;
 
         const cleanMerchantId =
           serverUserData?.merchantId && !serverUserData.merchantId.includes('@')
@@ -64,9 +69,14 @@ export const useAuthStore = create<AuthState>()(
           isAuthenticated: true,
           user: {
             ...DEFAULT_USER,
+            id: serverUserData?.id || DEFAULT_USER.id,
+            fullName: cleanFullName,
+            name: cleanFullName,
+            companyName: cleanCompanyName,
             merchantId: cleanMerchantId,
             merchantName: displayName,
             email: cleanEmail,
+            phone: serverUserData?.phone || DEFAULT_USER.phone,
             accountNumber: serverUserData?.accountNumber || '0091-2384-992019',
             branch: serverUserData?.branch || 'Yangon Main Settlement Branch (0091)',
             role: serverUserData?.role || 'Customer Account Admin',

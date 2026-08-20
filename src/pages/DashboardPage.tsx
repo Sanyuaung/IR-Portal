@@ -10,7 +10,7 @@ import {
   Sparkles,
   ChevronRight,
   TrendingUp,
-} from 'lucide-react';
+} from '../components/common/ui-icons';
 import { KPICard } from '../components/dashboard/KPICard';
 import { VolumeChart } from '../components/dashboard/VolumeChart';
 import { CurrencyBreakdownChart } from '../components/dashboard/CurrencyBreakdownChart';

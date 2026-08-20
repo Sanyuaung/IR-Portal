@@ -30,11 +30,16 @@ export async function seedDatabase() {
         "email" TEXT NOT NULL,
         "password" TEXT NOT NULL,
         "name" TEXT,
+        "companyName" TEXT,
+        "phone" TEXT,
         "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
         "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
         CONSTRAINT "User_pkey" PRIMARY KEY ("id")
       );
     `);
+
+    await client.query(`ALTER TABLE "User" ADD COLUMN IF NOT EXISTS "companyName" TEXT;`);
+    await client.query(`ALTER TABLE "User" ADD COLUMN IF NOT EXISTS "phone" TEXT;`);
 
     // 3. TwoFactorAuth table
     await client.query(`
@@ -124,18 +129,24 @@ export async function seedDatabase() {
         id: 'usr_sanyuaung_01',
         name: 'SanYuAung',
         email: 'sanyuaung.ygn.mm@gmail.com',
+        companyName: 'Myanmar Horizon Trading Co., Ltd.',
+        phone: '+95 9 798 112 889',
         password: encryptedPassword,
       },
       {
         id: 'usr_sya_kbz_02',
         name: 'SYA_KBZ',
         email: 'sanyu.aung@kbzbank.com',
+        companyName: 'KBZ Bank Co., Ltd.',
+        phone: '+95 9 798 112 889',
         password: encryptedPassword,
       },
       {
         id: 'usr_sya_kbz_03',
         name: 'SYA_KBZ',
         email: 'sanyu.aung.kbzbank.com',
+        companyName: 'KBZ Bank Co., Ltd.',
+        phone: '+95 9 798 112 889',
         password: encryptedPassword,
       },
     ];
@@ -143,13 +154,13 @@ export async function seedDatabase() {
     for (const u of defaultUsers) {
       const userRes = await client.query(
         `
-        INSERT INTO "User" ("id", "name", "email", "password", "updatedAt")
-        VALUES ($1, $2, $3, $4, NOW())
+        INSERT INTO "User" ("id", "name", "email", "password", "companyName", "phone", "updatedAt")
+        VALUES ($1, $2, $3, $4, $5, $6, NOW())
         ON CONFLICT ("email")
-        DO UPDATE SET "password" = $4, "name" = $2, "updatedAt" = NOW()
+        DO UPDATE SET "password" = $4, "name" = $2, "companyName" = $5, "phone" = $6, "updatedAt" = NOW()
         RETURNING "id";
       `,
-        [u.id, u.name, u.email, u.password]
+        [u.id, u.name, u.email, u.password, u.companyName, u.phone]
       );
 
       const actualUserId = userRes.rows[0].id;
@@ -215,8 +226,9 @@ export async function seedDatabase() {
           "updatedAt"
         )
         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, NOW())
-        ON CONFLICT ("transactionRef")
+        ON CONFLICT ("id")
         DO UPDATE SET
+          "transactionRef" = $2,
           "senderName" = $3,
           "senderCountry" = $4,
           "sendingBank" = $5,

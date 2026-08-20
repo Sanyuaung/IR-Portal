@@ -38,7 +38,7 @@ import {
   Database,
   Server,
   Layers,
-} from 'lucide-react';
+} from '../components/common/ui-icons';
 import { z } from 'zod';
 import { useSettingsStore } from '../store/useSettingsStore';
 import { useAuthStore } from '../store/useAuthStore';
@@ -565,45 +565,16 @@ export const SettingsPage: React.FC = () => {
                 <div className="p-3.5 bg-slate-50 rounded-lg border border-slate-200/80">
                   <span className="text-slate-500 block font-medium">Full Name</span>
                   <span className="font-bold text-slate-800 text-sm mt-0.5 block">
-                    {user?.fullName || user?.name || 'San Yu Aung'}
+                    {user?.name || 'San Yu Aung'}
                   </span>
                 </div>
 
-                {/* 2. Company / Entity Name */}
-                <div className="p-3.5 bg-slate-50 rounded-lg border border-slate-200/80">
-                  <span className="text-slate-500 block font-medium">Company / Entity Name</span>
-                  <span className="font-bold text-slate-800 text-sm mt-0.5 block">
-                    {user?.companyName || user?.merchantName || 'Myanmar Horizon Trading Co., Ltd.'}
-                  </span>
-                </div>
-
-                {/* 3. Authorized Email Address */}
+                {/* 2. Authorized Email Address */}
                 <div className="p-3.5 bg-slate-50 rounded-lg border border-slate-200/80">
                   <span className="text-slate-500 block font-medium">Authorized Email Address</span>
                   <span className="font-medium text-slate-800 text-sm mt-0.5 block font-mono">
                     {user?.email || 'sanyuaung.ygn.mm@gmail.com'}
                   </span>
-                </div>
-
-                {/* 4. Contact Phone Number */}
-                <div className="p-3.5 bg-slate-50 rounded-lg border border-slate-200/80">
-                  <span className="text-slate-500 block font-medium">Contact Phone Number</span>
-                  <span className="font-medium text-slate-800 text-sm mt-0.5 block font-mono">
-                    {user?.phone || '+95 9 798 112 889'}
-                  </span>
-                </div>
-
-                {/* 5. Account Reference ID */}
-                <div className="p-3.5 bg-slate-50 rounded-lg border border-slate-200/80 sm:col-span-2">
-                  <span className="text-slate-500 block font-medium">Account Reference ID</span>
-                  <div className="flex items-center justify-between mt-0.5">
-                    <span className="font-mono font-bold text-[#0F4C81] text-sm">
-                      {user?.merchantId || 'MMR-8839201'}
-                    </span>
-                    <span className="text-[11px] text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200 font-medium">
-                      Active Customer ID
-                    </span>
-                  </div>
                 </div>
               </div>
             </Paper>

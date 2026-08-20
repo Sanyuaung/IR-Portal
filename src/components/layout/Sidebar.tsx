@@ -5,7 +5,7 @@ import {
   Settings,
   ShieldCheck,
   X,
-} from 'lucide-react';
+} from '../common/ui-icons';
 import { Badge, Tooltip, ActionIcon } from '@mantine/core';
 import { useTransactionStore } from '../../store/useTransactionStore';
 import { formatNumber } from '../../utils/formatters';

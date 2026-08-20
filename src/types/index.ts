@@ -79,6 +79,7 @@ export interface FxRate {
 }
 
 export interface UserProfile {
+  id?: string;
   merchantId: string;
   merchantName: string;
   name?: string;

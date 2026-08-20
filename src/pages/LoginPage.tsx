@@ -15,7 +15,6 @@ import {
   Lock,
   ArrowRight,
   AlertCircle,
-  Building2,
   Globe2,
   Smartphone,
   Mail,
@@ -27,7 +26,7 @@ import {
   User,
   UserPlus,
   LogIn,
-} from 'lucide-react';
+} from '../components/common/ui-icons';
 import { z } from 'zod';
 import { useAuthStore } from '../store/useAuthStore';
 import { useSettingsStore } from '../store/useSettingsStore';
@@ -46,8 +45,6 @@ const signupSchema = z
   .object({
     name: z.string().min(2, { message: 'Full name must be at least 2 characters' }),
     email: z.string().email({ message: 'Please enter a valid email address' }),
-    companyName: z.string().min(2, { message: 'Company or entity name is required' }),
-    phone: z.string().min(6, { message: 'Please enter a valid contact phone number' }),
     password: z.string().min(6, { message: 'Password must be at least 6 characters' }),
     confirmPassword: z.string().min(1, { message: 'Please confirm your password' }),
   })
@@ -71,8 +68,6 @@ export const LoginPage: React.FC = () => {
   // Sign Up Form States
   const [signupName, setSignupName] = useState('');
   const [signupEmail, setSignupEmail] = useState('');
-  const [signupCompany, setSignupCompany] = useState('');
-  const [signupPhone, setSignupPhone] = useState('+95 9 798 112 889');
   const [signupPassword, setSignupPassword] = useState('');
   const [signupConfirmPassword, setSignupConfirmPassword] = useState('');
   const [signupErrors, setSignupErrors] = useState<Record<string, string>>({});
@@ -182,8 +177,6 @@ export const LoginPage: React.FC = () => {
     const validation = signupSchema.safeParse({
       name: signupName,
       email: signupEmail,
-      companyName: signupCompany,
-      phone: signupPhone,
       password: signupPassword,
       confirmPassword: signupConfirmPassword,
     });
@@ -206,8 +199,6 @@ export const LoginPage: React.FC = () => {
         body: JSON.stringify({
           name: signupName.trim(),
           email: signupEmail.trim(),
-          companyName: signupCompany.trim(),
-          phone: signupPhone.trim(),
           password: signupPassword,
         }),
       });
@@ -561,28 +552,6 @@ export const LoginPage: React.FC = () => {
                       required
                       size="sm"
                       leftSection={<Mail size={16} className="text-[#a0a3bd]" />}
-                    />
-
-                    <TextInput
-                      label="Company / Entity Name"
-                      placeholder="e.g. Apex Global Trading Co., Ltd."
-                      value={signupCompany}
-                      onChange={(e) => setSignupCompany(e.currentTarget.value)}
-                      error={signupErrors.companyName}
-                      required
-                      size="sm"
-                      leftSection={<Building2 size={16} className="text-[#a0a3bd]" />}
-                    />
-
-                    <TextInput
-                      label="Contact Phone Number"
-                      placeholder="e.g. +95 9 798 112 889"
-                      value={signupPhone}
-                      onChange={(e) => setSignupPhone(e.currentTarget.value)}
-                      error={signupErrors.phone}
-                      required
-                      size="sm"
-                      leftSection={<Smartphone size={16} className="text-[#a0a3bd]" />}
                     />
 
                     <PasswordInput

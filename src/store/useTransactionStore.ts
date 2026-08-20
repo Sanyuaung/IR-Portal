@@ -50,7 +50,7 @@ interface TransactionState {
   fetchFxRatesFromDb: () => Promise<void>;
   triggerDatabaseMigration: () => Promise<{ success: boolean; message?: string }>;
   addSimulatedTransaction: (tx: Partial<InboundTransaction>) => InboundTransaction;
-  updateFxRates: () => void;
+  updateFxRates: () => Promise<void>;
   getFilteredTransactions: () => InboundTransaction[];
   getStats: () => {
     totalInboundAmountMmk: number;
@@ -168,20 +168,17 @@ export const useTransactionStore = create<TransactionState>((set, get) => ({
     }
   },
 
-  updateFxRates: () => {
-    const updated = get().fxRates.map((rate) => {
-      const delta = (Math.random() - 0.5) * 2;
-      const newMid = Math.round((rate.middleRate + delta) * 100) / 100;
-      return {
-        ...rate,
-        middleRate: newMid,
-        buyRate: Math.round((newMid - 10) * 100) / 100,
-        sellRate: Math.round((newMid + 10) * 100) / 100,
-        change24h: Math.round((rate.change24h + (Math.random() - 0.5) * 0.1) * 100) / 100,
-        updatedAt: new Date().toISOString(),
-      };
-    });
-    set({ fxRates: updated });
+  updateFxRates: async () => {
+    try {
+      const res = await fetch('/api/fx-rates');
+      if (!res.ok) return;
+      const data = await res.json();
+      if (data.fxRates && data.fxRates.length > 0) {
+        set({ fxRates: data.fxRates });
+      }
+    } catch (err) {
+      console.warn('Could not refresh FX rates from API source:', err);
+    }
   },
 
   addSimulatedTransaction: (customData) => {

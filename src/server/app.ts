@@ -18,8 +18,22 @@ export const app = express();
 app.use(cors({ origin: true, credentials: true }));
 app.use(express.json());
 
-// Initialize database
-seedDatabase().catch((err) => console.error('Database initialization warning:', err));
+function shouldSeedDatabaseOnBoot() {
+  if (process.env.ENABLE_DB_SEED === 'true') {
+    return true;
+  }
+  if (process.env.ENABLE_DB_SEED === 'false') {
+    return false;
+  }
+
+  const isProduction = process.env.NODE_ENV === 'production';
+  const isVercel = process.env.VERCEL === '1';
+  return !isProduction && !isVercel;
+}
+
+if (shouldSeedDatabaseOnBoot()) {
+  seedDatabase().catch((err) => console.error('Database initialization warning:', err));
+}
 
 /**
  * Health check endpoint
@@ -44,9 +58,11 @@ app.post('/api/auth/login', async (req, res) => {
       return res.status(400).json({ error: 'Email and password are required' });
     }
 
+    const cleanEmail = String(email).trim().toLowerCase();
+
     console.log('Login attempt for:', email);
     const user = await prisma.user.findUnique({
-      where: { email },
+      where: { email: cleanEmail },
       include: {
         twoFactorAuth: true,
       },
@@ -98,8 +114,11 @@ app.post('/api/auth/login', async (req, res) => {
       maxAge: 60 * 60 * 24 * 7 * 1000,
     });
 
-    const userMerchantId = cleanEmail === 'sanyuaung.ygn.mm@gmail.com' || cleanEmail.includes('sanyu') 
-      ? 'MMR-8839201' 
+    const profileCompanyName = user.companyName || (user.name ? `${user.name} Trading Co., Ltd.` : 'Myanmar Horizon Trading Co., Ltd.');
+    const profilePhone = user.phone || '+95 9 798 112 889';
+
+    const userMerchantId = cleanEmail === 'sanyuaung.ygn.mm@gmail.com' || cleanEmail.includes('sanyu')
+      ? 'MMR-8839201'
       : `MMR-${Math.abs(cleanEmail.split('').reduce((a, b) => ((a << 5) - a + b.charCodeAt(0)) | 0, 0) % 9000000 + 1000000)}`;
 
     return res.json({
@@ -110,10 +129,10 @@ app.post('/api/auth/login', async (req, res) => {
         id: user.id,
         email: user.email,
         name: user.name || 'San Yu Aung',
-        companyName: user.name ? `${user.name} Trading Co., Ltd.` : 'Myanmar Horizon Trading Co., Ltd.',
+        companyName: profileCompanyName,
         merchantId: userMerchantId,
-        merchantName: user.name ? `${user.name} Trading Co., Ltd.` : 'Myanmar Horizon Trading Co., Ltd.',
-        phone: '+95 9 798 112 889',
+        merchantName: profileCompanyName,
+        phone: profilePhone,
         role: 'Customer Account Admin',
         accountNumber: '0091-2384-992019',
         branch: 'Yangon Main Settlement Gateway Branch (0091)',
@@ -147,7 +166,7 @@ app.post('/api/auth/logout', async (req, res) => {
  * POST /api/auth/signup or /api/auth/register
  */
 app.post(['/api/auth/signup', '/api/auth/register'], async (req, res) => {
-  const { name, email, password, companyName } = req.body;
+  const { name, email, password } = req.body;
 
   if (!email || !password) {
     return res.status(400).json({ error: 'Email and password are required.' });
@@ -159,6 +178,9 @@ app.post(['/api/auth/signup', '/api/auth/register'], async (req, res) => {
   let client;
   try {
     client = await pool.connect();
+    await client.query(`ALTER TABLE "User" ADD COLUMN IF NOT EXISTS "companyName" TEXT;`);
+    await client.query(`ALTER TABLE "User" ADD COLUMN IF NOT EXISTS "phone" TEXT;`);
+
     const existing = await client.query(`SELECT id FROM "User" WHERE LOWER(email) = LOWER($1)`, [cleanEmail]);
     if (existing.rows.length > 0) {
       return res.status(409).json({
@@ -170,9 +192,9 @@ app.post(['/api/auth/signup', '/api/auth/register'], async (req, res) => {
     const userId = `usr_${Date.now()}`;
 
     await client.query(
-      `INSERT INTO "User" ("id", "name", "email", "password", "createdAt", "updatedAt")
-       VALUES ($1, $2, $3, $4, NOW(), NOW())`,
-      [userId, cleanName, cleanEmail, hashedPassword]
+      `INSERT INTO "User" ("id", "name", "email", "password", "companyName", "phone", "createdAt", "updatedAt")
+       VALUES ($1, $2, $3, $4, $5, $6, NOW(), NOW())`,
+      [userId, cleanName, cleanEmail, hashedPassword, null, null]
     );
 
     await client.query(
@@ -207,10 +229,8 @@ app.post(['/api/auth/signup', '/api/auth/register'], async (req, res) => {
         id: userId,
         email: cleanEmail,
         name: cleanName,
-        companyName: companyName || `${cleanName} Trading Co., Ltd.`,
         merchantId: userMerchantId,
-        merchantName: companyName || `${cleanName} Trading Co., Ltd.`,
-        phone: '+95 9 798 112 889',
+        merchantName: cleanName,
         role: 'Customer Account Admin',
         accountNumber: `0091-${Math.floor(1000 + Math.random() * 9000)}-${Math.floor(100000 + Math.random() * 900000)}`,
         branch: 'Yangon Main Settlement Gateway Branch (0091)',
@@ -334,6 +354,9 @@ app.post('/api/auth/verify-2fa', async (req, res) => {
       maxAge: 60 * 60 * 24 * 7 * 1000,
     });
 
+    const profileCompanyName = user.companyName || (user.name ? `${user.name} Trading Co., Ltd.` : 'Myanmar Horizon Trading Co., Ltd.');
+    const profilePhone = user.phone || '+95 9 798 112 889';
+
     const userMerchantId = (user.email || '').toLowerCase().includes('sanyu')
       ? 'MMR-8839201'
       : `MMR-${Math.abs((user.email || '').split('').reduce((a: number, b: string) => ((a << 5) - a + b.charCodeAt(0)) | 0, 0) % 9000000 + 1000000)}`;
@@ -345,10 +368,10 @@ app.post('/api/auth/verify-2fa', async (req, res) => {
         id: user.id,
         email: user.email,
         name: user.name || 'San Yu Aung',
-        companyName: user.name ? `${user.name} Trading Co., Ltd.` : 'Myanmar Horizon Trading Co., Ltd.',
+        companyName: profileCompanyName,
         merchantId: userMerchantId,
-        merchantName: user.name ? `${user.name} Trading Co., Ltd.` : 'Myanmar Horizon Trading Co., Ltd.',
-        phone: '+95 9 798 112 889',
+        merchantName: profileCompanyName,
+        phone: profilePhone,
         role: 'Customer Account Admin',
         accountNumber: '0091-2384-992019',
         branch: 'Yangon Main Settlement Gateway Branch (0091)',
@@ -787,24 +810,86 @@ app.post('/api/transactions/simulate', async (req, res) => {
 
 /**
  * GET /api/fx-rates
- * Fetch all live FX rates from PostgreSQL
+ * Source: Central Bank of Myanmar API (https://forex.cbm.gov.mm/api/latest)
  */
 app.get('/api/fx-rates', async (req, res) => {
+  const targetCurrencies = ['USD', 'EUR', 'SGD', 'THB', 'GBP', 'JPY', 'CNY', 'MYR'];
+  const cbmApiUrl = process.env.CBM_FOREX_API_URL || 'https://forex.cbm.gov.mm/api/latest';
+
+  const parseRate = (value: string | number | undefined) => {
+    if (value === undefined || value === null) return null;
+    const parsed = Number(String(value).replace(/,/g, ''));
+    return Number.isFinite(parsed) ? parsed : null;
+  };
+
   let client;
   try {
+    const cbmResp = await fetch(cbmApiUrl);
+    if (!cbmResp.ok) {
+      throw new Error(`CBM FX API returned ${cbmResp.status}`);
+    }
+
+    const cbmData: any = await cbmResp.json();
+    const ratesMap = cbmData?.rates || {};
+    const ts = cbmData?.timestamp ? new Date(Number(cbmData.timestamp) * 1000).toISOString() : new Date().toISOString();
+
+    const fxRates = targetCurrencies
+      .map((currency) => {
+        const middleRate = parseRate(ratesMap[currency]);
+        if (!middleRate) return null;
+
+        const spread = middleRate * 0.002;
+        const buyRate = Math.round((middleRate - spread) * 100) / 100;
+        const sellRate = Math.round((middleRate + spread) * 100) / 100;
+
+        return {
+          currency,
+          buyRate,
+          sellRate,
+          middleRate: Math.round(middleRate * 100) / 100,
+          change24h: 0,
+          updatedAt: ts,
+        };
+      })
+      .filter(Boolean);
+
+    if (!fxRates.length) {
+      throw new Error('No supported currency rates returned from CBM API');
+    }
+
     client = await pool.connect();
-    const result = await client.query(`SELECT * FROM "FxRate" ORDER BY "currency" ASC`);
-    const rates = result.rows.map((row) => ({
-      currency: row.currency,
-      buyRate: row.buyRate,
-      sellRate: row.sellRate,
-      middleRate: row.middleRate,
-      change24h: row.change24h,
-      updatedAt: row.updatedAt.toISOString(),
-    }));
-    return res.json({ success: true, fxRates: rates });
+    for (const rate of fxRates as any[]) {
+      await client.query(
+        `INSERT INTO "FxRate" ("id", "currency", "buyRate", "sellRate", "middleRate", "change24h", "updatedAt")
+         VALUES ($1, $2, $3, $4, $5, $6, $7)
+         ON CONFLICT ("currency")
+         DO UPDATE SET
+           "buyRate" = EXCLUDED."buyRate",
+           "sellRate" = EXCLUDED."sellRate",
+           "middleRate" = EXCLUDED."middleRate",
+           "change24h" = EXCLUDED."change24h",
+           "updatedAt" = EXCLUDED."updatedAt"`,
+        [`fx_${rate.currency.toLowerCase()}`, rate.currency, rate.buyRate, rate.sellRate, rate.middleRate, rate.change24h, rate.updatedAt]
+      );
+    }
+
+    return res.json({ success: true, source: 'cbm', fxRates });
   } catch (err: any) {
-    return res.status(500).json({ error: err.message });
+    try {
+      if (!client) client = await pool.connect();
+      const result = await client.query(`SELECT * FROM "FxRate" ORDER BY "currency" ASC`);
+      const rates = result.rows.map((row) => ({
+        currency: row.currency,
+        buyRate: row.buyrate ?? row.buyRate,
+        sellRate: row.sellrate ?? row.sellRate,
+        middleRate: row.middlerate ?? row.middleRate,
+        change24h: row.change24h ?? 0,
+        updatedAt: row.updatedat?.toISOString?.() || row.updatedAt?.toISOString?.() || new Date().toISOString(),
+      }));
+      return res.json({ success: true, source: 'database-fallback', fxRates: rates });
+    } catch (dbErr: any) {
+      return res.status(500).json({ error: err.message || dbErr.message });
+    }
   } finally {
     if (client) client.release();
   }
