@@ -85,7 +85,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
 
         {/* Content Area */}
         <main className="flex-1 p-3 sm:p-6 lg:p-8 overflow-y-auto w-full min-w-0">
-          <div className="max-w-7xl mx-auto w-full space-y-5">
+          <div className={activePage === 'settings' ? 'w-full space-y-5' : 'max-w-7xl mx-auto w-full space-y-5'}>
             {!settings.is2FaEnabled && (
               <section className="bg-amber-50 border border-amber-300 rounded-xl px-4 py-3.5 shadow-xs">
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">

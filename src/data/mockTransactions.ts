@@ -85,7 +85,7 @@ export const mockTransactions: InboundTransaction[] = [
     feeAmount: 50000,
     netAmountMmk: 514700000,
     valueDate: now.subtract(12, 'minute').toISOString(),
-    status: 'Completed',
+    status: 'success',
     purpose: 'Commercial Invoicing - Ocean Freight & Container Clearance',
     beneficiaryAccount: '0091-2384-992019',
     swiftMetadata: {
@@ -160,7 +160,7 @@ export const mockTransactions: InboundTransaction[] = [
     feeAmount: 35000,
     netAmountMmk: 292840000,
     valueDate: now.subtract(42, 'minute').toISOString(),
-    status: 'Completed',
+    status: 'success',
     purpose: 'Software Engineering Services & Offshore Delivery Milestone 4',
     beneficiaryAccount: '0091-2384-992019',
     swiftMetadata: {
@@ -235,7 +235,7 @@ export const mockTransactions: InboundTransaction[] = [
     feeAmount: 25000,
     netAmountMmk: 189600000,
     valueDate: now.subtract(1, 'hour').subtract(15, 'minute').toISOString(),
-    status: 'Pending',
+    status: 'init',
     purpose: 'Agricultural Commodities & Fertilizer Import Consignment',
     beneficiaryAccount: '0091-2384-992019',
     swiftMetadata: {
@@ -311,7 +311,7 @@ export const mockTransactions: InboundTransaction[] = [
     feeAmount: 40000,
     netAmountMmk: 178853000,
     valueDate: now.subtract(2, 'hour').subtract(30, 'minute').toISOString(),
-    status: 'Completed',
+    status: 'success',
     purpose: 'Medical Supplies & WHO Certified Laboratory Equipment',
     beneficiaryAccount: '0091-2384-992019',
     swiftMetadata: {
@@ -385,7 +385,7 @@ export const mockTransactions: InboundTransaction[] = [
     feeAmount: 30000,
     netAmountMmk: 294990000,
     valueDate: now.subtract(3, 'hour').toISOString(),
-    status: 'Completed',
+    status: 'success',
     purpose: 'Cross-Border Merchant Payouts & Settlement Batch 401',
     beneficiaryAccount: '0091-2384-992019',
     swiftMetadata: {
@@ -453,7 +453,7 @@ export const mockTransactions: InboundTransaction[] = [
     feeAmount: 45000,
     netAmountMmk: 157385000,
     valueDate: now.subtract(5, 'hour').toISOString(),
-    status: 'Completed',
+    status: 'success',
     purpose: 'Offshore Drilling Engineering Inspection Retainer',
     beneficiaryAccount: '0091-2384-992019',
     swiftMetadata: {
@@ -515,7 +515,7 @@ export const mockTransactions: InboundTransaction[] = [
     feeAmount: 60000,
     netAmountMmk: 344315000,
     valueDate: now.subtract(8, 'hour').toISOString(),
-    status: 'Completed',
+    status: 'success',
     purpose: 'Industrial Micro-controller Units & Semiconductor Parts',
     beneficiaryAccount: '0091-2384-992019',
     swiftMetadata: {
@@ -577,7 +577,7 @@ export const mockTransactions: InboundTransaction[] = [
     feeAmount: 20000,
     netAmountMmk: 126380000,
     valueDate: now.subtract(14, 'hour').toISOString(),
-    status: 'Failed',
+    status: 'failed',
     statusMessage: 'Ordering institution account number mismatch with declaration',
     purpose: 'Refined Edible Oils Export Contract #KL-082',
     beneficiaryAccount: '0091-2384-992019',
@@ -647,7 +647,7 @@ export const mockTransactions: InboundTransaction[] = [
     feeAmount: 50000,
     netAmountMmk: 780950000,
     valueDate: now.subtract(1, 'day').toISOString(),
-    status: 'Completed',
+    status: 'success',
     purpose: 'Heavy Industrial Solar Panels & Inverters Procurement',
     beneficiaryAccount: '0091-2384-992019',
     swiftMetadata: {
@@ -709,7 +709,7 @@ export const mockTransactions: InboundTransaction[] = [
     feeAmount: 30000,
     netAmountMmk: 271120000,
     valueDate: now.subtract(1, 'day').subtract(5, 'hour').toISOString(),
-    status: 'Completed',
+    status: 'success',
     purpose: 'Telecommunications Fibre Optic Cables & Transceivers',
     beneficiaryAccount: '0091-2384-992019',
     swiftMetadata: {
@@ -771,7 +771,7 @@ export const mockTransactions: InboundTransaction[] = [
     feeAmount: 35000,
     netAmountMmk: 239235000,
     valueDate: now.subtract(2, 'day').toISOString(),
-    status: 'Completed',
+    status: 'success',
     purpose: 'Port Terminal Handling Charges & Vessel Bunkering Settlement',
     beneficiaryAccount: '0091-2384-992019',
     swiftMetadata: {
@@ -833,7 +833,7 @@ export const mockTransactions: InboundTransaction[] = [
     feeAmount: 75000,
     netAmountMmk: 745312500,
     valueDate: now.subtract(2, 'day').subtract(6, 'hour').toISOString(),
-    status: 'Pending',
+    status: 'init',
     purpose: 'Turnkey Hydro-Turbine Generator Spare Parts',
     beneficiaryAccount: '0091-2384-992019',
     swiftMetadata: {
@@ -902,7 +902,7 @@ export const mockTransactions: InboundTransaction[] = [
     feeAmount: 35000,
     netAmountMmk: 439340000,
     valueDate: now.subtract(3, 'hour').subtract(15, 'minute').toISOString(),
-    status: 'Completed',
+    status: 'success',
     purpose: 'Industrial Automation & CNC Spare Parts Supply Contract',
     beneficiaryAccount: '0091-2384-992019',
     swiftMetadata: {
@@ -971,7 +971,7 @@ export const mockTransactions: InboundTransaction[] = [
     feeAmount: 60000,
     netAmountMmk: 1135940000,
     valueDate: now.subtract(5, 'hour').subtract(40, 'minute').toISOString(),
-    status: 'Completed',
+    status: 'success',
     purpose: 'Import of Bitumen & Construction Raw Materials (Containerized)',
     beneficiaryAccount: '0091-2384-992019',
     swiftMetadata: {
@@ -1034,7 +1034,7 @@ export const mockTransactions: InboundTransaction[] = [
     feeAmount: 25000,
     netAmountMmk: 221175000,
     valueDate: now.subtract(8, 'hour').toISOString(),
-    status: 'Completed',
+    status: 'success',
     purpose: 'Refined Palm Oil & Agri Derivative Bulk Shipment Settlement',
     beneficiaryAccount: '0091-2384-992019',
     swiftMetadata: {
@@ -1097,7 +1097,7 @@ export const mockTransactions: InboundTransaction[] = [
     feeAmount: 45000,
     netAmountMmk: 692205000,
     valueDate: now.subtract(14, 'hour').toISOString(),
-    status: 'Pending',
+    status: 'init',
     purpose: 'Procurement of Microcontroller Units & LED Assemblies',
     beneficiaryAccount: '0091-2384-992019',
     swiftMetadata: {
@@ -1167,7 +1167,7 @@ export const mockTransactions: InboundTransaction[] = [
     feeAmount: 30000,
     netAmountMmk: 292340000,
     valueDate: now.subtract(1, 'day').subtract(2, 'hour').toISOString(),
-    status: 'Completed',
+    status: 'success',
     purpose: 'Marine Cargo Hull Insurance Claim Payout - Vessel MV Ayeyarwady Star',
     beneficiaryAccount: '0091-2384-992019',
     swiftMetadata: {
@@ -1230,7 +1230,7 @@ export const mockTransactions: InboundTransaction[] = [
     feeAmount: 20000,
     netAmountMmk: 153730000,
     valueDate: now.subtract(1, 'day').subtract(6, 'hour').toISOString(),
-    status: 'Completed',
+    status: 'success',
     purpose: 'FMCG Packaged Goods Export Invoice Clearing - Mae Sot / Myawaddy Gateway',
     beneficiaryAccount: '0091-2384-992019',
     swiftMetadata: {

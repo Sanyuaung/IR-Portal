@@ -975,7 +975,7 @@ app.post(['/api/transactions/simulate', '/transactions/simulate'], async (req, r
     feeAmount: Number(tx.feeAmount || 0),
     netAmountMmk: Number(tx.netAmountMmk || tx.convertedAmountMmk || tx.amount * (tx.exchangeRate || 3550)),
     valueDate: valueDate.toISOString(),
-    status: tx.status || 'Completed',
+    status: tx.status || 'success',
     statusMessage: tx.statusMessage || null,
     purpose: tx.purpose || 'Commercial Remittance Clearing',
     beneficiaryAccount: tx.beneficiaryAccount || '0091-2384-992019',

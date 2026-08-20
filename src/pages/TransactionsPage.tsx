@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   Menu,
   Pagination,
   Select,
 } from '@mantine/core';
+import { DatePickerInput } from '@mantine/dates';
+import dayjs from 'dayjs';
 import {
   Search,
   Download,
@@ -52,9 +54,8 @@ export const TransactionsPage: React.FC = () => {
     setIsDetailsModalOpen,
     setIsSimulateModalOpen,
     resetFilters,
+    fxRates,
   } = useTransactionStore();
-
-  const [showCustomDate, setShowCustomDate] = useState(datePreset === 'custom');
 
   const filtered = getFilteredTransactions();
   const totalCount = filtered.length;
@@ -89,6 +90,31 @@ export const TransactionsPage: React.FC = () => {
       <ChevronDown size={12} className="text-[#0B2B66]" />
     );
   };
+
+  const handleDateRangeChange = (value: [Date | null, Date | null] | null) => {
+    if (value && (value[0] || value[1])) {
+      setDatePreset('custom');
+      setCustomDateRange(
+        value[0] ? value[0].toISOString() : null,
+        value[1] ? value[1].toISOString() : null
+      );
+    } else {
+      setDatePreset('all');
+      setCustomDateRange(null, null);
+    }
+  };
+
+  const dateValue: [Date | null, Date | null] = datePreset === 'custom'
+    ? [customStartDate ? new Date(customStartDate) : null, customEndDate ? new Date(customEndDate) : null]
+    : datePreset === 'today'
+      ? [dayjs().startOf('day').toDate(), dayjs().endOf('day').toDate()]
+      : datePreset === 'last7days'
+        ? [dayjs().subtract(7, 'day').toDate(), dayjs().endOf('day').toDate()]
+        : datePreset === 'last30days'
+          ? [dayjs().subtract(30, 'day').toDate(), dayjs().endOf('day').toDate()]
+          : datePreset === 'thisMonth'
+            ? [dayjs().startOf('month').toDate(), dayjs().endOf('month').toDate()]
+            : [null, null];
 
   return (
     <div className="space-y-6">
@@ -166,26 +192,17 @@ export const TransactionsPage: React.FC = () => {
 
           {/* Date Preset Filter */}
           <div className="lg:col-span-3">
-            <Select
+            <DatePickerInput
+              type="range"
               placeholder="Date Range"
+              value={dateValue}
+              onChange={handleDateRangeChange as any}
               leftSection={<Calendar size={15} className="text-slate-400" />}
-              data={[
-                { value: 'all', label: 'All Dates' },
-                { value: 'today', label: "Today's Transactions" },
-                { value: 'last7days', label: 'Last 7 Days' },
-                { value: 'last30days', label: 'Last 30 Days' },
-                { value: 'thisMonth', label: 'This Month' },
-                { value: 'custom', label: 'Custom Date Range...' },
-              ]}
-              value={datePreset}
-              onChange={(val) => {
-                if (val) {
-                  setDatePreset(val as any);
-                  setShowCustomDate(val === 'custom');
-                }
-              }}
-              size="sm"
+              className="w-full"
               radius="md"
+              size="sm"
+              clearable
+              maxDate={new Date()}
             />
           </div>
 
@@ -195,14 +212,10 @@ export const TransactionsPage: React.FC = () => {
               placeholder="Currency"
               data={[
                 { value: 'ALL', label: 'All Currencies' },
-                { value: 'USD', label: 'USD ($)' },
-                { value: 'EUR', label: 'EUR (€)' },
-                { value: 'SGD', label: 'SGD (S$)' },
-                { value: 'THB', label: 'THB (฿)' },
-                { value: 'GBP', label: 'GBP (£)' },
-                { value: 'JPY', label: 'JPY (¥)' },
-                { value: 'CNY', label: 'CNY (¥)' },
-                { value: 'MYR', label: 'MYR (RM)' },
+                ...fxRates.map((r) => ({
+                  value: r.currency,
+                  label: r.currency,
+                })),
               ]}
               value={currencyFilter}
               onChange={(val) => val && setCurrencyFilter(val as any)}
@@ -217,9 +230,10 @@ export const TransactionsPage: React.FC = () => {
               placeholder="Status"
               data={[
                 { value: 'ALL', label: 'All Statuses' },
-                { value: 'Completed', label: 'Completed' },
-                { value: 'Pending', label: 'Pending' },
-                { value: 'Failed', label: 'Failed' },
+                { value: 'success', label: 'Success' },
+                { value: 'failed', label: 'Failed' },
+                { value: 'init', label: 'Init (Timeout Case)' },
+                { value: 'MFR', label: 'MFR (Timeout Case)' },
               ]}
               value={statusFilter}
               onChange={(val) => val && setStatusFilter(val as any)}
@@ -233,7 +247,6 @@ export const TransactionsPage: React.FC = () => {
             <button
               onClick={() => {
                 resetFilters();
-                setShowCustomDate(false);
               }}
               title="Reset all filters"
               className="w-full h-9 flex items-center justify-center rounded-lg border border-slate-200 text-slate-500 hover:bg-slate-50 hover:text-slate-700 transition-colors cursor-pointer"
@@ -242,34 +255,6 @@ export const TransactionsPage: React.FC = () => {
             </button>
           </div>
         </div>
-
-        {/* Custom Date Range Picker bar */}
-        {showCustomDate && (
-          <div className="pt-2 border-t border-slate-100 flex flex-wrap items-center gap-3 bg-slate-50 p-2.5 rounded-lg">
-            <span className="text-xs font-semibold text-slate-700">Custom Date Range:</span>
-            <input
-              type="date"
-              className="text-xs border border-slate-300 rounded-md px-2.5 py-1 bg-white outline-none"
-              value={customStartDate || ''}
-              onChange={(e) => setCustomDateRange(e.target.value, customEndDate)}
-            />
-            <span className="text-xs text-slate-400">to</span>
-            <input
-              type="date"
-              className="text-xs border border-slate-300 rounded-md px-2.5 py-1 bg-white outline-none"
-              value={customEndDate || ''}
-              onChange={(e) => setCustomDateRange(customStartDate, e.target.value)}
-            />
-            {(customStartDate || customEndDate) && (
-              <button
-                onClick={() => setCustomDateRange(null, null)}
-                className="text-xs font-semibold text-red-600 hover:underline cursor-pointer ml-auto"
-              >
-                Clear Dates
-              </button>
-            )}
-          </div>
-        )}
       </div>
 
       {/* Mantine Data Table matching Professional Polish theme */}

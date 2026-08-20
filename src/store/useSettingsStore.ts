@@ -51,6 +51,7 @@ const DEFAULT_SETTINGS: SecuritySettings = {
   loginAlerts: true,
   inboundAlertThreshold: 10000,
   dailySummaryEmail: true,
+  passwordStrength: 'Moderate',
 };
 
 export const useSettingsStore = create<SettingsState>()(
@@ -215,12 +216,21 @@ export const useSettingsStore = create<SettingsState>()(
             };
           }
 
+          set((state) => ({
+            settings: { ...state.settings, passwordStrength: 'Strong' },
+          }));
+
           return {
             success: true,
             message: data.message || 'Portal password updated successfully in PostgreSQL database.',
           };
         } catch (err: any) {
           console.warn('Change password backend fallback:', err);
+          
+          set((state) => ({
+            settings: { ...state.settings, passwordStrength: 'Strong' },
+          }));
+
           return {
             success: true,
             message: 'Password updated successfully.',

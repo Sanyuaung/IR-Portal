@@ -9,11 +9,11 @@ interface StatusBadgeProps {
 export const StatusBadge: React.FC<StatusBadgeProps> = ({ status }) => {
   const normStatus = String(status).trim().toLowerCase();
 
-  if (normStatus === 'active' || normStatus === 'completed') {
+  if (normStatus === 'active' || normStatus === 'success' || normStatus === 'completed') {
     return (
       <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-[#E8F8EE] text-[#1E7E34] text-xs font-semibold rounded-full border border-[#BDE8CA]/80 select-none shadow-2xs">
         <span className="w-2 h-2 rounded-full bg-[#28A745]"></span>
-        <span>{status === 'Active' ? 'Active' : 'Completed'}</span>
+        <span>{normStatus === 'active' ? 'Active' : 'Success'}</span>
       </span>
     );
   }
@@ -22,16 +22,16 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({ status }) => {
     return (
       <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-[#FDE8E8] text-[#D9383A] text-xs font-semibold rounded-full border border-[#F8B4B4]/80 select-none shadow-2xs">
         <span className="w-2 h-2 rounded-full bg-[#E02424]"></span>
-        <span>{status === 'Inactive' ? 'Inactive' : 'Failed'}</span>
+        <span>{normStatus === 'inactive' ? 'Inactive' : 'Failed'}</span>
       </span>
     );
   }
 
-  if (normStatus === 'pending' || normStatus === 'processing') {
+  if (normStatus === 'init' || normStatus === 'mfr' || normStatus === 'pending') {
     return (
       <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-[#FEF3C7] text-[#B45309] text-xs font-semibold rounded-full border border-[#FCD34D]/80 select-none shadow-2xs">
         <span className="w-2 h-2 rounded-full bg-[#F59E0B] animate-pulse"></span>
-        <span>Pending</span>
+        <span>{normStatus === 'init' ? 'Init (Timeout)' : normStatus === 'mfr' ? 'MFR (Timeout)' : 'Pending'}</span>
       </span>
     );
   }

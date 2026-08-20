@@ -500,8 +500,8 @@ export const LoginPage: React.FC = () => {
 
                   <form onSubmit={handleSignInSubmit} className="space-y-4">
                     <TextInput
-                      label="Email Address / User ID"
-                      placeholder="e.g. sanyu.aung@kbzbank.com"
+                      label="Email Address"
+                      placeholder="Enter your email address"
                       value={loginEmail}
                       onChange={(e) => setLoginEmail(e.currentTarget.value)}
                       error={loginErrors.email}
@@ -595,7 +595,7 @@ export const LoginPage: React.FC = () => {
                   <form onSubmit={handleSignUpSubmit} className="space-y-3.5">
                     <TextInput
                       label="Full Name"
-                      placeholder="e.g. San Yu Aung"
+                      placeholder="Enter your full name"
                       value={signupName}
                       onChange={(e) => setSignupName(e.currentTarget.value)}
                       error={signupErrors.name}
@@ -606,7 +606,7 @@ export const LoginPage: React.FC = () => {
 
                     <TextInput
                       label="Email Address"
-                      placeholder="e.g. sanyu.aung@gmail.com"
+                      placeholder="Enter your email address"
                       value={signupEmail}
                       onChange={(e) => setSignupEmail(e.currentTarget.value)}
                       error={signupErrors.email}
@@ -617,7 +617,7 @@ export const LoginPage: React.FC = () => {
 
                     <PasswordInput
                       label="Password"
-                      placeholder="Minimum 6 characters"
+                      placeholder="Enter your password"
                       value={signupPassword}
                       onChange={(e) => setSignupPassword(e.currentTarget.value)}
                       error={signupErrors.password}
@@ -640,7 +640,7 @@ export const LoginPage: React.FC = () => {
 
                     <PasswordInput
                       label="Confirm Password"
-                      placeholder="Re-enter password"
+                      placeholder="Confirm your password"
                       value={signupConfirmPassword}
                       onChange={(e) => setSignupConfirmPassword(e.currentTarget.value)}
                       error={signupErrors.confirmPassword}

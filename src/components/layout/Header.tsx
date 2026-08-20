@@ -50,7 +50,7 @@ export const Header: React.FC<HeaderProps> = ({
 
   const [notificationsRead, setNotificationsRead] = useState(false);
 
-  const pendingCount = transactions.filter((t) => t.status === 'Pending').length;
+  const pendingCount = transactions.filter((t) => t.status === 'init' || t.status === 'MFR').length;
   const recentAlerts = transactions.slice(0, 4);
   const activePageLabel =
     activePage === 'ir-transactions' ? 'IR Transactions' : activePage === 'settings' ? 'Settings' : 'Dashboard';
@@ -133,7 +133,7 @@ export const Header: React.FC<HeaderProps> = ({
                 <span className="font-semibold text-xs text-[#0F4C81]">Incoming Remittance Feed</span>
                 {pendingCount > 0 && (
                   <Badge size="xs" color="yellow" variant="filled">
-                    {pendingCount} Pending
+                    {pendingCount} Timeouts
                   </Badge>
                 )}
               </div>
@@ -162,7 +162,7 @@ export const Header: React.FC<HeaderProps> = ({
                       <Badge
                         size="xs"
                         variant="light"
-                        color={tx.status === 'Completed' ? 'green' : tx.status === 'Pending' ? 'yellow' : 'red'}
+                        color={tx.status === 'success' ? 'green' : tx.status === 'init' || tx.status === 'MFR' ? 'yellow' : 'red'}
                       >
                         {tx.status}
                       </Badge>

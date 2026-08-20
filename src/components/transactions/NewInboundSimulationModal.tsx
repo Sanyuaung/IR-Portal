@@ -24,7 +24,7 @@ export const NewInboundSimulationModal: React.FC = () => {
   const [sendingBank, setSendingBank] = useState('DBS Bank Singapore');
   const [currency, setCurrency] = useState<CurrencyCode>('USD');
   const [amount, setAmount] = useState<number | string>(75000);
-  const [status, setStatus] = useState<TransactionStatus>('Completed');
+  const [status, setStatus] = useState<TransactionStatus>('success');
   const [purpose, setPurpose] = useState('Export Goods Final Payment Batch #8839');
 
   const handleSimulate = () => {
@@ -42,8 +42,8 @@ export const NewInboundSimulationModal: React.FC = () => {
 
     setIsSimulateModalOpen(false);
 
-    // Fire celebratory confetti if completed
-    if (status === 'Completed') {
+    // Fire celebratory confetti if success
+    if (status === 'success') {
       try {
         confetti({
           particleCount: 50,
@@ -58,7 +58,7 @@ export const NewInboundSimulationModal: React.FC = () => {
     notifications.show({
       title: 'Incoming Remittance Received',
       message: `Received ${currency} ${numAmt.toLocaleString()} from ${senderName} (${newTx.transactionRef})`,
-      color: status === 'Completed' ? 'green' : status === 'Pending' ? 'yellow' : 'red',
+      color: status === 'success' ? 'green' : status === 'init' || status === 'MFR' ? 'yellow' : 'red',
       icon: <Check size={16} />,
       autoClose: 5000,
     });
@@ -152,9 +152,10 @@ export const NewInboundSimulationModal: React.FC = () => {
         <Select
           label="Initial Status"
           data={[
-            { value: 'Completed', label: '✅ Completed (Directly Settled)' },
-            { value: 'Pending', label: '⏳ Pending (Compliance Review)' },
-            { value: 'Failed', label: '❌ Failed (Discrepancy / Rejected)' },
+            { value: 'success', label: '✅ Success (Directly Settled)' },
+            { value: 'init', label: '⏳ Init (Timeout Case)' },
+            { value: 'MFR', label: '⏳ MFR (Timeout Case)' },
+            { value: 'failed', label: '❌ Failed (Discrepancy / Rejected)' },
           ]}
           value={status}
           onChange={(val) => val && setStatus(val as TransactionStatus)}

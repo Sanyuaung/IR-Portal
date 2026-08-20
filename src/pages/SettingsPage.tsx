@@ -353,18 +353,18 @@ export const SettingsPage: React.FC = () => {
 
         <Paper withBorder p="md" radius="md" className="bg-white border-slate-200 shadow-xs">
           <div className="flex items-start gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-violet-50 text-violet-700 flex items-center justify-center">
+            <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${settings.passwordStrength === 'Strong' ? 'bg-emerald-50 text-emerald-700' : settings.passwordStrength === 'Moderate' ? 'bg-amber-50 text-amber-700' : 'bg-red-50 text-red-700'}`}>
               <Lock size={16} />
             </div>
             <div>
               <Text size="xs" fw={700} c="dimmed" className="uppercase tracking-wide">
                 Password Hygiene
               </Text>
-              <Text size="sm" fw={700} c="#0F4C81">
-                Strong Password Recommended
+              <Text size="sm" fw={700} c={settings.passwordStrength === 'Strong' ? 'teal' : settings.passwordStrength === 'Moderate' ? 'orange' : 'red'}>
+                {settings.passwordStrength || 'Moderate'} Password
               </Text>
               <Text size="xs" c="dimmed">
-                Update regularly and avoid reusing old passwords.
+                {settings.passwordStrength === 'Strong' ? 'Your password is secure.' : 'Update regularly to improve security.'}
               </Text>
             </div>
           </div>
@@ -563,7 +563,7 @@ export const SettingsPage: React.FC = () => {
 
         {/* Tab 2: Password Change Module */}
         <Tabs.Panel value="password">
-          <div className="max-w-xl">
+          <div className="w-full">
             <Paper withBorder p="lg" radius="md" className="bg-white border-slate-200">
               <form onSubmit={handlePasswordSubmit} className="space-y-4">
                 <div>
@@ -617,12 +617,17 @@ export const SettingsPage: React.FC = () => {
                   size="sm"
                 />
 
-                <div className="p-3 bg-blue-50/60 rounded-md border border-blue-100 text-xs text-slate-600 space-y-1">
-                  <span className="font-bold text-[#0F4C81] block">Password Requirements:</span>
-                  <p>• At least 8 characters</p>
-                  <p>• At least 1 uppercase & 1 lowercase letter</p>
-                  <p>• At least 1 number and 1 special symbol (!@#$%^&*)</p>
-                </div>
+                <Paper withBorder p="md" radius="md" className="bg-slate-50 border-slate-200">
+                  <div className="flex items-center gap-2 text-[#0F4C81] font-bold text-sm mb-2">
+                    <ShieldCheck size={18} />
+                    <span>Password Requirements</span>
+                  </div>
+                  <div className="space-y-2.5 text-xs text-slate-600">
+                    <p>• At least 8 characters</p>
+                    <p>• At least 1 uppercase & 1 lowercase letter</p>
+                    <p>• At least 1 number and 1 special symbol (!@#$%^&*)</p>
+                  </div>
+                </Paper>
 
                 <Button
                   type="submit"
@@ -640,7 +645,7 @@ export const SettingsPage: React.FC = () => {
 
         {/* Tab 3: Customer Account Profile (Strictly Matching Sign Up Registration Fields) */}
         <Tabs.Panel value="merchant">
-          <div className="max-w-2xl">
+          <div className="w-full">
             <Paper withBorder p="lg" radius="md" className="bg-white border-slate-200 space-y-5">
               <div className="flex items-center justify-between">
                 <div>

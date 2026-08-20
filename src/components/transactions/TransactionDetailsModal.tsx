@@ -38,7 +38,7 @@ import { notifications } from '@mantine/notifications';
 
 export const TransactionDetailsModal: React.FC = () => {
   const { selectedTransaction, isDetailsModalOpen, setIsDetailsModalOpen } = useTransactionStore();
-  const [activeTab, setActiveTab] = useState<string | null>('swift');
+  const [activeTab, setActiveTab] = useState<string | null>('parties');
 
   if (!selectedTransaction) return null;
 
@@ -124,9 +124,6 @@ export const TransactionDetailsModal: React.FC = () => {
 
         <Tabs value={activeTab} onChange={setActiveTab}>
           <Tabs.List className="mb-4">
-            <Tabs.Tab value="swift" leftSection={<Globe2 size={16} />}>
-              SWIFT MT103 Metadata
-            </Tabs.Tab>
             <Tabs.Tab value="parties" leftSection={<Building2 size={16} />}>
               Sender & Beneficiary
             </Tabs.Tab>
@@ -134,105 +131,6 @@ export const TransactionDetailsModal: React.FC = () => {
               Settlement Tracking
             </Tabs.Tab>
           </Tabs.List>
-
-          {/* SWIFT MT103 Metadata Tab */}
-          <Tabs.Panel value="swift">
-            <div className="space-y-3">
-              <div className="bg-slate-900 text-slate-100 rounded-lg p-4 font-mono text-xs overflow-x-auto shadow-inner">
-                <div className="flex justify-between items-center text-slate-400 pb-2 border-b border-slate-800 mb-2">
-                  <div className="flex items-center gap-2">
-                    <span className="inline-block w-2 h-2 rounded-full bg-emerald-400"></span>
-                    <span>SWIFT MT103 / ISO 15022 SINGLE CUSTOMER CREDIT TRANSFER</span>
-                  </div>
-                  <Badge size="xs" color="blue" variant="filled">
-                    {meta.settlementChannel}
-                  </Badge>
-                </div>
-
-                <div className="grid grid-cols-12 gap-2 py-1">
-                  <div className="col-span-3 text-cyan-400 font-bold">:20: TRN</div>
-                  <div className="col-span-9 text-slate-200 flex items-center justify-between">
-                    <span>{meta.senderReference}</span>
-                    <CopyButton value={meta.senderReference} timeout={2000}>
-                      {({ copied, copy }) => (
-                        <ActionIcon size="xs" color={copied ? 'teal' : 'gray'} variant="subtle" onClick={copy}>
-                          {copied ? <Check size={12} /> : <Copy size={12} />}
-                        </ActionIcon>
-                      )}
-                    </CopyButton>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-12 gap-2 py-1">
-                  <div className="col-span-3 text-cyan-400 font-bold">:23B: Bank Op Code</div>
-                  <div className="col-span-9 text-slate-200">{meta.bankOpCode} (CRED - Standard Credit Transfer)</div>
-                </div>
-
-                <div className="grid grid-cols-12 gap-2 py-1">
-                  <div className="col-span-3 text-cyan-400 font-bold">:32A: Value/Curr/Amt</div>
-                  <div className="col-span-9 text-amber-300 font-semibold">
-                    {formatDate(tx.valueDate, 'YYMMDD')} {tx.currency} {formatNumber(tx.amount)}
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-12 gap-2 py-1">
-                  <div className="col-span-3 text-cyan-400 font-bold">:50K: Ordering Customer</div>
-                  <div className="col-span-9 text-slate-200">
-                    <div>{meta.orderingCustomer.name}</div>
-                    <div className="text-slate-400 text-[11px]">{meta.orderingCustomer.address}, {meta.orderingCustomer.country}</div>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-12 gap-2 py-1">
-                  <div className="col-span-3 text-cyan-400 font-bold">:52A: Ordering Inst.</div>
-                  <div className="col-span-9 text-slate-200">
-                    {meta.orderingInstitution.bic} - {meta.orderingInstitution.name}
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-12 gap-2 py-1">
-                  <div className="col-span-3 text-cyan-400 font-bold">:57A: Account Inst.</div>
-                  <div className="col-span-9 text-slate-200">
-                    {meta.accountWithInstitution.bic} - {meta.accountWithInstitution.name} ({meta.accountWithInstitution.branch})
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-12 gap-2 py-1">
-                  <div className="col-span-3 text-cyan-400 font-bold">:59: Beneficiary Cust.</div>
-                  <div className="col-span-9 text-slate-200">
-                    <div className="text-emerald-400 font-bold">/{meta.beneficiaryCustomer.accountNumber}</div>
-                    <div>{meta.beneficiaryCustomer.name}</div>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-12 gap-2 py-1">
-                  <div className="col-span-3 text-cyan-400 font-bold">:70: Remittance Info</div>
-                  <div className="col-span-9 text-slate-300 italic">{meta.remittanceInfo}</div>
-                </div>
-
-                <div className="grid grid-cols-12 gap-2 py-1">
-                  <div className="col-span-3 text-cyan-400 font-bold">:71A: Details of Charges</div>
-                  <div className="col-span-9 text-slate-200 font-bold">
-                    {meta.detailsOfCharges} ({meta.detailsOfCharges === 'OUR' ? 'All sender side' : meta.detailsOfCharges === 'SHA' ? 'Shared charges' : 'Beneficiary pays'})
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-12 gap-2 py-1 border-t border-slate-800 mt-2 pt-2">
-                  <div className="col-span-3 text-emerald-400 font-bold">:121: UETR Ref</div>
-                  <div className="col-span-9 text-slate-300 text-[11px] flex items-center justify-between">
-                    <span>{meta.uetr}</span>
-                    <CopyButton value={meta.uetr} timeout={2000}>
-                      {({ copied, copy }) => (
-                        <ActionIcon size="xs" color={copied ? 'teal' : 'gray'} variant="subtle" onClick={copy}>
-                          {copied ? <Check size={12} /> : <Copy size={12} />}
-                        </ActionIcon>
-                      )}
-                    </CopyButton>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </Tabs.Panel>
 
           {/* Sender & Beneficiary Tab */}
           <Tabs.Panel value="parties">

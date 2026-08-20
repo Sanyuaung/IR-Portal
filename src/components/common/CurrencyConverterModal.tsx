@@ -123,10 +123,13 @@ export const CurrencyConverterModal: React.FC = () => {
 
             <div className="w-full sm:w-56">
               <Select
-                data={CURRENCIES.map((c) => ({
-                  value: c.value,
-                  label: `${c.flag} ${c.value} (${c.name})`,
-                }))}
+                data={fxRates.map((r) => {
+                  const currMatch = CURRENCIES.find(c => c.value === r.currency);
+                  return {
+                    value: r.currency,
+                    label: currMatch ? `${currMatch.flag} ${r.currency} (${currMatch.name})` : `${r.currency} - ${r.currency}`,
+                  };
+                })}
                 value={selectedCurrency}
                 onChange={(val) => val && setSelectedCurrency(val as CurrencyCode)}
                 size="md"

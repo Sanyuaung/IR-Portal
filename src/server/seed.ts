@@ -89,7 +89,7 @@ export async function ensureDatabaseSchema(existingClient?: any) {
         "feeAmount" DOUBLE PRECISION NOT NULL DEFAULT 0,
         "netAmountMmk" DOUBLE PRECISION NOT NULL,
         "valueDate" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        "status" TEXT NOT NULL DEFAULT 'Completed',
+        "status" TEXT NOT NULL DEFAULT 'success',
         "statusMessage" TEXT,
         "purpose" TEXT NOT NULL,
         "beneficiaryAccount" TEXT NOT NULL,

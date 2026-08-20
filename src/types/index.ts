@@ -1,6 +1,6 @@
 export type CurrencyCode = 'USD' | 'EUR' | 'SGD' | 'THB' | 'GBP' | 'JPY' | 'CNY' | 'MYR';
 
-export type TransactionStatus = 'Completed' | 'Pending' | 'Failed';
+export type TransactionStatus = 'success' | 'failed' | 'init' | 'MFR';
 
 export type ChargeType = 'OUR' | 'SHA' | 'BEN';
 
@@ -109,4 +109,5 @@ export interface SecuritySettings {
   loginAlerts: boolean;
   inboundAlertThreshold: number;
   dailySummaryEmail: boolean;
+  passwordStrength?: 'Weak' | 'Moderate' | 'Strong';
 }

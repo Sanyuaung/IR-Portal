@@ -206,7 +206,7 @@ export const useTransactionStore = create<TransactionState>((set, get) => ({
       feeAmount: fee,
       netAmountMmk: net,
       valueDate: new Date().toISOString(),
-      status: customData.status || 'Completed',
+      status: customData.status || 'success',
       purpose: customData.purpose || 'Trade invoice settlement via SWIFT GPI',
       beneficiaryAccount: '0091-2384-992019',
       swiftMetadata: {
@@ -261,8 +261,8 @@ export const useTransactionStore = create<TransactionState>((set, get) => ({
             title: 'Settled to Beneficiary Account',
             description: 'Final MMK settlement posted to 0091-2384-992019',
             timestamp: dayjs().format('DD/MM/YYYY hh:mm A'),
-            completed: customData.status !== 'Pending',
-            current: customData.status === 'Pending',
+            completed: customData.status !== 'init' && customData.status !== 'MFR',
+            current: customData.status === 'init' || customData.status === 'MFR',
           },
         ],
       },
@@ -373,9 +373,9 @@ export const useTransactionStore = create<TransactionState>((set, get) => ({
 
   getStats: () => {
     const { transactions } = get();
-    const completed = transactions.filter((t) => t.status === 'Completed');
-    const pending = transactions.filter((t) => t.status === 'Pending');
-    const failed = transactions.filter((t) => t.status === 'Failed');
+    const completed = transactions.filter((t) => t.status === 'success');
+    const pending = transactions.filter((t) => t.status === 'init' || t.status === 'MFR');
+    const failed = transactions.filter((t) => t.status === 'failed');
 
     const totalInboundAmountMmk = completed.reduce(
       (sum, t) => sum + (t.netAmountMmk || t.convertedAmountMmk),

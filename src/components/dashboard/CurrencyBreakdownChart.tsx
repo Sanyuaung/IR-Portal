@@ -1,14 +1,37 @@
 import React from 'react';
 import { ResponsiveContainer, PieChart, Pie, Cell, Tooltip } from 'recharts';
-import { mockCurrencyBreakdown } from '../../data/mockTransactions';
-import { formatCurrency, formatNumber } from '../../utils/formatters';
+import { formatNumber } from '../../utils/formatters';
 
 export const CurrencyBreakdownChart: React.FC = () => {
+  const [activeIndex, setActiveIndex] = React.useState<number | null>(null);
   const chartData = [
     { currency: 'USD', value: 65, amountUsd: 1593020, color: '#0B2B66' },
     { currency: 'EUR', value: 20, amountUsd: 490160, color: '#E11D2A' },
     { currency: 'SGD', value: 15, amountUsd: 367620, color: '#F27D26' },
   ];
+
+  const renderPointerLabel = (props: any) => {
+    const { cx, cy, midAngle, outerRadius, payload } = props;
+    const RADIAN = Math.PI / 180;
+    const cos = Math.cos(-midAngle * RADIAN);
+    const sin = Math.sin(-midAngle * RADIAN);
+    const startX = cx + (outerRadius + 4) * cos;
+    const startY = cy + (outerRadius + 4) * sin;
+    const midX = cx + (outerRadius + 14) * cos;
+    const midY = cy + (outerRadius + 14) * sin;
+    const endX = midX + (cos >= 0 ? 24 : -24);
+    const endY = midY;
+    const textAnchor = cos >= 0 ? 'start' : 'end';
+
+    return (
+      <g>
+        <path d={`M${startX},${startY}L${midX},${midY}L${endX},${endY}`} fill="none" stroke={payload.color} strokeWidth={1.5} />
+        <text x={endX + (cos >= 0 ? 4 : -4)} y={endY + 4} textAnchor={textAnchor} fill="#334155" fontSize={11} fontWeight={700}>
+          {payload.currency}
+        </text>
+      </g>
+    );
+  };
 
   const CustomTooltip = ({ active, payload }: any) => {
     if (active && payload && payload.length) {
@@ -36,23 +59,39 @@ export const CurrencyBreakdownChart: React.FC = () => {
       </div>
 
       <div className="flex flex-col items-center justify-center py-3 relative">
-        <div className="relative w-44 h-44">
+        <div className="relative w-full max-w-[280px] h-[220px]">
           <ResponsiveContainer width="100%" height="100%">
             <PieChart>
               <Pie
                 data={chartData}
                 cx="50%"
                 cy="50%"
-                innerRadius={54}
-                outerRadius={74}
+                innerRadius={52}
+                outerRadius={70}
                 paddingAngle={3}
                 dataKey="value"
+                nameKey="currency"
+                labelLine={false}
+                label={renderPointerLabel}
+                onMouseEnter={(_, index) => setActiveIndex(index)}
+                onMouseLeave={() => setActiveIndex(null)}
               >
                 {chartData.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={entry.color} />
+                  <Cell
+                    key={`cell-${index}`}
+                    fill={entry.color}
+                    stroke="#ffffff"
+                    strokeWidth={activeIndex === index ? 3 : 2}
+                    style={{ cursor: 'pointer', transition: 'all 180ms ease' }}
+                  />
                 ))}
               </Pie>
-              <Tooltip content={<CustomTooltip />} />
+              <Tooltip
+                content={<CustomTooltip />}
+                allowEscapeViewBox={{ x: true, y: true }}
+                wrapperStyle={{ zIndex: 50 }}
+                animationDuration={180}
+              />
             </PieChart>
           </ResponsiveContainer>
 

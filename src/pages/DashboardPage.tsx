@@ -21,15 +21,16 @@ import { formatCurrency, formatNumber } from '../utils/formatters';
 import { exportTransactionsToCsv } from '../utils/export';
 import { notifications } from '@mantine/notifications';
 
+import { DatePickerInput } from '@mantine/dates';
+import dayjs from 'dayjs';
+
 interface DashboardPageProps {
   onNavigate: (page: string) => void;
 }
 
 export const DashboardPage: React.FC<DashboardPageProps> = ({ onNavigate }) => {
   const { user } = useAuthStore();
-  const { getStats, transactions, setIsSimulateModalOpen, setDatePreset } = useTransactionStore();
-
-  const [dateFilterLabel, setDateFilterLabel] = useState('Last 30 Days');
+  const { getStats, transactions, setIsSimulateModalOpen, setCustomDateRange, setDatePreset, datePreset, customStartDate, customEndDate } = useTransactionStore();
 
   const stats = getStats();
 
@@ -42,15 +43,26 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onNavigate }) => {
     });
   };
 
-  const handleToggleDatePreset = () => {
-    if (dateFilterLabel === 'Last 30 Days') {
-      setDatePreset('today');
-      setDateFilterLabel('Today');
+  const handleDateRangeChange = (value: [Date | null, Date | null] | null) => {
+    if (value && (value[0] || value[1])) {
+      setDatePreset('custom');
+      setCustomDateRange(
+        value[0] ? value[0].toISOString() : null,
+        value[1] ? value[1].toISOString() : null
+      );
     } else {
-      setDatePreset('last30days');
-      setDateFilterLabel('Last 30 Days');
+      setDatePreset('all');
+      setCustomDateRange(null, null);
     }
   };
+
+  const dateValue: [Date | null, Date | null] = datePreset === 'custom'
+    ? [customStartDate ? new Date(customStartDate) : null, customEndDate ? new Date(customEndDate) : null]
+    : datePreset === 'today'
+      ? [dayjs().startOf('day').toDate(), dayjs().endOf('day').toDate()]
+      : datePreset === 'last30days'
+        ? [dayjs().subtract(30, 'day').toDate(), dayjs().endOf('day').toDate()]
+        : [null, null];
 
   return (
     <div className="space-y-6">
@@ -63,22 +75,19 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onNavigate }) => {
           </p>
         </div>
 
-        <div className="flex items-center gap-2.5">
-          <button
-            onClick={handleToggleDatePreset}
-            className="px-4 py-2 bg-white border border-slate-200 text-slate-700 text-sm font-medium rounded-lg flex items-center gap-2 hover:bg-slate-50 transition-colors shadow-2xs cursor-pointer"
-          >
-            <Calendar size={16} className="text-slate-500" />
-            <span>{dateFilterLabel}</span>
-          </button>
-
-          <button
-            onClick={handleExportReport}
-            className="px-4 py-2 bg-[#E11D2A] text-white text-sm font-medium rounded-lg flex items-center gap-2 shadow-md shadow-red-200 hover:bg-[#c91823] transition-all cursor-pointer font-semibold"
-          >
-            <Download size={16} />
-            <span>Export Report</span>
-          </button>
+        <div className="flex items-center gap-2.5 min-w-[280px]">
+          <DatePickerInput
+            type="range"
+            placeholder="Select date range"
+            value={dateValue}
+            onChange={handleDateRangeChange as any}
+            leftSection={<Calendar size={16} className="text-slate-500" />}
+            className="w-full"
+            radius="md"
+            size="sm"
+            clearable
+            maxDate={new Date()}
+          />
         </div>
       </div>
 
@@ -134,7 +143,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onNavigate }) => {
         <KPICard
           title="Transactions Count"
           value={formatNumber(stats.completedCount + stats.pendingCount)}
-          subValue={`${stats.completedCount} Cleared • ${stats.pendingCount} Pending`}
+          subValue={`${stats.completedCount} Cleared • ${stats.pendingCount} Timeouts`}
           icon={<ArrowDownLeft size={20} />}
           iconVariant="purple"
           trend={{
@@ -151,7 +160,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onNavigate }) => {
           icon={<Clock size={20} />}
           iconVariant="orange"
           badge={{
-            text: `${stats.pendingCount} Pending`,
+            text: `${stats.pendingCount} Timeouts`,
             color: 'orange',
           }}
         />
