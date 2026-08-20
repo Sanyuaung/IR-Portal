@@ -57,7 +57,8 @@ export const LoginPage: React.FC = () => {
   const { completeLogin, savedMerchantId, rememberMerchantId } = useAuthStore();
   const { settings, sendEmailOtp, mockGeneratedOtpCode } = useSettingsStore();
 
-  const [authMode, setAuthMode] = useState<'signin' | 'signup'>('signin');
+  const [authMode, setAuthMode] = useState<'signin' | 'signup' | 'forgot'>('signin');
+  const [forgotEmail, setForgotEmail] = useState('');
 
   // Sign In Form States
   const [loginEmail, setLoginEmail] = useState(savedMerchantId || '');
@@ -481,7 +482,78 @@ export const LoginPage: React.FC = () => {
               </div>
 
               {/* VIEW A: SIGN IN FORM */}
-              {authMode === 'signin' ? (
+              
+              {authMode === 'forgot' ? (
+                <div className="space-y-6">
+                  <div className="space-y-2">
+                    <h2 className="text-2xl font-bold text-[#0F4C81]">Reset Password</h2>
+                    <p className="text-[#6e7191] text-sm">
+                      Enter your email address and we'll send you a link to reset your password.
+                    </p>
+                  </div>
+                  
+                  <form 
+                    onSubmit={async (e) => {
+                      e.preventDefault();
+                      if (!forgotEmail) {
+                        notifications.show({ title: 'Error', message: 'Please enter your email', color: 'red' });
+                        return;
+                      }
+                      setIsLoading(true);
+                      try {
+                        const res = await fetch('/api/auth/forgot-password', {
+                          method: 'POST',
+                          headers: { 'Content-Type': 'application/json' },
+                          body: JSON.stringify({ email: forgotEmail })
+                        });
+                        const data = await res.json();
+                        if (data.success) {
+                          notifications.show({ title: 'Email Sent', message: 'Check your email for the reset link.', color: 'green' });
+                          console.log('Demo Reset Link:', data.resetLink);
+                          // For demo purposes, we automatically redirect after 2s
+                          setTimeout(() => {
+                             window.location.href = data.resetLink;
+                          }, 2000);
+                        } else {
+                          notifications.show({ title: 'Error', message: data.error || 'Failed to send link', color: 'red' });
+                        }
+                      } catch (err) {
+                        notifications.show({ title: 'Error', message: 'Network error', color: 'red' });
+                      } finally {
+                        setIsLoading(false);
+                      }
+                    }} 
+                    className="space-y-4"
+                  >
+                    <TextInput
+                      label="Email Address"
+                      placeholder="Enter your email address"
+                      value={forgotEmail}
+                      onChange={(e) => setForgotEmail(e.currentTarget.value)}
+                      required
+                    />
+                    
+                    <button
+                      type="submit"
+                      disabled={isLoading}
+                      className="w-full py-2.5 px-4 bg-[#0F4C81] hover:bg-[#0A365D] font-semibold text-white text-sm rounded-lg shadow-md transition-colors flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+                    >
+                      {isLoading ? 'Sending...' : 'Send Reset Link'}
+                    </button>
+                    
+                    <div className="text-center mt-4">
+                      <button 
+                        type="button" 
+                        onClick={() => setAuthMode('signin')} 
+                        className="text-sm font-semibold text-[#0F4C81] hover:underline"
+                      >
+                        Back to Login
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              ) : authMode === 'signin' ? (
+
                 <div>
                   <div className="mb-5">
                     <Title order={2} size="h3" fw={700} c="#002C76">
@@ -532,14 +604,7 @@ export const LoginPage: React.FC = () => {
 
                       <a
                         href="#forgot-password"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          notifications.show({
-                            title: 'Password Reset',
-                            message: 'Please contact MM Global Remit Support or use your registered email 2FA recovery.',
-                            color: 'blue',
-                          });
-                        }}
+                        onClick={(e) => { e.preventDefault(); setAuthMode('forgot'); }}
                         className="text-xs text-[#0F4C81] font-medium hover:underline cursor-pointer"
                       >
                         Forgot password?

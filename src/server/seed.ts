@@ -37,6 +37,9 @@ export async function ensureDatabaseSchema(existingClient?: any) {
 
     await client.query(`ALTER TABLE "User" ADD COLUMN IF NOT EXISTS "companyName" TEXT;`);
     await client.query(`ALTER TABLE "User" ADD COLUMN IF NOT EXISTS "phone" TEXT;`);
+    await client.query(`ALTER TABLE "User" ADD COLUMN IF NOT EXISTS "passwordStrength" TEXT DEFAULT 'Moderate';`);
+    await client.query(`ALTER TABLE "User" ADD COLUMN IF NOT EXISTS "resetToken" TEXT;`);
+    await client.query(`ALTER TABLE "User" ADD COLUMN IF NOT EXISTS "resetTokenExpires" TIMESTAMP(3);`);
 
     // Ensure UNIQUE constraint on email
     await client.query(`
@@ -161,7 +164,15 @@ export async function seedDatabase() {
     console.log('⚡ Initializing and migrating PostgreSQL database tables...');
     await ensureDatabaseSchema(client);
 
+
+    console.log('Cleaning existing tables...');
+    await client.query('TRUNCATE TABLE "InboundTransaction" CASCADE;');
+    await client.query('TRUNCATE TABLE "FxRate" CASCADE;');
+    await client.query('TRUNCATE TABLE "TwoFactorAuth" CASCADE;');
+    await client.query('TRUNCATE TABLE "User" CASCADE;');
+    
     // 7. Seed Default Users
+
     const encryptedPassword = hashPassword('password');
     const defaultUsers = [
       {

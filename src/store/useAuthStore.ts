@@ -14,7 +14,7 @@ interface AuthState {
     loginEmail: string,
     plainPassword: string,
     remember?: boolean,
-    serverUserData?: Partial<UserProfile>
+    serverUserData?: Partial<UserProfile> & { passwordStrength?: string }
   ) => void;
   logout: () => void;
   updateProfile: (partial: Partial<UserProfile>) => void;
@@ -59,6 +59,7 @@ export const useAuthStore = create<AuthState>()(
             : `${baseName.charAt(0).toUpperCase() + baseName.slice(1)} Trading Co., Ltd.`);
         const displayName =
           cleanCompanyName;
+        const passwordStrength = serverUserData?.passwordStrength || "Moderate";
 
         const cleanMerchantId =
           serverUserData?.merchantId && !serverUserData.merchantId.includes('@')

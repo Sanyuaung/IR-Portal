@@ -67,6 +67,7 @@ const passwordChangeSchema = z
 
 export const SettingsPage: React.FC = () => {
   const { user, logout } = useAuthStore();
+  const displayPasswordStrength = user?.passwordStrength || "Moderate";
   const {
     settings,
     set2FaEnabled,
@@ -353,18 +354,18 @@ export const SettingsPage: React.FC = () => {
 
         <Paper withBorder p="md" radius="md" className="bg-white border-slate-200 shadow-xs">
           <div className="flex items-start gap-2.5">
-            <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${settings.passwordStrength === 'Strong' ? 'bg-emerald-50 text-emerald-700' : settings.passwordStrength === 'Moderate' ? 'bg-amber-50 text-amber-700' : 'bg-red-50 text-red-700'}`}>
+            <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${displayPasswordStrength === 'Strong' ? 'bg-emerald-50 text-emerald-700' : displayPasswordStrength === 'Moderate' ? 'bg-amber-50 text-amber-700' : 'bg-red-50 text-red-700'}`}>
               <Lock size={16} />
             </div>
             <div>
               <Text size="xs" fw={700} c="dimmed" className="uppercase tracking-wide">
                 Password Hygiene
               </Text>
-              <Text size="sm" fw={700} c={settings.passwordStrength === 'Strong' ? 'teal' : settings.passwordStrength === 'Moderate' ? 'orange' : 'red'}>
-                {settings.passwordStrength || 'Moderate'} Password
+              <Text size="sm" fw={700} c={displayPasswordStrength === 'Strong' ? 'teal' : displayPasswordStrength === 'Moderate' ? 'orange' : 'red'}>
+                {displayPasswordStrength || 'Moderate'} Password
               </Text>
               <Text size="xs" c="dimmed">
-                {settings.passwordStrength === 'Strong' ? 'Your password is secure.' : 'Update regularly to improve security.'}
+                {displayPasswordStrength === 'Strong' ? 'Your password is secure.' : 'Update regularly to improve security.'}
               </Text>
             </div>
           </div>

@@ -92,6 +92,7 @@ export interface UserProfile {
   branch: string;
   lastLogin: string;
   avatarUrl?: string;
+  passwordStrength?: "Weak" | "Moderate" | "Strong";
 }
 
 export type TwoFactorMethod = 'totp' | 'email' | 'sms';

@@ -29,6 +29,8 @@ const FALLBACK_USERS = [
     companyName: 'Myanmar Horizon Trading Co., Ltd.',
     phone: '+95 9 798 112 889',
     password: hashPassword('password'),
+
+
     twoFactorAuth: { isEnabled: false, method: 'EMAIL' },
   },
   {
@@ -38,6 +40,8 @@ const FALLBACK_USERS = [
     companyName: 'KBZ Bank Co., Ltd.',
     phone: '+95 9 798 112 889',
     password: hashPassword('password'),
+
+
     twoFactorAuth: { isEnabled: false, method: 'EMAIL' },
   },
   {
@@ -47,6 +51,8 @@ const FALLBACK_USERS = [
     companyName: 'KBZ Bank Co., Ltd.',
     phone: '+95 9 798 112 889',
     password: hashPassword('password'),
+
+
     twoFactorAuth: { isEnabled: false, method: 'EMAIL' },
   },
 ];
@@ -164,6 +170,42 @@ export const prisma = {
         }
         throw err;
       }
+
+    },
+
+    async update({ where, data }: { where: { email?: string; id?: string }; data: any }) {
+      try {
+        const client = await pool.connect();
+        try {
+          const updates: string[] = [];
+          const params: any[] = [];
+          let idx = 1;
+          Object.keys(data).forEach((key) => {
+            updates.push(`"${key}" = ${idx}`);
+            params.push(data[key]);
+            idx++;
+          });
+          updates.push(`"updatedAt" = NOW()`);
+          let whereClause = '';
+          if (where.email) {
+            whereClause = `LOWER("email") = LOWER(${idx})`;
+            params.push(where.email.trim());
+          } else if (where.id) {
+            whereClause = `"id" = ${idx}`;
+            params.push(where.id);
+          }
+          const res = await client.query(
+            `UPDATE "User" SET ${updates.join(', ')} WHERE ${whereClause} RETURNING *`,
+            params
+          );
+          return res.rows[0];
+        } finally {
+          client.release();
+        }
+      } catch (err: any) {
+        console.warn('user.update error:', err?.message);
+        throw err;
+      }
     },
   },
 
@@ -183,43 +225,6 @@ export const prisma = {
       }
     },
 
-    async update({ where, data }: { where: { userId?: string; id?: string }; data: any }) {
-      try {
-        const client = await pool.connect();
-        try {
-          const updates: string[] = [];
-          const params: any[] = [];
-          let idx = 1;
 
-          Object.keys(data).forEach((key) => {
-            updates.push(`"${key}" = $${idx}`);
-            params.push(data[key]);
-            idx++;
-          });
-
-          updates.push(`"updatedAt" = NOW()`);
-
-          let whereClause = '';
-          if (where.userId) {
-            whereClause = `"userId" = $${idx}`;
-            params.push(where.userId);
-          } else if (where.id) {
-            whereClause = `"id" = $${idx}`;
-            params.push(where.id);
-          }
-
-          const res = await client.query(
-            `UPDATE "TwoFactorAuth" SET ${updates.join(', ')} WHERE ${whereClause} RETURNING *`,
-            params
-          );
-          return res.rows[0];
-        } finally {
-          client.release();
-        }
-      } catch (err: any) {
-        console.warn('twoFactorAuth.update error:', err?.message);
-        return { isEnabled: false, method: 'EMAIL', ...data };
-      }
-    },
   },
 };

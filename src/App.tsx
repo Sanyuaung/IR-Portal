@@ -8,17 +8,21 @@ import { LoginPage } from './pages/LoginPage';
 import { DashboardPage } from './pages/DashboardPage';
 import { TransactionsPage } from './pages/TransactionsPage';
 import { SettingsPage } from './pages/SettingsPage';
+import { ResetPasswordPage } from './pages/ResetPasswordPage';
 
 export default function App() {
   const { isAuthenticated } = useAuthStore();
   // Strictly Limited Navigation: 'dashboard' | 'ir-transactions' | 'settings'
   const [activePage, setActivePage] = useState<string>('dashboard');
+  const isResetPassword = window.location.pathname === '/reset-password';
 
   return (
     <MantineProvider theme={corporateTheme} defaultColorScheme="light">
       <Notifications position="top-right" zIndex={2000} autoClose={4000} />
 
-      {!isAuthenticated ? (
+      {isResetPassword ? (
+        <ResetPasswordPage />
+      ) : !isAuthenticated ? (
         <LoginPage />
       ) : (
         <AppLayout activePage={activePage} onNavigate={setActivePage}>

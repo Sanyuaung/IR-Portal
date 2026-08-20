@@ -29,12 +29,17 @@ enum CurrencyCode {
 }
 
 model User {
-  id        String   @id @default(uuid())
-  email     String   @unique
-  password  String
-  name      String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id                String   @id @default(uuid())
+  email             String   @unique
+  password          String
+  name              String?
+  companyName       String?
+  phone             String?
+  passwordStrength  String?  @default("Moderate")
+  resetToken        String?
+  resetTokenExpires DateTime?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
 
   twoFactorAuth TwoFactorAuth?
   auditLogs     AuditLog[]
