@@ -44,6 +44,9 @@ export const TransactionDetailsModal: React.FC = () => {
 
   const tx = selectedTransaction;
   const meta = tx.swiftMetadata;
+  const orderingCustomer = meta?.orderingCustomer;
+  const beneficiaryCustomer = meta?.beneficiaryCustomer;
+  const settlementSteps = Array.isArray(meta?.settlementSteps) ? meta.settlementSteps : [];
 
   const handlePrint = () => {
     window.print();
@@ -143,7 +146,7 @@ export const TransactionDetailsModal: React.FC = () => {
                 <div className="space-y-2 text-xs">
                   <div>
                     <Text c="dimmed">Company / Individual Name</Text>
-                    <Text fw={600} className="text-slate-800">{meta.orderingCustomer.name}</Text>
+                    <Text fw={600} className="text-slate-800">{orderingCustomer?.name || tx.senderName || 'Not available'}</Text>
                   </div>
                   <div>
                     <Text c="dimmed">Originating Bank</Text>
@@ -152,7 +155,9 @@ export const TransactionDetailsModal: React.FC = () => {
                   </div>
                   <div>
                     <Text c="dimmed">Sender Address</Text>
-                    <Text className="text-slate-700">{meta.orderingCustomer.address}, {tx.senderCountry}</Text>
+                    <Text className="text-slate-700">
+                      {orderingCustomer?.address || 'Not available'}{tx.senderCountry ? `, ${tx.senderCountry}` : ''}
+                    </Text>
                   </div>
                 </div>
               </Paper>
@@ -165,7 +170,7 @@ export const TransactionDetailsModal: React.FC = () => {
                 <div className="space-y-2 text-xs">
                   <div>
                     <Text c="dimmed">Beneficiary Corporate Name</Text>
-                    <Text fw={600} className="text-slate-800">{meta.beneficiaryCustomer.name}</Text>
+                    <Text fw={600} className="text-slate-800">{beneficiaryCustomer?.name || 'Not available'}</Text>
                   </div>
                   <div>
                     <Text c="dimmed">KBZ Settlement Account</Text>
@@ -187,41 +192,47 @@ export const TransactionDetailsModal: React.FC = () => {
               <Text size="sm" fw={600} c="slate.8" mb="md">
                 End-to-End SWIFT GPI Milestone Status
               </Text>
-              <Timeline active={meta.settlementSteps.filter((s) => s.completed).length - 1} bulletSize={24} lineWidth={2}>
-                {meta.settlementSteps.map((step, idx) => (
-                  <Timeline.Item
-                    key={idx}
-                    bullet={
-                      step.failed ? (
-                        <AlertCircle size={14} className="text-rose-600" />
-                      ) : step.completed ? (
-                        <CheckCircle2 size={14} className="text-emerald-600" />
-                      ) : (
-                        <Clock size={14} className="text-amber-500" />
-                      )
-                    }
-                    title={
-                      <div className="flex items-center gap-2">
-                        <Text size="sm" fw={600} c={step.failed ? 'red.7' : 'slate.8'}>
-                          {step.title}
-                        </Text>
-                        {step.current && (
-                          <Badge size="xs" color="yellow" variant="filled">
-                            In Progress
-                          </Badge>
-                        )}
-                      </div>
-                    }
-                  >
-                    <Text size="xs" c="dimmed">
-                      {step.description}
-                    </Text>
-                    <Text size="xs" c="dimmed" mt={4} className="font-mono">
-                      {step.timestamp}
-                    </Text>
-                  </Timeline.Item>
-                ))}
-              </Timeline>
+              {settlementSteps.length > 0 ? (
+                <Timeline active={settlementSteps.filter((step) => step.completed).length - 1} bulletSize={24} lineWidth={2}>
+                  {settlementSteps.map((step, idx) => (
+                    <Timeline.Item
+                      key={idx}
+                      bullet={
+                        step.failed ? (
+                          <AlertCircle size={14} className="text-rose-600" />
+                        ) : step.completed ? (
+                          <CheckCircle2 size={14} className="text-emerald-600" />
+                        ) : (
+                          <Clock size={14} className="text-amber-500" />
+                        )
+                      }
+                      title={
+                        <div className="flex items-center gap-2">
+                          <Text size="sm" fw={600} c={step.failed ? 'red.7' : 'slate.8'}>
+                            {step.title}
+                          </Text>
+                          {step.current && (
+                            <Badge size="xs" color="yellow" variant="filled">
+                              In Progress
+                            </Badge>
+                          )}
+                        </div>
+                      }
+                    >
+                      <Text size="xs" c="dimmed">
+                        {step.description}
+                      </Text>
+                      <Text size="xs" c="dimmed" mt={4} className="font-mono">
+                        {step.timestamp}
+                      </Text>
+                    </Timeline.Item>
+                  ))}
+                </Timeline>
+              ) : (
+                <Text size="sm" c="dimmed">
+                  Settlement tracking details are not available for this transaction.
+                </Text>
+              )}
             </Paper>
           </Tabs.Panel>
         </Tabs>
