@@ -194,7 +194,7 @@ export const Header: React.FC<HeaderProps> = ({
         </Popover>
 
         {/* User Profile / Avatar Dropdown (Matches Screenshot & Cleaned per request) */}
-        <Menu shadow="md" width={270} position="bottom-end" transitionProps={{ transition: 'pop-top-right' }}>
+        <Menu shadow="md" width={360} position="bottom-end" transitionProps={{ transition: 'pop-top-right' }}>
           <Menu.Target>
             <button
               type="button"
@@ -241,7 +241,37 @@ export const Header: React.FC<HeaderProps> = ({
               </div>
             </div>
 
-            {/* Direct Sign Out button only (no navigation links per request) */}
+            <div className="p-3 border-b border-slate-100">
+              <div className="flex items-center gap-2">
+                <div className="w-7 h-7 rounded-md bg-blue-50 text-[#0F4C81] flex items-center justify-center">
+                  <Shield size={15} />
+                </div>
+                <div>
+                  <Text size="xs" fw={700} c="#0F4C81">Help & Contact</Text>
+                  <Text size="10px" c="dimmed">Remittance guidance and KBZ support</Text>
+                </div>
+              </div>
+              <div className="mt-3 space-y-2.5">
+                <div>
+                  <Text size="xs" fw={600} c="dark.7">Track a remittance</Text>
+                  <Text size="10px" c="dimmed">Open IR Transactions and select a transfer to see its status and advice.</Text>
+                </div>
+                <div>
+                  <Text size="xs" fw={600} c="dark.7">Settlement timing</Text>
+                  <Text size="10px" c="dimmed">Cleared transfers are credited to your registered settlement account.</Text>
+                </div>
+                <div className="pt-2 border-t border-slate-100">
+                  <Text size="10px" c="dimmed">No.(615/1), Pyay Road, Kamayut Township, Yangon City, Myanmar.</Text>
+                  <div className="mt-2 grid grid-cols-2 gap-x-3 gap-y-1.5 text-[10px]">
+                    <span className="text-slate-500">KBZ Bank Call Center</span><a href="tel:09951018555" className="font-semibold text-[#0F4C81] hover:underline">09951018555</a>
+                    <span className="text-slate-500">KBZPAY Call Center</span><a href="tel:3211" className="font-semibold text-[#0F4C81] hover:underline">3211</a>
+                    <span className="text-slate-500">Customer Service</span><a href="mailto:customer_service@kbzbank.com" className="font-semibold text-[#0F4C81] hover:underline truncate">customer_service@kbzbank.com</a>
+                    <span className="text-slate-500">Press Office</span><a href="mailto:pressoffice@kbzbank.com" className="font-semibold text-[#0F4C81] hover:underline truncate">pressoffice@kbzbank.com</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             <div className="p-2">
               <button
                 type="button"
