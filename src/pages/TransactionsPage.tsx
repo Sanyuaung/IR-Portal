@@ -225,18 +225,16 @@ export const TransactionsPage: React.FC = () => {
           <div className="lg:col-span-2">
             <Select
               placeholder="Currency"
-              data={[
-                { value: 'ALL', label: 'All Currencies' },
-                ...fxRates.map((r) => ({
-                  value: r.currency,
-                  label: r.currency,
-                })),
-              ]}
-              value={currencyFilter}
+              data={fxRates.map((r) => ({
+                value: r.currency,
+                label: r.currency,
+              }))}
+              value={currencyFilter === 'ALL' ? null : currencyFilter}
               onChange={(val) => setCurrencyFilter((val || 'ALL') as any)}
               clearable
               size="sm"
               radius="md"
+              rightSection={currencyFilter !== 'ALL' ? <></> : undefined}
             />
           </div>
 
@@ -245,17 +243,17 @@ export const TransactionsPage: React.FC = () => {
             <Select
               placeholder="Status"
               data={[
-                { value: 'ALL', label: 'All Statuses' },
                 { value: 'success', label: 'Success' },
                 { value: 'failed', label: 'Failed' },
                 { value: 'init', label: 'Init (Timeout Case)' },
                 { value: 'MFR', label: 'MFR (Timeout Case)' },
               ]}
-              value={statusFilter}
+              value={statusFilter === 'ALL' ? null : statusFilter}
               onChange={(val) => setStatusFilter((val || 'ALL') as any)}
               clearable
               size="sm"
               radius="md"
+              rightSection={statusFilter !== 'ALL' ? <></> : undefined}
             />
           </div>
 

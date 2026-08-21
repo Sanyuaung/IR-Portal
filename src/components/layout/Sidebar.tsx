@@ -108,7 +108,48 @@ export const Sidebar: React.FC<SidebarProps> = ({
             const isActive = activePage === item.id;
             const isExpanded = isOpen;
 
-            const content = (
+            return !isExpanded ? (
+              <div key={item.id} className="w-full">
+                <Tooltip label={item.label} position="right" withArrow className="hidden lg:block">
+                  <button
+                    type="button"
+                    onClick={() => handleItemClick(item.id)}
+                    className={`w-full flex items-center justify-center p-3 rounded-lg transition-colors text-sm font-medium cursor-pointer ${
+                      isActive
+                        ? 'bg-white/10 text-white shadow-xs'
+                        : 'hover:bg-white/5 text-slate-300 hover:text-white'
+                    }`}
+                  >
+                    <span className={isActive ? 'text-white' : 'text-slate-400'}>
+                      {item.icon}
+                    </span>
+                  </button>
+                </Tooltip>
+                <div className="lg:hidden">
+                  <button
+                    type="button"
+                    onClick={() => handleItemClick(item.id)}
+                    className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors text-sm font-medium cursor-pointer text-left ${
+                      isActive
+                        ? 'bg-white/10 text-white shadow-xs'
+                        : 'hover:bg-white/5 text-slate-300 hover:text-white'
+                    }`}
+                  >
+                    <span className={isActive ? 'text-white' : 'text-slate-400'}>
+                      {item.icon}
+                    </span>
+                    <span className="flex-1 flex items-center justify-between">
+                      <span>{item.label}</span>
+                      {item.badge && (
+                        <Badge size="xs" variant="filled" className="bg-[#E11D2A] text-white">
+                          {item.badge}
+                        </Badge>
+                      )}
+                    </span>
+                  </button>
+                </div>
+              </div>
+            ) : (
               <button
                 key={item.id}
                 type="button"
@@ -117,13 +158,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   isActive
                     ? 'bg-white/10 text-white shadow-xs'
                     : 'hover:bg-white/5 text-slate-300 hover:text-white'
-                } ${!isExpanded ? 'lg:justify-center lg:px-2' : ''}`}
+                }`}
               >
                 <span className={isActive ? 'text-white' : 'text-slate-400'}>
                   {item.icon}
                 </span>
 
-                <span className={`flex-1 flex items-center justify-between ${!isExpanded ? 'lg:hidden' : ''}`}>
+                <span className="flex-1 flex items-center justify-between">
                   <span>{item.label}</span>
                   {item.badge && (
                     <Badge size="xs" variant="filled" className="bg-[#E11D2A] text-white">
@@ -132,17 +173,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   )}
                 </span>
               </button>
-            );
-
-            return !isExpanded ? (
-              <div key={item.id} className="w-full">
-                <Tooltip label={item.label} position="right" withArrow className="hidden lg:block">
-                  {content}
-                </Tooltip>
-                <div className="lg:hidden">{content}</div>
-              </div>
-            ) : (
-              content
             );
           })}
         </nav>
