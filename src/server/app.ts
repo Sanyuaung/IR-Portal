@@ -202,6 +202,8 @@ app.post(['/api/auth/login', '/auth/login', '/login'], async (req, res) => {
         role: 'Customer Account Admin',
         accountNumber: '0091-2384-992019',
         branch: 'Yangon Main Settlement Gateway Branch (0091)',
+        passwordStrength: user.passwordStrength,
+
       },
     });
   } catch (error: any) {
@@ -304,10 +306,7 @@ app.post(['/api/auth/reset-password', '/auth/reset-password'], async (req, res) 
 
     const passwordStrength = evaluatePasswordStrength(newPassword);
 
-    // Using the same hash function as seed.ts
-    const ENCRYPTION_SALT = 'KBZ_IR_PORTAL_SECURE_SALT_2026';
-    const hashPassword = (password) => crypto.createHash('sha256').update(password + ENCRYPTION_SALT).digest('hex');
-    const passwordHash = hashPassword(newPassword);
+    const passwordHash = await AuthUtils.hashPassword(newPassword);
 
     await prisma.user.update({
       where: { email: cleanEmail },
