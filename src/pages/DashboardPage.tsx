@@ -8,6 +8,8 @@ import {
   Eye,
 } from "../components/common/ui-icons";
 import { RecentTransactionsTable } from "../components/dashboard/RecentTransactionsTable";
+import { RemittanceMap } from "../components/dashboard/RemittanceMap";
+import { CountrySettlementPieChart } from "../components/dashboard/CountrySettlementPieChart";
 import { useTransactionStore } from "../store/useTransactionStore";
 import { useAuthStore } from "../store/useAuthStore";
 import { formatCurrency, formatNumber } from "../utils/formatters";
@@ -331,100 +333,20 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onNavigate }) => {
               Remittance Map
             </h2>
             <p className="text-xs text-slate-500 mt-0.5">
-              Source countries represented in the transactions in this view.
+              Most 10 sender countries, calculated from transactions in the selected view.
             </p>
           </div>
           <div className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#0F4C81]">
-            <Globe2 size={15} /> {analysis.countryCounts.length} sending countr
+            <Globe2 size={15} /> {Math.min(analysis.countryCounts.length, 10)} sending countr
             {analysis.countryCounts.length === 1 ? "y" : "ies"}
           </div>
         </div>
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-5 items-center">
-          <div className="lg:col-span-3 relative overflow-hidden rounded-lg border border-blue-100 bg-[#F5F9FF] min-h-[250px]">
-            <svg
-              viewBox="0 0 800 350"
-              className="absolute inset-0 h-full w-full"
-              role="img"
-              aria-label="World remittance map"
-            >
-              <path
-                d="M35 72 L145 36 L234 65 L248 118 L201 143 L166 128 L121 172 L75 151 L50 110 Z M229 182 L278 202 L294 293 L249 323 L216 257 Z M351 67 L470 48 L542 86 L570 132 L525 152 L465 135 L420 164 L368 130 Z M457 176 L527 181 L564 239 L536 301 L478 278 L448 218 Z M582 73 L690 90 L741 147 L696 189 L626 168 L597 119 Z M650 225 L734 232 L758 283 L692 306 L639 275 Z"
-                fill="#DCEBFA"
-                stroke="#B8D5F2"
-                strokeWidth="3"
-              />
-              <path
-                d="M105 112 C300 20, 510 30, 688 143"
-                fill="none"
-                stroke="#8FC2F0"
-                strokeWidth="2"
-                strokeDasharray="6 6"
-              />
-              <path
-                d="M230 228 C390 115, 530 100, 688 143"
-                fill="none"
-                stroke="#8FC2F0"
-                strokeWidth="2"
-                strokeDasharray="6 6"
-              />
-              {analysis.countryCounts
-                .slice(0, 6)
-                .map(([country, count], index) => {
-                  const positions = [
-                    [112, 102],
-                    [246, 224],
-                    [478, 102],
-                    [540, 134],
-                    [604, 123],
-                    [687, 143],
-                  ];
-                  const [cx, cy] = positions[index];
-                  return (
-                    <g key={country}>
-                      <circle
-                        cx={cx}
-                        cy={cy}
-                        r={8 + Math.min(count, 4) * 2}
-                        fill="#E11D2A"
-                        fillOpacity="0.9"
-                        stroke="white"
-                        strokeWidth="3"
-                      />
-                      <text
-                        x={cx + 14}
-                        y={cy + 4}
-                        fill="#0B2B66"
-                        fontSize="13"
-                        fontWeight="700"
-                      >
-                        {country}
-                      </text>
-                    </g>
-                  );
-                })}
-            </svg>
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-5">
+          <div className="lg:col-span-3 flex">
+            <RemittanceMap countryCounts={analysis.countryCounts} />
           </div>
-          <div className="lg:col-span-2 space-y-3">
-            {analysis.countryCounts.length ? (
-              analysis.countryCounts.slice(0, 6).map(([country, count]) => (
-                <div
-                  key={country}
-                  className="flex items-center justify-between border-b border-slate-100 pb-2.5 last:border-0"
-                >
-                  <span className="text-sm font-semibold text-slate-700">
-                    {country}
-                  </span>
-                  <span className="text-xs font-medium text-slate-500">
-                    {count} transaction{count === 1 ? "" : "s"}
-                  </span>
-                </div>
-              ))
-            ) : (
-              <p className="text-sm text-slate-500">
-                No sending-country information is available for the selected
-                period.
-              </p>
-            )}
+          <div className="lg:col-span-2">
+            <CountrySettlementPieChart transactions={filteredTransactions} />
           </div>
         </div>
       </section>

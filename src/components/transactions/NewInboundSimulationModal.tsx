@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import {
   Modal,
   TextInput,
@@ -9,55 +9,109 @@ import {
   Stack,
   Text,
   Paper,
+  Divider,
 } from '@mantine/core';
-import { PlusCircle, Sparkles, Check } from '../common/ui-icons';
+import { PlusCircle, Sparkles, Check, Building2 } from '../common/ui-icons';
 import { useTransactionStore } from '../../store/useTransactionStore';
 import { CurrencyCode, TransactionStatus } from '../../types';
+import { formatCurrency } from '../../utils/formatters';
 import { notifications } from '@mantine/notifications';
 import confetti from 'canvas-confetti';
 
+interface RemittanceRoute {
+  country: string;
+  bank: string;
+  bic: string;
+  currency: CurrencyCode;
+}
+
 export const NewInboundSimulationModal: React.FC = () => {
-  const { isSimulateModalOpen, setIsSimulateModalOpen, addSimulatedTransaction } = useTransactionStore();
+  const {
+    isSimulateModalOpen,
+    setIsSimulateModalOpen,
+    addSimulatedTransaction,
+    transactions,
+    fxRates,
+  } = useTransactionStore();
+  const routes = useMemo<RemittanceRoute[]>(() => {
+    const routeByCountry = new Map<string, RemittanceRoute>();
+    transactions.forEach((transaction) => {
+      if (!routeByCountry.has(transaction.senderCountry)) {
+        routeByCountry.set(transaction.senderCountry, {
+          country: transaction.senderCountry,
+          bank: transaction.sendingBank,
+          bic: transaction.sendingBankBic,
+          currency: transaction.currency,
+        });
+      }
+    });
+    return Array.from(routeByCountry.values()).sort((first, second) =>
+      first.country.localeCompare(second.country)
+    );
+  }, [transactions]);
+  const initialRoute = routes.find((route) => route.country === 'Singapore') || routes[0];
 
   const [senderName, setSenderName] = useState('DBS Trade Settlement Corp');
-  const [senderCountry, setSenderCountry] = useState('Singapore');
-  const [sendingBank, setSendingBank] = useState('DBS Bank Singapore');
-  const [currency, setCurrency] = useState<CurrencyCode>('USD');
-  const [amount, setAmount] = useState<number | string>(75000);
+  const [senderCountry, setSenderCountry] = useState(initialRoute?.country || 'Singapore');
+  const [sendingBank, setSendingBank] = useState(initialRoute?.bank || 'DBS Bank Singapore');
+  const [sendingBankBic, setSendingBankBic] = useState(initialRoute?.bic || 'DBSSSGSG');
+  const [currency, setCurrency] = useState<CurrencyCode>(initialRoute?.currency || 'USD');
+  const [amount, setAmount] = useState<number | string | bigint>(75000);
+  const [feeAmount, setFeeAmount] = useState<number | string | bigint>(30000);
   const [status, setStatus] = useState<TransactionStatus>('success');
-  const [purpose, setPurpose] = useState('Export Goods Final Payment Batch #8839');
+  const [purpose, setPurpose] = useState('Export goods invoice settlement');
+
+  const currentRate = fxRates.find((rate) => rate.currency === currency)?.middleRate || 3550;
+  const numericAmount = typeof amount === 'number' ? amount : Number(amount) || 0;
+  const numericFee = typeof feeAmount === 'number' ? feeAmount : Number(feeAmount) || 0;
+  const convertedAmountMmk = Math.round(numericAmount * currentRate);
+  const netAmountMmk = Math.max(convertedAmountMmk - numericFee, 0);
+
+  const selectRoute = (country: string | null) => {
+    const route = routes.find((item) => item.country === country) || initialRoute;
+    if (!route) return;
+
+    setSenderCountry(route.country);
+    setSendingBank(route.bank);
+    setSendingBankBic(route.bic);
+    setCurrency(route.currency);
+  };
 
   const handleSimulate = () => {
-    const numAmt = typeof amount === 'number' ? amount : parseFloat(amount) || 50000;
+    if (!senderName.trim() || !purpose.trim() || numericAmount <= 0 || !sendingBankBic.trim()) {
+      notifications.show({
+        title: 'Complete the remittance details',
+        message: 'Sender, route, amount, BIC, and payment purpose are required.',
+        color: 'red',
+      });
+      return;
+    }
 
     const newTx = addSimulatedTransaction({
-      senderName,
+      senderName: senderName.trim(),
       senderCountry,
       sendingBank,
+      sendingBankBic: sendingBankBic.trim().toUpperCase(),
       currency,
-      amount: numAmt,
+      amount: numericAmount,
+      feeAmount: numericFee,
       status,
-      purpose,
+      purpose: purpose.trim(),
     });
 
     setIsSimulateModalOpen(false);
 
-    // Fire celebratory confetti if success
     if (status === 'success') {
-      try {
-        confetti({
-          particleCount: 50,
-          spread: 60,
-          origin: { y: 0.6 },
-        });
-      } catch (e) {
-        // ignore in tests
-      }
+      confetti({
+        particleCount: 50,
+        spread: 60,
+        origin: { y: 0.6 },
+      });
     }
 
     notifications.show({
-      title: 'Incoming Remittance Received',
-      message: `Received ${currency} ${numAmt.toLocaleString()} from ${senderName} (${newTx.transactionRef})`,
+      title: 'Incoming Remittance Posted',
+      message: `${currency} ${numericAmount.toLocaleString()} from ${senderName} was added as ${newTx.transactionRef}.`,
       color: status === 'success' ? 'green' : status === 'init' || status === 'MFR' ? 'yellow' : 'red',
       icon: <Check size={16} />,
       autoClose: 5000,
@@ -74,108 +128,126 @@ export const NewInboundSimulationModal: React.FC = () => {
           <span>Simulate Incoming International Remittance</span>
         </div>
       }
-      size="md"
+      size="lg"
       centered
     >
-      <Stack gap="sm">
+      <Stack gap="md">
         <Text size="xs" c="dimmed">
-          Simulate a new incoming SWIFT MT103 credit message to test real-time dashboard analytics and transaction list updates.
+          Create a realistic inbound remittance using an existing transaction corridor. The new record is posted to the transaction table and updates the dashboard.
         </Text>
 
+        <Paper p="sm" radius="md" withBorder className="border-blue-100 bg-blue-50/60">
+          <div className="flex items-center gap-2">
+            <Building2 size={17} className="text-[#0B2B66]" />
+            <div>
+              <Text size="sm" fw={700} c="#0B2B66">Incoming corridor</Text>
+              <Text size="xs" c="dimmed">Bank, BIC, and currency are prefilled from existing transaction data.</Text>
+            </div>
+          </div>
+          <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <Select
+              label="Sender country / region"
+              data={routes.map((route) => ({ value: route.country, label: route.country }))}
+              value={senderCountry}
+              onChange={selectRoute}
+              searchable
+              required
+            />
+            <Select
+              label="Originating bank"
+              data={routes.map((route) => ({
+                value: route.bank,
+                label: `${route.bank} (${route.country})`,
+              }))}
+              value={sendingBank}
+              onChange={(bank) => {
+                const route = routes.find((item) => item.bank === bank) || initialRoute;
+                if (route) selectRoute(route.country);
+              }}
+              searchable
+              required
+            />
+            <TextInput
+              label="SWIFT BIC"
+              value={sendingBankBic}
+              onChange={(event) => setSendingBankBic(event.currentTarget.value)}
+              maxLength={11}
+              required
+            />
+            <Select
+              label="Remittance currency"
+              data={fxRates.map((rate) => ({ value: rate.currency, label: rate.currency }))}
+              value={currency}
+              onChange={(value) => setCurrency((value || currency) as CurrencyCode)}
+              required
+            />
+          </div>
+        </Paper>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <TextInput
+            label="Ordering customer (sender)"
+            placeholder="Company or individual name"
+            value={senderName}
+            onChange={(event) => setSenderName(event.currentTarget.value)}
+            required
+          />
+          <Select
+            label="Initial settlement status"
+            data={[
+              { value: 'success', label: 'Cleared and settled' },
+              { value: 'init', label: 'Awaiting settlement' },
+              { value: 'MFR', label: 'Manual review required' },
+              { value: 'failed', label: 'Rejected / failed' },
+            ]}
+            value={status}
+            onChange={(value) => setStatus((value || 'success') as TransactionStatus)}
+            required
+          />
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <NumberInput
+            label={`Incoming amount (${currency})`}
+            value={amount}
+            onChange={setAmount}
+            min={1}
+            thousandSeparator=","
+            required
+          />
+          <NumberInput
+            label="Settlement fee (MMK)"
+            value={feeAmount}
+            onChange={setFeeAmount}
+            min={0}
+            thousandSeparator=","
+            required
+          />
+        </div>
+
         <TextInput
-          label="Ordering Customer (Sender Name)"
-          placeholder="e.g. Acme Global Logistics Pte Ltd"
-          value={senderName}
-          onChange={(e) => setSenderName(e.currentTarget.value)}
+          label="Payment purpose (SWIFT field :70:)"
+          placeholder="e.g. Export goods invoice settlement"
+          value={purpose}
+          onChange={(event) => setPurpose(event.currentTarget.value)}
           required
         />
 
-        <div className="grid grid-cols-2 gap-3">
-          <Select
-            label="Sender Country"
-            data={[
-              { value: 'Singapore', label: '🇸🇬 Singapore' },
-              { value: 'United States', label: '🇺🇸 United States' },
-              { value: 'Thailand', label: '🇹🇭 Thailand' },
-              { value: 'Germany', label: '🇩🇪 Germany' },
-              { value: 'United Kingdom', label: '🇬🇧 United Kingdom' },
-              { value: 'Japan', label: '🇯🇵 Japan' },
-              { value: 'China', label: '🇨🇳 China' },
-              { value: 'Malaysia', label: '🇲🇾 Malaysia' },
-            ]}
-            value={senderCountry}
-            onChange={(val) => setSenderCountry(val || 'Singapore')}
-            clearable
-          />
-
-          <Select
-            label="Originating Bank"
-            data={[
-              { value: 'DBS Bank Singapore', label: 'DBS Bank SG' },
-              { value: 'Citibank N.A. New York', label: 'Citibank N.A.' },
-              { value: 'Bangkok Bank PCL', label: 'Bangkok Bank' },
-              { value: 'Deutsche Bank AG', label: 'Deutsche Bank' },
-              { value: 'Standard Chartered Bank', label: 'Standard Chartered' },
-              { value: 'SMBC Tokyo', label: 'SMBC Tokyo' },
-              { value: 'Bank of China', label: 'Bank of China' },
-            ]}
-            value={sendingBank}
-            onChange={(val) => setSendingBank(val || 'DBS Bank Singapore')}
-            clearable
-          />
-        </div>
-
-        <div className="grid grid-cols-2 gap-3">
-          <Select
-            label="Currency"
-            data={[
-              { value: 'USD', label: 'USD ($)' },
-              { value: 'EUR', label: 'EUR (€)' },
-              { value: 'SGD', label: 'SGD (S$)' },
-              { value: 'THB', label: 'THB (฿)' },
-              { value: 'GBP', label: 'GBP (£)' },
-              { value: 'JPY', label: 'JPY (¥)' },
-              { value: 'CNY', label: 'CNY (¥)' },
-              { value: 'MYR', label: 'MYR (RM)' },
-            ]}
-            value={currency}
-            onChange={(val) => setCurrency((val || 'USD') as CurrencyCode)}
-            clearable
-          />
-
-          <NumberInput
-            label="Remittance Amount"
-            value={amount}
-            onChange={(val) => setAmount(val)}
-            min={100}
-            step={5000}
-          />
-        </div>
-
-        <Select
-          label="Initial Status"
-          data={[
-            { value: 'success', label: '✅ Success (Directly Settled)' },
-            { value: 'init', label: '⏳ Init (Timeout Case)' },
-            { value: 'MFR', label: '⏳ MFR (Timeout Case)' },
-            { value: 'failed', label: '❌ Failed (Discrepancy / Rejected)' },
-          ]}
-          value={status}
-          onChange={(val) => setStatus((val || 'success') as TransactionStatus)}
-          clearable
-        />
-
-        <TextInput
-          label="Remittance Purpose / Field :70:"
-          value={purpose}
-          onChange={(e) => setPurpose(e.currentTarget.value)}
-        />
-
-        <Paper p="xs" radius="sm" className="bg-blue-50/50 border border-blue-100 text-xs text-blue-800">
-          💡 The transaction will be posted with full SWIFT GPI tracking, simulated exchange rate conversion, and notification alert.
+        <Paper p="sm" radius="md" className="border border-slate-200 bg-slate-50">
+          <div className="flex items-center justify-between gap-3">
+            <div>
+              <Text size="xs" fw={700} c="dark.8">Settlement preview</Text>
+              <Text size="11px" c="dimmed">Live FX rate: 1 {currency} = {currentRate.toLocaleString()} MMK</Text>
+            </div>
+            <div className="text-right">
+              <Text size="sm" fw={800} c="#0B2B66">{formatCurrency(netAmountMmk, 'MMK')}</Text>
+              <Text size="11px" c="dimmed">after {formatCurrency(numericFee, 'MMK')} fee</Text>
+            </div>
+          </div>
         </Paper>
 
-        <Group justify="flex-end" mt="md">
+        <Divider />
+        <Group justify="flex-end">
           <Button variant="default" onClick={() => setIsSimulateModalOpen(false)}>
             Cancel
           </Button>
@@ -185,7 +257,7 @@ export const NewInboundSimulationModal: React.FC = () => {
             leftSection={<PlusCircle size={16} />}
             onClick={handleSimulate}
           >
-            Post Inbound Wire
+            Post Incoming Remittance
           </Button>
         </Group>
       </Stack>

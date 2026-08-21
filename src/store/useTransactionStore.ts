@@ -189,7 +189,7 @@ export const useTransactionStore = create<TransactionState>((set, get) => ({
       get().fxRates.find((r) => r.currency === curr)?.middleRate || 3550;
     const amt = customData.amount || 50000;
     const converted = Math.round(amt * rate);
-    const fee = 30000;
+    const fee = customData.feeAmount ?? 30000;
     const net = converted - fee;
 
     const newTx: InboundTransaction = {
@@ -208,14 +208,14 @@ export const useTransactionStore = create<TransactionState>((set, get) => ({
       valueDate: new Date().toISOString(),
       status: customData.status || 'success',
       purpose: customData.purpose || 'Trade invoice settlement via SWIFT GPI',
-      beneficiaryAccount: '0091-2384-992019',
+      beneficiaryAccount: customData.beneficiaryAccount || '0091-2384-992019',
       swiftMetadata: {
         senderReference: `SIM-REF-${randomId}`,
         bankOpCode: 'CRED',
         orderingCustomer: {
           name: customData.senderName || 'Global Merchant Settlement Corp',
-          address: '8 Shenton Way, #45-01 AXA Tower',
-          city: 'Singapore',
+          address: 'Remittance sender address provided by originating institution',
+          city: customData.senderCountry || 'Singapore',
           country: customData.senderCountry || 'Singapore',
         },
         orderingInstitution: {
@@ -231,7 +231,7 @@ export const useTransactionStore = create<TransactionState>((set, get) => ({
         },
         beneficiaryCustomer: {
           accountNumber: '0091-2384-992019',
-          name: 'KBZ Golden Horizon Trading Co., Ltd.',
+          name: 'KBZ Settlement Account Holder',
           address: 'No. 45 Strand Road, Kyauktada Township, Yangon',
         },
         remittanceInfo: customData.purpose || 'Commercial invoice settlement batch',
@@ -259,7 +259,7 @@ export const useTransactionStore = create<TransactionState>((set, get) => ({
           },
           {
             title: 'Settled to Beneficiary Account',
-            description: 'Final MMK settlement posted to 0091-2384-992019',
+            description: `Final MMK settlement posted to ${customData.beneficiaryAccount || '0091-2384-992019'}`,
             timestamp: dayjs().format('DD/MM/YYYY hh:mm A'),
             completed: customData.status !== 'init' && customData.status !== 'MFR',
             current: customData.status === 'init' || customData.status === 'MFR',
