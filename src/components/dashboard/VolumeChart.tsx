@@ -60,7 +60,7 @@ export const VolumeChart: React.FC<VolumeChartProps> = ({ transactions }) => {
   };
 
   return (
-    <div className="bg-white border border-slate-200 rounded-xl p-5 flex flex-col shadow-xs h-full">
+    <div className="bg-white border border-slate-200 rounded-xl p-5 flex flex-col shadow-xs min-h-[360px]">
       <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
         <div>
           <h3 className="font-bold text-slate-800 text-base">Settlement Volume</h3>
@@ -68,7 +68,7 @@ export const VolumeChart: React.FC<VolumeChartProps> = ({ transactions }) => {
         </div>
       </div>
 
-      <div className="h-64 w-full flex-1">
+      <div className="h-64 w-full">
         {volumeData.length ? (
           <ResponsiveContainer width="100%" height="100%">
             <ComposedChart data={volumeData} margin={{ top: 10, right: 10, left: 10, bottom: 0 }}>
