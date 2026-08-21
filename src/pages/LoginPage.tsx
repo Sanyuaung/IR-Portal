@@ -372,7 +372,7 @@ export const LoginPage: React.FC = () => {
   return (
     <div className="min-h-screen flex flex-col lg:flex-row bg-[#F8FAFC]">
       {/* LEFT PANEL: Public Customer Remittance Portal Banner */}
-      <div className="lg:w-1/2 bg-[#0F4C81] text-white p-8 lg:p-14 flex flex-col justify-between relative overflow-hidden">
+      <div className="hidden lg:flex lg:w-1/2 bg-[#0F4C81] text-white p-8 lg:p-14 flex-col justify-between relative overflow-hidden">
         {/* Decorative background glow */}
         <div className="absolute top-0 right-0 w-96 h-96 bg-blue-400/10 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute bottom-0 left-0 w-80 h-80 bg-amber-400/10 rounded-full blur-2xl pointer-events-none" />
