@@ -183,7 +183,9 @@ export const Header: React.FC<HeaderProps> = ({
                 size="xs"
                 fullWidth
                 color="corporateBlue"
-                onClick={() => onNavigate('transactions')}
+                onClick={() => {
+                  onNavigate('ir-transactions');
+                }}
               >
                 View All Remittances →
               </Button>

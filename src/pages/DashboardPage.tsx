@@ -1,10 +1,9 @@
-import React, { useState } from 'react';
+import React, { useMemo } from 'react';
 import {
   DollarSign,
   Calendar,
   Download,
   ArrowDownLeft,
-  Clock,
   Building,
   Users,
   Sparkles,
@@ -30,12 +29,60 @@ interface DashboardPageProps {
 
 export const DashboardPage: React.FC<DashboardPageProps> = ({ onNavigate }) => {
   const { user } = useAuthStore();
-  const { getStats, transactions, setIsSimulateModalOpen, setCustomDateRange, setDatePreset, datePreset, customStartDate, customEndDate } = useTransactionStore();
+  const {
+    getFilteredTransactions,
+    setIsSimulateModalOpen,
+    setCustomDateRange,
+    setDatePreset,
+    datePreset,
+    customStartDate,
+    customEndDate,
+  } = useTransactionStore();
+  const filteredTransactions = getFilteredTransactions();
+  const analysis = useMemo(() => {
+    const settled = filteredTransactions.filter((transaction) => transaction.status === 'success');
+    const processing = filteredTransactions.filter(
+      (transaction) => transaction.status === 'init' || transaction.status === 'MFR'
+    );
+    const failed = filteredTransactions.filter((transaction) => transaction.status === 'failed');
+    const totalSettledMmk = settled.reduce(
+      (sum, transaction) => sum + (transaction.netAmountMmk || transaction.convertedAmountMmk || 0),
+      0
+    );
+    const countBy = (key: (transaction: typeof filteredTransactions[number]) => string) => {
+      const counts = new Map<string, number>();
+      filteredTransactions.forEach((transaction) => {
+        const value = key(transaction);
+        if (value) counts.set(value, (counts.get(value) || 0) + 1);
+      });
+      return Array.from(counts.entries()).sort(([, first], [, second]) => second - first)[0];
+    };
+    const leadingBank = countBy((transaction) => transaction.sendingBank);
+    const dominantCurrency = countBy((transaction) => transaction.currency);
+    const largestSettlement = settled.reduce<typeof settled[number] | null>(
+      (largest, transaction) =>
+        !largest || (transaction.netAmountMmk || transaction.convertedAmountMmk || 0) >
+          (largest.netAmountMmk || largest.convertedAmountMmk || 0)
+          ? transaction
+          : largest,
+      null
+    );
 
-  const stats = getStats();
+    return {
+      settled,
+      processing,
+      failed,
+      totalSettledMmk,
+      averageSettlementMmk: settled.length ? Math.round(totalSettledMmk / settled.length) : 0,
+      settlementRate: filteredTransactions.length ? Math.round((settled.length / filteredTransactions.length) * 100) : 0,
+      leadingBank,
+      dominantCurrency,
+      largestSettlement,
+    };
+  }, [filteredTransactions]);
 
   const handleExportReport = () => {
-    exportTransactionsToCsv(transactions, 'KBZ_Remittance_Summary_Report');
+    exportTransactionsToCsv(filteredTransactions, 'KBZ_Remittance_Summary_Report');
     notifications.show({
       title: 'Report Downloaded',
       message: 'Exported transaction ledger to CSV successfully.',
@@ -128,13 +175,13 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onNavigate }) => {
               <ArrowDownLeft size={14} />
               Open Transactions
             </button>
-            <button
+            {/* <button
               onClick={handleExportReport}
               className="px-3.5 py-2 bg-white border border-slate-200 text-slate-700 text-xs font-semibold rounded-lg hover:bg-slate-50 transition-colors inline-flex items-center gap-1.5"
             >
               <Download size={14} />
               Download CSV
-            </button>
+            </button> */}
           </div>
         </div>
       </section>
@@ -143,66 +190,76 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onNavigate }) => {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Card 1: Total Inbound Amount */}
         <KPICard
-          title="Total Inbound Amount"
-          value={`$${formatNumber(stats.totalInboundAmountUsd)}`}
-          subValue={formatCurrency(stats.totalInboundAmountMmk, 'MMK')}
+          title="Settled Value"
+          value={formatCurrency(analysis.totalSettledMmk, 'MMK')}
+          subValue={`${analysis.settled.length} cleared transaction${analysis.settled.length === 1 ? '' : 's'}`}
           icon={<DollarSign size={20} />}
           iconVariant="blue"
-          trend={{
-            value: '+12.5%',
-            isPositive: true,
-          }}
         />
 
         {/* Card 2: Transactions Count */}
         <KPICard
           title="Transactions Count"
-          value={formatNumber(stats.completedCount + stats.pendingCount)}
-          subValue={`${stats.completedCount} Cleared • ${stats.pendingCount} Timeouts`}
+          value={formatNumber(filteredTransactions.length)}
+          subValue={`${analysis.settled.length} cleared • ${analysis.processing.length} processing`}
           icon={<ArrowDownLeft size={20} />}
           iconVariant="purple"
-          trend={{
-            value: '+4%',
-            isPositive: true,
-          }}
         />
 
         {/* Card 3: Processing Amount */}
         <KPICard
-          title="Processing Amount"
-          value={`$${formatNumber(stats.pendingAmountUsd)}`}
-          subValue={formatCurrency(stats.pendingAmountMmk, 'MMK')}
-          icon={<Clock size={20} />}
+          title="Largest Settlement"
+          value={formatCurrency(analysis.largestSettlement?.netAmountMmk || analysis.largestSettlement?.convertedAmountMmk || 0, 'MMK')}
+          subValue={analysis.largestSettlement ? `${analysis.largestSettlement.currency} • ${analysis.largestSettlement.transactionRef}` : 'No cleared transaction in this view'}
+          icon={<TrendingUp size={20} />}
           iconVariant="orange"
-          badge={{
-            text: `${stats.pendingCount} Timeouts`,
-            color: 'orange',
-          }}
         />
 
         {/* Card 4: Active Settlements */}
         <KPICard
-          title="Active Settlements"
-          value={formatCurrency(stats.todayInboundMmk, 'MMK')}
-          subValue="Settled to main corporate account"
+          title="Average Settlement"
+          value={formatCurrency(analysis.averageSettlementMmk, 'MMK')}
+          subValue={analysis.failed.length ? `${analysis.failed.length} failed transaction${analysis.failed.length === 1 ? '' : 's'} require review` : 'No failed transactions in this view'}
           icon={<Building size={20} />}
           iconVariant="emerald"
-          trend={{
-            value: 'Real-Time',
-            isPositive: true,
-          }}
         />
       </div>
 
       {/* Analytics */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2">
-          <VolumeChart />
+          <VolumeChart transactions={filteredTransactions} />
         </div>
         <div className="lg:col-span-1">
-          <CurrencyBreakdownChart />
+          <CurrencyBreakdownChart transactions={filteredTransactions} />
         </div>
       </div>
+
+      <section className="bg-white rounded-xl border border-slate-200 shadow-xs p-4 sm:p-5">
+        <div className="flex items-center justify-between gap-3 mb-4">
+          <div>
+            <h3 className="text-sm font-bold text-slate-900">Operational Insights</h3>
+            <p className="text-xs text-slate-500 mt-0.5">Calculated from the transactions in the current view.</p>
+          </div>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-slate-100">
+          <div className="py-3 sm:py-1 sm:pr-5">
+            <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Settlement success</p>
+            <p className="mt-1 text-xl font-bold text-emerald-700">{analysis.settlementRate}%</p>
+            <p className="mt-1 text-xs text-slate-500">{analysis.settled.length} of {filteredTransactions.length} transactions cleared</p>
+          </div>
+          <div className="py-3 sm:py-1 sm:px-5">
+            <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Leading source bank</p>
+            <p className="mt-1 text-sm font-bold text-slate-800 truncate">{analysis.leadingBank?.[0] || 'No data'}</p>
+            <p className="mt-1 text-xs text-slate-500">{analysis.leadingBank ? `${analysis.leadingBank[1]} transaction${analysis.leadingBank[1] === 1 ? '' : 's'}` : 'No transactions in this view'}</p>
+          </div>
+          <div className="py-3 sm:py-1 sm:pl-5">
+            <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Dominant currency</p>
+            <p className="mt-1 text-xl font-bold text-[#0F4C81]">{analysis.dominantCurrency?.[0] || '—'}</p>
+            <p className="mt-1 text-xs text-slate-500">{analysis.dominantCurrency ? `${analysis.dominantCurrency[1]} transaction${analysis.dominantCurrency[1] === 1 ? '' : 's'}` : 'No transactions in this view'}</p>
+          </div>
+        </div>
+      </section>
 
       {/* Recent inbound activity */}
       <RecentTransactionsTable onNavigateToTransactions={() => onNavigate('ir-transactions')} />
