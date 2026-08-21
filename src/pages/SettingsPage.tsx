@@ -38,6 +38,7 @@ import {
   Database,
   Server,
   Layers,
+  CheckCircle2,
 } from '../components/common/ui-icons';
 import { z } from 'zod';
 import { useSettingsStore } from '../store/useSettingsStore';
@@ -119,23 +120,36 @@ export const SettingsPage: React.FC = () => {
     return () => clearInterval(interval);
   }, [showEmailModal, emailOtpSecondsLeft]);
 
-  // Password strength calculation
-  const getPasswordStrength = (pass: string) => {
-    let score = 0;
+  // Password strength calculation and criteria checks
+  const hasMinLength = newPassword.length >= 8;
+  const hasUppercase = /[A-Z]/.test(newPassword);
+  const hasLowercase = /[a-z]/.test(newPassword);
+  const hasNumber = /[0-9]/.test(newPassword);
+  const hasSpecial = /[^A-Za-z0-9]/.test(newPassword);
+  const passwordsMatch = newPassword.length > 0 && newPassword === confirmPassword;
+
+  const calculateStrength = (pass: string) => {
     if (!pass) return 0;
-    if (pass.length >= 8) score += 25;
-    if (/[A-Z]/.test(pass)) score += 25;
-    if (/[0-9]/.test(pass)) score += 25;
-    if (/[^A-Za-z0-9]/.test(pass)) score += 25;
+    let score = 0;
+    if (pass.length >= 8) score += 20;
+    if (/[A-Z]/.test(pass)) score += 20;
+    if (/[a-z]/.test(pass)) score += 20;
+    if (/[0-9]/.test(pass)) score += 20;
+    if (/[^A-Za-z0-9]/.test(pass)) score += 20;
     return score;
   };
 
-  const strength = getPasswordStrength(newPassword);
-  const getStrengthColor = (val: number) => {
-    if (val < 50) return 'red';
-    if (val < 75) return 'yellow';
-    return 'green';
+  const strength = calculateStrength(newPassword);
+
+  const getStrengthInfo = (score: number) => {
+    if (score === 0) return { label: 'Empty', color: 'gray', barColor: '#cbd5e1' };
+    if (score < 40) return { label: 'Weak', color: 'red', barColor: '#ef4444' };
+    if (score < 80) return { label: 'Moderate', color: 'yellow', barColor: '#f59e0b' };
+    if (score < 100) return { label: 'Good', color: 'blue', barColor: '#3b82f6' };
+    return { label: 'Strong', color: 'green', barColor: '#10b981' };
   };
+
+  const strengthInfo = getStrengthInfo(strength);
 
   const handle2FaToggle = (checked: boolean) => {
     if (!checked && settings.is2FaEnabled) {
@@ -587,27 +601,36 @@ export const SettingsPage: React.FC = () => {
                     size="sm"
                   />
 
-                  <PasswordInput
-                    label="New Password"
-                    placeholder="Enter new password"
-                    value={newPassword}
-                    onChange={(e) => setNewPassword(e.currentTarget.value)}
-                    error={passwordErrors.newPassword}
-                    required
-                    size="sm"
-                  />
+                  <div>
+                    <PasswordInput
+                      label="New Password"
+                      placeholder="Enter new password"
+                      value={newPassword}
+                      onChange={(e) => setNewPassword(e.currentTarget.value)}
+                      error={passwordErrors.newPassword}
+                      required
+                      size="sm"
+                    />
 
-                  {newPassword && (
-                    <div>
-                      <div className="flex justify-between items-center mb-1 text-xs">
-                        <span className="text-slate-500">Password Strength:</span>
-                        <span className="font-semibold" style={{ color: getStrengthColor(strength) }}>
-                          {strength < 50 ? 'Weak' : strength < 75 ? 'Good' : 'Strong'}
-                        </span>
+                    {/* Real-time Password Strength Meter */}
+                    {newPassword && (
+                      <div className="mt-2 space-y-1.5 bg-slate-50 p-2.5 rounded-md border border-slate-200">
+                        <div className="flex justify-between items-center text-xs">
+                          <span className="text-slate-500 font-medium">Password Strength:</span>
+                          <Badge size="xs" variant="light" color={strengthInfo.color} className="font-semibold">
+                            {strengthInfo.label} ({strength}%)
+                          </Badge>
+                        </div>
+                        <Progress
+                          value={strength}
+                          color={strengthInfo.color}
+                          size="xs"
+                          radius="xl"
+                          className="transition-all duration-300"
+                        />
                       </div>
-                      <Progress value={strength} color={getStrengthColor(strength)} size="xs" radius="xl" />
-                    </div>
-                  )}
+                    )}
+                  </div>
 
                   <PasswordInput
                     label="Confirm New Password"
@@ -622,8 +645,9 @@ export const SettingsPage: React.FC = () => {
                   <Button
                     type="submit"
                     color="corporateBlue"
-                    className="bg-[#0F4C81] hover:bg-[#0A365D]"
+                    className="bg-[#0F4C81] hover:bg-[#0A365D] text-white"
                     loading={isChangingPass}
+                    disabled={!hasMinLength || !hasUppercase || !hasLowercase || !hasNumber || !hasSpecial || !passwordsMatch}
                     leftSection={<ShieldCheck size={16} />}
                   >
                     Update & Encrypt Password
@@ -638,11 +662,31 @@ export const SettingsPage: React.FC = () => {
                   <ShieldCheck size={18} />
                   <span>Password Requirements</span>
                 </div>
-                <div className="space-y-2.5 text-xs text-slate-600">
-                  <p>• At least 8 characters</p>
-                  <p>• At least 1 uppercase & 1 lowercase letter</p>
-                  <p>• At least 1 number and 1 special symbol (!@#$%^&*)</p>
-                  <p>• Confirm password must match new password</p>
+                <div className="space-y-2 text-xs">
+                  <div className={`flex items-center gap-1.5 ${hasMinLength ? 'text-emerald-600 font-medium' : 'text-slate-500'}`}>
+                    {hasMinLength ? <CheckCircle2 size={14} /> : <span className="w-3.5 h-3.5 rounded-full border border-slate-300 inline-block" />}
+                    <span>At least 8 characters</span>
+                  </div>
+                  <div className={`flex items-center gap-1.5 ${hasUppercase ? 'text-emerald-600 font-medium' : 'text-slate-500'}`}>
+                    {hasUppercase ? <CheckCircle2 size={14} /> : <span className="w-3.5 h-3.5 rounded-full border border-slate-300 inline-block" />}
+                    <span>1 uppercase letter (A-Z)</span>
+                  </div>
+                  <div className={`flex items-center gap-1.5 ${hasLowercase ? 'text-emerald-600 font-medium' : 'text-slate-500'}`}>
+                    {hasLowercase ? <CheckCircle2 size={14} /> : <span className="w-3.5 h-3.5 rounded-full border border-slate-300 inline-block" />}
+                    <span>1 lowercase letter (a-z)</span>
+                  </div>
+                  <div className={`flex items-center gap-1.5 ${hasNumber ? 'text-emerald-600 font-medium' : 'text-slate-500'}`}>
+                    {hasNumber ? <CheckCircle2 size={14} /> : <span className="w-3.5 h-3.5 rounded-full border border-slate-300 inline-block" />}
+                    <span>1 number (0-9)</span>
+                  </div>
+                  <div className={`flex items-center gap-1.5 ${hasSpecial ? 'text-emerald-600 font-medium' : 'text-slate-500'}`}>
+                    {hasSpecial ? <CheckCircle2 size={14} /> : <span className="w-3.5 h-3.5 rounded-full border border-slate-300 inline-block" />}
+                    <span>1 special symbol (!@#$%^&*)</span>
+                  </div>
+                  <div className={`flex items-center gap-1.5 ${passwordsMatch ? 'text-emerald-600 font-medium' : 'text-slate-500'}`}>
+                    {passwordsMatch ? <CheckCircle2 size={14} /> : <span className="w-3.5 h-3.5 rounded-full border border-slate-300 inline-block" />}
+                    <span>Confirm password matches</span>
+                  </div>
                 </div>
               </Paper>
             </div>
