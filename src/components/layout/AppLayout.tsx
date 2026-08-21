@@ -127,10 +127,12 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
         <span>© 2026 MM Global Remit Gateway. All rights reserved. Version 2.4.1 (Stable)</span>
         <div className="flex items-center gap-4 text-[10px]">
           <span className="hidden md:inline text-white/80">Secure 256-bit SSL Encrypted</span>
+          {/* 
           <span className="flex items-center gap-1.5">
             <span className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse"></span>
             <span className="text-white font-medium">SWIFT GPI Active</span>
           </span>
+           */}
         </div>
       </footer>
 
