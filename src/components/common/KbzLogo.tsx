@@ -100,13 +100,13 @@ export const PortalStackedColorLogo: React.FC<{
 
       <div className="mt-3 text-center">
         <span
-          className="font-black tracking-wider text-[#0F4C81] block leading-none"
+          className="font-black tracking-wider text-[#0F4C81] dark:text-blue-300 block leading-none"
           style={{ fontSize: `${height * 0.22}px`, letterSpacing: '0.04em', fontFamily: 'system-ui, -apple-system, sans-serif' }}
         >
           MM GLOBAL REMIT
         </span>
         <span
-          className="text-slate-500 font-bold uppercase tracking-[0.22em] block mt-1.5"
+          className="text-slate-500 dark:text-slate-400 font-bold uppercase tracking-[0.22em] block mt-1.5"
           style={{ fontSize: `${height * 0.085}px` }}
         >
           MYANMAR REMITTANCE GATEWAY
@@ -138,7 +138,7 @@ export const PortalHorizontalLogo: React.FC<{
       <div className="flex flex-col justify-center">
         <div className="flex items-center gap-2">
           <span
-            className="font-black text-[#0F4C81] tracking-tight leading-none"
+            className="font-black text-[#0F4C81] dark:text-blue-300 tracking-tight leading-none"
             style={{ fontSize: `${height * 0.52}px`, letterSpacing: '0.02em', fontFamily: 'system-ui, -apple-system, sans-serif' }}
           >
             MM GLOBAL REMIT
@@ -152,7 +152,7 @@ export const PortalHorizontalLogo: React.FC<{
         </div>
 
         <span
-          className="text-slate-500 font-bold uppercase tracking-[0.2em] leading-tight mt-0.5 text-[9px] sm:text-[10px]"
+          className="text-slate-500 dark:text-slate-400 font-bold uppercase tracking-[0.2em] leading-tight mt-0.5 text-[9px] sm:text-[10px]"
           style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}
         >
           INBOUND REMITTANCE GATEWAY

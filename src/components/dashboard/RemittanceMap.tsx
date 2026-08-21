@@ -134,7 +134,7 @@ export const RemittanceMap: React.FC<RemittanceMapProps> = ({
         </div>
       )}
 
-      <div className="h-full overflow-hidden rounded-lg border border-blue-100 bg-[#F5F9FF]">
+      <div className="h-full overflow-hidden rounded-lg border border-blue-100 dark:border-blue-800/50 bg-[#F5F9FF]">
         <ComposableMap
           projection="geoEqualEarth"
           projectionConfig={{ scale: 145 }}

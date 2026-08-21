@@ -422,7 +422,7 @@ export const LoginPage: React.FC = () => {
         </div>
 
         {/* Footer info */}
-        <div className="pt-6 border-t border-white/10 flex flex-col sm:flex-row justify-between items-center text-xs text-slate-400 gap-2 relative z-10">
+        <div className="pt-6 border-t border-white/10 flex flex-col sm:flex-row justify-between items-center text-xs text-slate-400 dark:text-slate-500 gap-2 relative z-10">
           <div>
             <span>Version 3.1.0 • Public Customer Portal</span>
           </div>
@@ -447,7 +447,7 @@ export const LoginPage: React.FC = () => {
 
           {/* MAIN AUTHENTICATION CARD */}
           {!is2FaStep ? (
-            <div className="bg-white border border-[#d9dbe9] rounded-xl p-6 sm:p-8 shadow-xs">
+            <div className="bg-white dark:bg-slate-900 border border-[#d9dbe9] rounded-xl p-6 sm:p-8 shadow-xs">
               {/* Tab Selector: Sign In vs Sign Up - only show when not in forgot password flow */}
               {authMode !== 'forgot' && (
                 <div className="flex bg-[#eff0f6] p-1 rounded-lg mb-6">
@@ -459,7 +459,7 @@ export const LoginPage: React.FC = () => {
                     }}
                     className={`flex-1 py-2 rounded-md text-xs sm:text-sm font-semibold transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
                       authMode === 'signin'
-                        ? 'bg-white text-[#002C76] shadow-xs'
+                        ? 'bg-white dark:bg-slate-900 text-[#002C76] shadow-xs'
                         : 'text-[#6e7191] hover:text-[#14142b]'
                     }`}
                   >
@@ -475,7 +475,7 @@ export const LoginPage: React.FC = () => {
                     }}
                     className={`flex-1 py-2 rounded-md text-xs sm:text-sm font-semibold transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
                       authMode === 'signup'
-                        ? 'bg-white text-[#002C76] shadow-xs'
+                        ? 'bg-white dark:bg-slate-900 text-[#002C76] shadow-xs'
                         : 'text-[#6e7191] hover:text-[#14142b]'
                     }`}
                   >
@@ -495,14 +495,14 @@ export const LoginPage: React.FC = () => {
                         <CheckCircle2 size={24} />
                       </div>
                       <div className="space-y-1.5">
-                        <h2 className="text-xl font-bold text-[#0F4C81]">Check Your Email</h2>
+                        <h2 className="text-xl font-bold text-[#0F4C81] dark:text-blue-300">Check Your Email</h2>
                         <p className="text-[#6e7191] text-xs leading-relaxed max-w-sm mx-auto">
                           A password reset link has been dispatched to <strong className="text-[#14142b]">{forgotEmail}</strong>.
                         </p>
                       </div>
                       
                       <div className="p-3.5 bg-[#f8f9fa] rounded-lg border border-[#e9ecef] text-left text-xs text-[#4e4b66] space-y-1.5">
-                        <div className="font-semibold text-[#0F4C81] flex items-center gap-1.5">
+                        <div className="font-semibold text-[#0F4C81] dark:text-blue-300 flex items-center gap-1.5">
                           <Mail size={14} />
                           <span>Next steps:</span>
                         </div>
@@ -536,7 +536,7 @@ export const LoginPage: React.FC = () => {
                                 navigator.clipboard.writeText(window.location.origin + generatedResetLink);
                                 notifications.show({ title: 'Copied!', message: 'Reset link copied to clipboard', color: 'blue' });
                               }}
-                              className="py-1.5 px-2.5 bg-white border border-amber-300 hover:bg-amber-100/50 text-amber-900 font-medium text-xs rounded transition-colors cursor-pointer"
+                              className="py-1.5 px-2.5 bg-white dark:bg-slate-900 border border-amber-300 hover:bg-amber-100/50 text-amber-900 font-medium text-xs rounded transition-colors cursor-pointer"
                             >
                               Copy Link
                             </button>
@@ -560,7 +560,7 @@ export const LoginPage: React.FC = () => {
                             setAuthMode('signin');
                             setForgotEmailSent(false);
                           }} 
-                          className="w-full py-2 text-xs font-semibold text-[#0F4C81] hover:underline cursor-pointer"
+                          className="w-full py-2 text-xs font-semibold text-[#0F4C81] dark:text-blue-300 hover:underline cursor-pointer"
                         >
                           Back to Sign In
                         </button>
@@ -569,7 +569,7 @@ export const LoginPage: React.FC = () => {
                   ) : (
                     <>
                       <div className="space-y-2">
-                        <h2 className="text-2xl font-bold text-[#0F4C81]">Reset Password</h2>
+                        <h2 className="text-2xl font-bold text-[#0F4C81] dark:text-blue-300">Reset Password</h2>
                         <p className="text-[#6e7191] text-sm">
                           Enter your registered email address and we'll send you a password reset link.
                         </p>
@@ -634,7 +634,7 @@ export const LoginPage: React.FC = () => {
                               setAuthMode('signin');
                               setForgotEmailSent(false);
                             }} 
-                            className="text-sm font-semibold text-[#0F4C81] hover:underline cursor-pointer"
+                            className="text-sm font-semibold text-[#0F4C81] dark:text-blue-300 hover:underline cursor-pointer"
                           >
                             Back to Sign In
                           </button>
@@ -696,7 +696,7 @@ export const LoginPage: React.FC = () => {
                       <a
                         href="#forgot-password"
                         onClick={(e) => { e.preventDefault(); setAuthMode('forgot'); }}
-                        className="text-xs text-[#0F4C81] font-medium hover:underline cursor-pointer"
+                        className="text-xs text-[#0F4C81] dark:text-blue-300 font-medium hover:underline cursor-pointer"
                       >
                         Forgot password?
                       </a>
@@ -723,7 +723,7 @@ export const LoginPage: React.FC = () => {
                           setAuthMode('signup');
                           setSignupErrors({});
                         }}
-                        className="text-[#0F4C81] font-bold hover:underline cursor-pointer"
+                        className="text-[#0F4C81] dark:text-blue-300 font-bold hover:underline cursor-pointer"
                       >
                         Create an account
                       </button>
@@ -826,7 +826,7 @@ export const LoginPage: React.FC = () => {
                           setAuthMode('signin');
                           setLoginErrors({});
                         }}
-                        className="text-[#0F4C81] font-bold hover:underline cursor-pointer"
+                        className="text-[#0F4C81] dark:text-blue-300 font-bold hover:underline cursor-pointer"
                       >
                         Sign in
                       </button>
@@ -842,15 +842,15 @@ export const LoginPage: React.FC = () => {
             </div>
           ) : (
             /* STEP 2: TWO-FACTOR AUTHENTICATION (2FA) CHALLENGE CARD */
-            <div className="bg-white border border-[#d9dbe9] rounded-xl p-8 shadow-xs">
+            <div className="bg-white dark:bg-slate-900 border border-[#d9dbe9] rounded-xl p-8 shadow-xs">
               <div className="text-center mb-6">
-                <div className="w-12 h-12 bg-[#e6eaf1] text-[#0F4C81] rounded-full flex items-center justify-center mx-auto mb-3 border border-[#b0bed5] shadow-xs">
+                <div className="w-12 h-12 bg-[#e6eaf1] text-[#0F4C81] dark:text-blue-300 rounded-full flex items-center justify-center mx-auto mb-3 border border-[#b0bed5] shadow-xs">
                   {isUsingBackupCode ? (
-                    <Key size={24} className="text-[#0F4C81]" />
+                    <Key size={24} className="text-[#0F4C81] dark:text-blue-300" />
                   ) : twoFactorMethod === 'GOOGLE_AUTH' ? (
-                    <Smartphone size={24} className="text-[#0F4C81]" />
+                    <Smartphone size={24} className="text-[#0F4C81] dark:text-blue-300" />
                   ) : (
-                    <Mail size={24} className="text-[#0F4C81]" />
+                    <Mail size={24} className="text-[#0F4C81] dark:text-blue-300" />
                   )}
                 </div>
 
@@ -876,7 +876,7 @@ export const LoginPage: React.FC = () => {
                 <Alert color="info" icon={<Mail size={16} />} radius="md" mb="md">
                   <div className="text-xs">
                     <span>A 6-digit verification code was sent to <strong>{loginEmail}</strong> via MM Global Remit service.</span>
-                    <div className="text-[11px] text-[#0F4C81] mt-1 font-medium">
+                    <div className="text-[11px] text-[#0F4C81] dark:text-blue-300 mt-1 font-medium">
                       Please check your inbox or spam folder.
                     </div>
                   </div>
@@ -939,7 +939,7 @@ export const LoginPage: React.FC = () => {
                       className={`text-xs font-medium inline-flex items-center gap-1 cursor-pointer ${
                         resendCooldown > 0
                           ? 'text-[#a0a3bd] cursor-not-allowed'
-                          : 'text-[#0F4C81] hover:underline'
+                          : 'text-[#0F4C81] dark:text-blue-300 hover:underline'
                       }`}
                     >
                       <RefreshCw size={12} className={resendCooldown > 0 ? '' : 'animate-spin-slow'} />

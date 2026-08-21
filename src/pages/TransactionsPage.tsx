@@ -82,12 +82,12 @@ export const TransactionsPage: React.FC = () => {
 
   const renderSortIcon = (field: keyof InboundTransaction) => {
     if (sortField !== field) {
-      return <ChevronSelectorVertical size={12} className="text-slate-400" />;
+      return <ChevronSelectorVertical size={12} className="text-slate-400 dark:text-slate-500" />;
     }
     return sortDirection === 'asc' ? (
-      <ChevronUp size={12} className="text-[#0B2B66]" />
+      <ChevronUp size={12} className="text-[#0B2B66] dark:text-blue-300" />
     ) : (
-      <ChevronDown size={12} className="text-[#0B2B66]" />
+      <ChevronDown size={12} className="text-[#0B2B66] dark:text-blue-300" />
     );
   };
 
@@ -136,10 +136,10 @@ export const TransactionsPage: React.FC = () => {
       {/* Page Title & Top Actions matching Professional Polish */}
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900 tracking-tight">
+          <h1 className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">
             IR Transactions
           </h1>
-          <p className="text-sm text-slate-500 mt-0.5">
+          <p className="text-sm text-slate-500 dark:text-slate-400 mt-0.5">
             Simple searchable list of all inbound remittance records and statuses
           </p>
         </div>
@@ -148,8 +148,8 @@ export const TransactionsPage: React.FC = () => {
           {/* Export Dropdown */}
           <Menu shadow="md" width={200} position="bottom-end">
             <Menu.Target>
-              <button className="px-4 py-2 bg-white border border-slate-200 text-slate-700 text-sm font-medium rounded-lg flex items-center gap-2 hover:bg-slate-50 transition-colors shadow-2xs cursor-pointer">
-                <Download size={16} className="text-slate-500" />
+              <button className="px-4 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 text-sm font-medium rounded-lg flex items-center gap-2 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors shadow-2xs cursor-pointer">
+                <Download size={16} className="text-slate-500 dark:text-slate-400" />
                 <span>Export Report</span>
               </button>
             </Menu.Target>
@@ -189,16 +189,16 @@ export const TransactionsPage: React.FC = () => {
       </div>
 
       {/* Filter Toolbar Container */}
-      <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-xs space-y-3">
+      <div className="bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-700 shadow-xs space-y-3">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-3">
           {/* Global Search Input */}
           <div className="lg:col-span-4 relative">
-            <div className="flex items-center gap-2 bg-slate-100/80 px-3 py-2 rounded-lg border border-slate-200/80 focus-within:bg-white focus-within:border-blue-400 transition-all">
-              <Search size={16} className="text-slate-400 shrink-0" />
+            <div className="flex items-center gap-2 bg-slate-100 dark:bg-slate-800/80 px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700/80 focus-within:bg-white dark:bg-slate-900 focus-within:border-blue-400 transition-all">
+              <Search size={16} className="text-slate-400 dark:text-slate-500 shrink-0" />
               <input
                 type="text"
                 placeholder="Search by Ref, Sender, Bank, BIC, UETR..."
-                className="text-xs bg-transparent border-none outline-none w-full text-slate-700 placeholder:text-slate-400"
+                className="text-xs bg-transparent border-none outline-none w-full text-slate-700 dark:text-slate-300 placeholder:text-slate-400 dark:text-slate-500"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.currentTarget.value)}
               />
@@ -212,7 +212,7 @@ export const TransactionsPage: React.FC = () => {
               placeholder="Date Range"
               value={dateValue}
               onChange={handleDateRangeChange as any}
-              leftSection={<Calendar size={15} className="text-slate-400" />}
+              leftSection={<Calendar size={15} className="text-slate-400 dark:text-slate-500" />}
               className="w-full"
               radius="md"
               size="sm"
@@ -264,7 +264,7 @@ export const TransactionsPage: React.FC = () => {
                 resetFilters();
               }}
               title="Reset all filters"
-              className="w-full h-9 flex items-center justify-center rounded-lg border border-slate-200 text-slate-500 hover:bg-slate-50 hover:text-slate-700 transition-colors cursor-pointer"
+              className="w-full h-9 flex items-center justify-center rounded-lg border border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50 hover:text-slate-700 dark:text-slate-300 transition-colors cursor-pointer"
             >
               <RotateCcw size={15} />
             </button>
@@ -273,14 +273,14 @@ export const TransactionsPage: React.FC = () => {
       </div>
 
       {/* Mantine Data Table matching Professional Polish theme */}
-      <div className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-xs">
+      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden shadow-xs">
         <div className="overflow-x-auto">
           <table className="w-full min-w-[1180px] text-left border-separate border-spacing-0">
-            <thead className="bg-slate-50 text-[10px] uppercase font-bold text-slate-500">
+            <thead className="bg-slate-50 dark:bg-slate-800/50 text-[10px] uppercase font-bold text-slate-500 dark:text-slate-400">
               <tr>
-                <th className="px-4 py-3.5 border border-slate-200 w-10 text-center">#</th>
+                <th className="px-4 py-3.5 border border-slate-200 dark:border-slate-700 w-10 text-center">#</th>
                 <th
-                  className="px-4 py-3.5 border border-slate-200 cursor-pointer select-none hover:text-[#0B2B66]"
+                  className="px-4 py-3.5 border border-slate-200 dark:border-slate-700 cursor-pointer select-none hover:text-[#0B2B66] dark:text-blue-300"
                   onClick={() => setSort('transactionRef')}
                 >
                   <div className="flex items-center gap-1">
@@ -289,7 +289,7 @@ export const TransactionsPage: React.FC = () => {
                   </div>
                 </th>
                 <th
-                  className="px-4 py-3.5 border border-slate-200 cursor-pointer select-none hover:text-[#0B2B66]"
+                  className="px-4 py-3.5 border border-slate-200 dark:border-slate-700 cursor-pointer select-none hover:text-[#0B2B66] dark:text-blue-300"
                   onClick={() => setSort('senderName')}
                 >
                   <div className="flex items-center gap-1">
@@ -297,10 +297,10 @@ export const TransactionsPage: React.FC = () => {
                     {renderSortIcon('senderName')}
                   </div>
                 </th>
-                <th className="px-4 py-3.5 border border-slate-200">Sending Bank</th>
-                <th className="px-4 py-3.5 border border-slate-200">Currency</th>
+                <th className="px-4 py-3.5 border border-slate-200 dark:border-slate-700">Sending Bank</th>
+                <th className="px-4 py-3.5 border border-slate-200 dark:border-slate-700">Currency</th>
                 <th
-                  className="px-4 py-3.5 border border-slate-200 cursor-pointer select-none hover:text-[#0B2B66]"
+                  className="px-4 py-3.5 border border-slate-200 dark:border-slate-700 cursor-pointer select-none hover:text-[#0B2B66] dark:text-blue-300"
                   onClick={() => setSort('amount')}
                 >
                   <div className="flex items-center gap-1">
@@ -308,9 +308,9 @@ export const TransactionsPage: React.FC = () => {
                     {renderSortIcon('amount')}
                   </div>
                 </th>
-                <th className="px-4 py-3.5 border border-slate-200">Exchange Rate</th>
+                <th className="px-4 py-3.5 border border-slate-200 dark:border-slate-700">Exchange Rate</th>
                 <th
-                  className="px-4 py-3.5 border border-slate-200 cursor-pointer select-none hover:text-[#0B2B66]"
+                  className="px-4 py-3.5 border border-slate-200 dark:border-slate-700 cursor-pointer select-none hover:text-[#0B2B66] dark:text-blue-300"
                   onClick={() => setSort('convertedAmountMmk')}
                 >
                   <div className="flex items-center gap-1">
@@ -319,7 +319,7 @@ export const TransactionsPage: React.FC = () => {
                   </div>
                 </th>
                 <th
-                  className="px-4 py-3.5 border border-slate-200 cursor-pointer select-none hover:text-[#0B2B66]"
+                  className="px-4 py-3.5 border border-slate-200 dark:border-slate-700 cursor-pointer select-none hover:text-[#0B2B66] dark:text-blue-300"
                   onClick={() => setSort('valueDate')}
                 >
                   <div className="flex items-center gap-1">
@@ -327,8 +327,8 @@ export const TransactionsPage: React.FC = () => {
                     {renderSortIcon('valueDate')}
                   </div>
                 </th>
-                <th className="px-4 py-3.5 border border-slate-200 text-center">Status</th>
-                <th className="px-4 py-3.5 border border-slate-200 text-right sticky right-0 z-20 bg-slate-50">Action</th>
+                <th className="px-4 py-3.5 border border-slate-200 dark:border-slate-700 text-center">Status</th>
+                <th className="px-4 py-3.5 border border-slate-200 dark:border-slate-700 text-right sticky right-0 z-20 bg-slate-50 dark:bg-slate-800/50">Action</th>
               </tr>
             </thead>
 
@@ -337,64 +337,64 @@ export const TransactionsPage: React.FC = () => {
                 currentItems.map((tx, idx) => {
                   const rowIndex = startIndex + idx + 1;
                   return (
-                    <tr key={tx.id} className="group hover:bg-slate-50/80 transition-colors">
-                      <td className="px-4 py-3.5 border border-slate-200 text-center font-mono text-slate-400 font-medium">
+                    <tr key={tx.id} className="group hover:bg-slate-50/80 dark:hover:bg-slate-800/50 transition-colors">
+                      <td className="px-4 py-3.5 border border-slate-200 dark:border-slate-700 text-center font-mono text-slate-400 dark:text-slate-500 font-medium">
                         {rowIndex}
                       </td>
 
-                      <td className="px-4 py-3.5 border border-slate-200">
-                        <span className="font-mono font-semibold text-[#0B2B66]">{tx.transactionRef}</span>
-                        <div className="text-[10px] text-slate-400 font-mono flex items-center gap-1 mt-0.5 truncate max-w-[130px]" title={tx.swiftMetadata.uetr}>
+                      <td className="px-4 py-3.5 border border-slate-200 dark:border-slate-700">
+                        <span className="font-mono font-semibold text-[#0B2B66] dark:text-blue-300">{tx.transactionRef}</span>
+                        <div className="text-[10px] text-slate-400 dark:text-slate-500 font-mono flex items-center gap-1 mt-0.5 truncate max-w-[130px]" title={tx.swiftMetadata.uetr}>
                           <ShieldCheck size={10} className="text-blue-500 shrink-0" />
                           <span>{tx.swiftMetadata.uetr.slice(0, 13)}...</span>
                         </div>
                       </td>
 
-                      <td className="px-4 py-3.5 border border-slate-200">
-                        <div className="font-medium text-slate-800 max-w-[180px] truncate" title={tx.senderName}>
+                      <td className="px-4 py-3.5 border border-slate-200 dark:border-slate-700">
+                        <div className="font-medium text-slate-800 dark:text-slate-200 max-w-[180px] truncate" title={tx.senderName}>
                           {tx.senderName}
                         </div>
-                        <div className="text-[10px] text-slate-400">{tx.senderCountry}</div>
+                        <div className="text-[10px] text-slate-400 dark:text-slate-500">{tx.senderCountry}</div>
                       </td>
 
-                      <td className="px-4 py-3.5 border border-slate-200">
-                        <div className="text-slate-700 max-w-[160px] truncate" title={tx.sendingBank}>
+                      <td className="px-4 py-3.5 border border-slate-200 dark:border-slate-700">
+                        <div className="text-slate-700 dark:text-slate-300 max-w-[160px] truncate" title={tx.sendingBank}>
                           {tx.sendingBank}
                         </div>
-                        <div className="text-[10px] font-mono text-slate-400">{tx.sendingBankBic}</div>
+                        <div className="text-[10px] font-mono text-slate-400 dark:text-slate-500">{tx.sendingBankBic}</div>
                       </td>
 
-                      <td className="px-4 py-3.5 border border-slate-200">
-                        <span className="inline-flex items-center px-2 py-0.5 bg-blue-50 text-[#0B2B66] font-bold font-mono rounded text-[11px] border border-blue-100">
+                      <td className="px-4 py-3.5 border border-slate-200 dark:border-slate-700">
+                        <span className="inline-flex items-center px-2 py-0.5 bg-blue-50 dark:bg-blue-900/30 text-[#0B2B66] dark:text-blue-300 font-bold font-mono rounded text-[11px] border border-blue-100 dark:border-blue-800/50">
                           {tx.currency}
                         </span>
                       </td>
 
-                      <td className="px-4 py-3.5 border border-slate-200 font-bold font-mono text-slate-900">
-                        {formatNumber(tx.amount)} <span className="text-slate-400 font-normal">{tx.currency}</span>
+                      <td className="px-4 py-3.5 border border-slate-200 dark:border-slate-700 font-bold font-mono text-slate-900 dark:text-white">
+                        {formatNumber(tx.amount)} <span className="text-slate-400 dark:text-slate-500 font-normal">{tx.currency}</span>
                       </td>
 
-                      <td className="px-4 py-3.5 border border-slate-200 font-mono text-slate-600">
+                      <td className="px-4 py-3.5 border border-slate-200 dark:border-slate-700 font-mono text-slate-600 dark:text-slate-400">
                         {formatNumber(tx.exchangeRate)}
                       </td>
 
-                      <td className="px-4 py-3.5 border border-slate-200 font-bold font-mono text-emerald-700">
+                      <td className="px-4 py-3.5 border border-slate-200 dark:border-slate-700 font-bold font-mono text-emerald-700 dark:text-emerald-400">
                         {formatNumber(tx.convertedAmountMmk)} MMK
                       </td>
 
-                      <td className="px-4 py-3.5 border border-slate-200">
-                        <div className="text-slate-700 font-medium">{formatDate(tx.valueDate, 'DD/MM/YYYY')}</div>
-                        <div className="text-[10px] text-slate-400">{formatDate(tx.valueDate, 'hh:mm A')}</div>
+                      <td className="px-4 py-3.5 border border-slate-200 dark:border-slate-700">
+                        <div className="text-slate-700 dark:text-slate-300 font-medium">{formatDate(tx.valueDate, 'DD/MM/YYYY')}</div>
+                        <div className="text-[10px] text-slate-400 dark:text-slate-500">{formatDate(tx.valueDate, 'hh:mm A')}</div>
                       </td>
 
-                      <td className="px-4 py-3.5 border border-slate-200 text-center">
+                      <td className="px-4 py-3.5 border border-slate-200 dark:border-slate-700 text-center">
                         <StatusBadge status={tx.status} />
                       </td>
 
-                      <td className="px-4 py-3.5 border border-slate-200 text-right sticky right-0 z-10 bg-white group-hover:bg-slate-50/80">
+                      <td className="px-4 py-3.5 border border-slate-200 dark:border-slate-700 text-right sticky right-0 z-10 bg-white dark:bg-slate-900 group-hover:bg-slate-50/80 dark:group-hover:bg-slate-800/50">
                         <button
                           onClick={() => handleViewDetails(tx)}
-                          className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold text-[#0B2B66] bg-blue-50 hover:bg-blue-100 rounded-md transition-colors cursor-pointer"
+                          className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold text-[#0B2B66] dark:text-blue-300 bg-blue-50 dark:bg-blue-900/30 hover:bg-blue-100 dark:hover:bg-blue-800/40 rounded-md transition-colors cursor-pointer"
                         >
                           <Eye size={12} />
                           <span>Details</span>
@@ -405,14 +405,14 @@ export const TransactionsPage: React.FC = () => {
                 })
               ) : (
                 <tr>
-                  <td colSpan={11} className="text-center py-12 text-slate-400">
+                  <td colSpan={11} className="text-center py-12 text-slate-400 dark:text-slate-500">
                     <div className="flex flex-col items-center justify-center space-y-2">
                       <Search size={32} className="text-slate-300" />
-                      <p className="text-sm font-semibold text-slate-600">No transactions found</p>
-                      <p className="text-xs text-slate-400">Try adjusting your filters or search keywords.</p>
+                      <p className="text-sm font-semibold text-slate-600 dark:text-slate-400">No transactions found</p>
+                      <p className="text-xs text-slate-400 dark:text-slate-500">Try adjusting your filters or search keywords.</p>
                       <button
                         onClick={resetFilters}
-                        className="mt-2 px-3 py-1.5 bg-slate-100 text-slate-700 text-xs font-medium rounded-lg hover:bg-slate-200 transition-colors cursor-pointer"
+                        className="mt-2 px-3 py-1.5 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-medium rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors cursor-pointer"
                       >
                         Clear All Filters
                       </button>
@@ -425,7 +425,7 @@ export const TransactionsPage: React.FC = () => {
         </div>
 
         {/* Pagination Bar Matching Professional Polish layout */}
-        <div className="px-5 py-4 border-t border-slate-100 bg-slate-50/50 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-600">
+        <div className="px-5 py-4 border-t border-slate-100 dark:border-slate-700/50 bg-slate-50 dark:bg-slate-800/25 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-600 dark:text-slate-400">
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-1.5">
               <span>Show</span>
@@ -443,9 +443,9 @@ export const TransactionsPage: React.FC = () => {
             <span className="text-slate-300">|</span>
 
             <span>
-              Showing <span className="font-semibold text-slate-800">{totalCount > 0 ? startIndex + 1 : 0}</span> to{' '}
-              <span className="font-semibold text-slate-800">{endIndex}</span> of{' '}
-              <span className="font-semibold text-slate-800">{totalCount}</span> records
+              Showing <span className="font-semibold text-slate-800 dark:text-slate-200">{totalCount > 0 ? startIndex + 1 : 0}</span> to{' '}
+              <span className="font-semibold text-slate-800 dark:text-slate-200">{endIndex}</span> of{' '}
+              <span className="font-semibold text-slate-800 dark:text-slate-200">{totalCount}</span> records
             </span>
           </div>
 

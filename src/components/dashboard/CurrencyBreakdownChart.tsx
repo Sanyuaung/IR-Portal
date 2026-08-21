@@ -55,10 +55,10 @@ export const CurrencyBreakdownChart: React.FC<CurrencyBreakdownChartProps> = ({ 
   };
 
   return (
-    <div className="bg-white border border-slate-200 rounded-xl p-5 flex flex-col justify-between shadow-xs h-full">
+    <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl p-5 flex flex-col justify-between shadow-xs h-full">
       <div>
-        <h3 className="font-bold text-slate-800 text-base">Currency Breakdown</h3>
-        <p className="text-xs text-slate-400 mt-0.5">Settlement-value distribution in the current view</p>
+        <h3 className="font-bold text-slate-800 dark:text-slate-200 text-base">Currency Breakdown</h3>
+        <p className="text-xs text-slate-400 dark:text-slate-500 mt-0.5">Settlement-value distribution in the current view</p>
       </div>
 
       <div className="flex flex-col items-center justify-center py-3 relative">
@@ -98,20 +98,20 @@ export const CurrencyBreakdownChart: React.FC<CurrencyBreakdownChartProps> = ({ 
           </ResponsiveContainer>
 
           <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-            <span className="text-xl font-bold text-slate-900 leading-tight">{dominantCurrency?.value}%</span>
-            <span className="text-[10px] text-slate-400 uppercase font-bold tracking-wider">{dominantCurrency?.currency} dominant</span>
+            <span className="text-xl font-bold text-slate-900 dark:text-white leading-tight">{dominantCurrency?.value}%</span>
+            <span className="text-[10px] text-slate-400 dark:text-slate-500 uppercase font-bold tracking-wider">{dominantCurrency?.currency} dominant</span>
           </div>
-        </div> : <div className="h-[220px] flex items-center justify-center text-sm text-slate-400">No transaction data in the selected period.</div>}
+        </div> : <div className="h-[220px] flex items-center justify-center text-sm text-slate-400 dark:text-slate-500">No transaction data in the selected period.</div>}
       </div>
 
-      <div className="w-full space-y-2.5 pt-2 border-t border-slate-100">
+      <div className="w-full space-y-2.5 pt-2 border-t border-slate-100 dark:border-slate-700/50">
         {chartData.map((item) => (
           <div key={item.currency} className="flex items-center justify-between text-xs">
             <div className="flex items-center gap-2">
               <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: item.color }}></div>
-              <span className="font-medium text-slate-700">{item.currency}</span>
+              <span className="font-medium text-slate-700 dark:text-slate-300">{item.currency}</span>
             </div>
-            <span className="font-bold text-slate-900 font-mono">{formatNumber(item.amountMmk)} MMK</span>
+            <span className="font-bold text-slate-900 dark:text-white font-mono">{formatNumber(item.amountMmk)} MMK</span>
           </div>
         ))}
       </div>

@@ -1041,12 +1041,12 @@ var require_debug = __commonJS({
     function createDebug(namespace) {
       function debug() {
         if (!debug.enabled) return;
-        var self2 = debug;
+        var self = debug;
         var curr = +/* @__PURE__ */ new Date();
         var ms = curr - (prevTime || curr);
-        self2.diff = ms;
-        self2.prev = prevTime;
-        self2.curr = curr;
+        self.diff = ms;
+        self.prev = prevTime;
+        self.curr = curr;
         prevTime = curr;
         var args = new Array(arguments.length);
         for (var i = 0; i < args.length; i++) {
@@ -1063,15 +1063,15 @@ var require_debug = __commonJS({
           var formatter = exports.formatters[format];
           if ("function" === typeof formatter) {
             var val = args[index];
-            match = formatter.call(self2, val);
+            match = formatter.call(self, val);
             args.splice(index, 1);
             index--;
           }
           return match;
         });
-        exports.formatArgs.call(self2, args);
+        exports.formatArgs.call(self, args);
         var logFn = debug.log || exports.log || console.log.bind(console);
-        logFn.apply(self2, args);
+        logFn.apply(self, args);
       }
       debug.namespace = namespace;
       debug.enabled = exports.enabled(namespace);
@@ -21468,7 +21468,7 @@ var require_router = __commonJS({
       return this;
     };
     proto.handle = function handle(req, res, out) {
-      var self2 = this;
+      var self = this;
       debug("dispatching %s %s", req.method, req.url);
       var idx = 0;
       var protohost = getProtohost(req.url) || "";
@@ -21477,7 +21477,7 @@ var require_router = __commonJS({
       var sync = 0;
       var paramcalled = {};
       var options = [];
-      var stack = self2.stack;
+      var stack = self.stack;
       var parentParams = req.params;
       var parentUrl = req.baseUrl || "";
       var done = restore(out, req, "baseUrl", "next", "params");
@@ -21552,9 +21552,9 @@ var require_router = __commonJS({
         if (route) {
           req.route = route;
         }
-        req.params = self2.mergeParams ? mergeParams(layer.params, parentParams) : layer.params;
+        req.params = self.mergeParams ? mergeParams(layer.params, parentParams) : layer.params;
         var layerPath = layer.path;
-        self2.process_params(layer, paramcalled, req, res, function(err2) {
+        self.process_params(layer, paramcalled, req, res, function(err2) {
           if (err2) {
             next(layerError || err2);
           } else if (route) {
@@ -22861,52 +22861,52 @@ var require_send = __commonJS({
     };
     SendStream.prototype.sendFile = function sendFile(path2) {
       var i = 0;
-      var self2 = this;
+      var self = this;
       debug('stat "%s"', path2);
       fs.stat(path2, function onstat(err, stat) {
         if (err && err.code === "ENOENT" && !extname(path2) && path2[path2.length - 1] !== sep) {
           return next(err);
         }
-        if (err) return self2.onStatError(err);
-        if (stat.isDirectory()) return self2.redirect(path2);
-        self2.emit("file", path2, stat);
-        self2.send(path2, stat);
+        if (err) return self.onStatError(err);
+        if (stat.isDirectory()) return self.redirect(path2);
+        self.emit("file", path2, stat);
+        self.send(path2, stat);
       });
       function next(err) {
-        if (self2._extensions.length <= i) {
-          return err ? self2.onStatError(err) : self2.error(404);
+        if (self._extensions.length <= i) {
+          return err ? self.onStatError(err) : self.error(404);
         }
-        var p = path2 + "." + self2._extensions[i++];
+        var p = path2 + "." + self._extensions[i++];
         debug('stat "%s"', p);
         fs.stat(p, function(err2, stat) {
           if (err2) return next(err2);
           if (stat.isDirectory()) return next();
-          self2.emit("file", p, stat);
-          self2.send(p, stat);
+          self.emit("file", p, stat);
+          self.send(p, stat);
         });
       }
     };
     SendStream.prototype.sendIndex = function sendIndex(path2) {
       var i = -1;
-      var self2 = this;
+      var self = this;
       function next(err) {
-        if (++i >= self2._index.length) {
-          if (err) return self2.onStatError(err);
-          return self2.error(404);
+        if (++i >= self._index.length) {
+          if (err) return self.onStatError(err);
+          return self.error(404);
         }
-        var p = join(path2, self2._index[i]);
+        var p = join(path2, self._index[i]);
         debug('stat "%s"', p);
         fs.stat(p, function(err2, stat) {
           if (err2) return next(err2);
           if (stat.isDirectory()) return next();
-          self2.emit("file", p, stat);
-          self2.send(p, stat);
+          self.emit("file", p, stat);
+          self.send(p, stat);
         });
       }
       next();
     };
     SendStream.prototype.stream = function stream(path2, options) {
-      var self2 = this;
+      var self = this;
       var res = this.res;
       var stream2 = fs.createReadStream(path2, options);
       this.emit("stream", stream2);
@@ -22917,10 +22917,10 @@ var require_send = __commonJS({
       onFinished(res, cleanup);
       stream2.on("error", function onerror(err) {
         cleanup();
-        self2.onStatError(err);
+        self.onStatError(err);
       });
       stream2.on("end", function onend() {
-        self2.emit("end");
+        self.emit("end");
       });
     };
     SendStream.prototype.type = function type(path2) {
@@ -25750,15 +25750,15 @@ var require_response = __commonJS({
       var done = callback;
       var opts = options || {};
       var req = this.req;
-      var self2 = this;
+      var self = this;
       if (typeof options === "function") {
         done = options;
         opts = {};
       }
-      opts._locals = self2.locals;
+      opts._locals = self.locals;
       done = done || function(err, str) {
         if (err) return req.next(err);
-        self2.send(str);
+        self.send(str);
       };
       app2.render(view, opts, done);
     };
@@ -30456,7 +30456,7 @@ var require_sync_inflate = __commonJS({
       if (typeof asyncCb === "function") {
         return zlib.Inflate._processChunk.call(this, chunk, flushFlag, asyncCb);
       }
-      let self2 = this;
+      let self = this;
       let availInBefore = chunk && chunk.length;
       let availOutBefore = this._chunkSize - this._offset;
       let leftToInflate = this._maxLength;
@@ -30468,14 +30468,14 @@ var require_sync_inflate = __commonJS({
         error = err;
       });
       function handleChunk(availInAfter, availOutAfter) {
-        if (self2._hadError) {
+        if (self._hadError) {
           return;
         }
         let have = availOutBefore - availOutAfter;
         assert(have >= 0, "have should not go down");
         if (have > 0) {
-          let out = self2._buffer.slice(self2._offset, self2._offset + have);
-          self2._offset += have;
+          let out = self._buffer.slice(self._offset, self._offset + have);
+          self._offset += have;
           if (out.length > leftToInflate) {
             out = out.slice(0, leftToInflate);
           }
@@ -30486,10 +30486,10 @@ var require_sync_inflate = __commonJS({
             return false;
           }
         }
-        if (availOutAfter === 0 || self2._offset >= self2._chunkSize) {
-          availOutBefore = self2._chunkSize;
-          self2._offset = 0;
-          self2._buffer = Buffer.allocUnsafe(self2._chunkSize);
+        if (availOutAfter === 0 || self._offset >= self._chunkSize) {
+          availOutBefore = self._chunkSize;
+          self._offset = 0;
+          self._buffer = Buffer.allocUnsafe(self._chunkSize);
         }
         if (availOutAfter === 0) {
           inOff += availInBefore - availInAfter;
@@ -34688,40 +34688,40 @@ var require_connection = __commonJS({
         this.sslNegotiation = config.sslNegotiation || "postgres";
         this._ending = false;
         this._emitMessage = false;
-        const self2 = this;
+        const self = this;
         this.on("newListener", function(eventName) {
           if (eventName === "message") {
-            self2._emitMessage = true;
+            self._emitMessage = true;
           }
         });
       }
       connect(port2, host2) {
-        const self2 = this;
+        const self = this;
         this._connecting = true;
         this.stream.setNoDelay(true);
         this.stream.connect(port2, host2);
         this.stream.once("connect", function() {
-          if (self2._keepAlive) {
-            self2.stream.setKeepAlive(true, self2._keepAliveInitialDelayMillis);
+          if (self._keepAlive) {
+            self.stream.setKeepAlive(true, self._keepAliveInitialDelayMillis);
           }
-          self2.emit("connect");
+          self.emit("connect");
         });
         const reportStreamError = function(error) {
-          if (self2._ending && (error.code === "ECONNRESET" || error.code === "EPIPE")) {
+          if (self._ending && (error.code === "ECONNRESET" || error.code === "EPIPE")) {
             return;
           }
-          self2.emit("error", error);
+          self.emit("error", error);
         };
         this.stream.on("error", reportStreamError);
         this.stream.on("close", function() {
-          self2.emit("end");
+          self.emit("end");
         });
         if (!this.ssl) {
           return this.attachListeners(this.stream);
         }
         if (this.sslNegotiation === "direct") {
           return this.stream.once("connect", function() {
-            self2.upgradeToSSL(host2, reportStreamError);
+            self.upgradeToSSL(host2, reportStreamError);
           });
         }
         this.stream.once("data", function(buffer) {
@@ -34730,27 +34730,27 @@ var require_connection = __commonJS({
             case "S":
               break;
             case "N":
-              self2.stream.end();
-              return self2.emit("error", new Error("The server does not support SSL connections"));
+              self.stream.end();
+              return self.emit("error", new Error("The server does not support SSL connections"));
             default:
-              self2.stream.end();
-              return self2.emit("error", new Error("There was an error establishing an SSL connection"));
+              self.stream.end();
+              return self.emit("error", new Error("There was an error establishing an SSL connection"));
           }
-          self2.upgradeToSSL(host2, reportStreamError);
+          self.upgradeToSSL(host2, reportStreamError);
         });
       }
       upgradeToSSL(host2, reportStreamError) {
-        const self2 = this;
+        const self = this;
         const options = {
-          socket: self2.stream
+          socket: self.stream
         };
-        if (self2.ssl !== true) {
-          Object.assign(options, self2.ssl);
-          if ("key" in self2.ssl) {
-            options.key = self2.ssl.key;
+        if (self.ssl !== true) {
+          Object.assign(options, self.ssl);
+          if ("key" in self.ssl) {
+            options.key = self.ssl.key;
           }
         }
-        if (self2.sslNegotiation === "direct") {
+        if (self.sslNegotiation === "direct") {
           options.ALPNProtocols = ["postgresql"];
         }
         const net = __require("net");
@@ -34758,13 +34758,13 @@ var require_connection = __commonJS({
           options.servername = host2;
         }
         try {
-          self2.stream = stream.getSecureStream(options);
+          self.stream = stream.getSecureStream(options);
         } catch (err) {
-          return self2.emit("error", err);
+          return self.emit("error", err);
         }
-        self2.attachListeners(self2.stream);
-        self2.stream.on("error", reportStreamError);
-        self2.emit("sslconnect");
+        self.attachListeners(self.stream);
+        self.stream.on("error", reportStreamError);
+        self.emit("sslconnect");
       }
       attachListeners(stream2) {
         parse(stream2, (msg) => {
@@ -34905,9 +34905,9 @@ var require_split2 = __commonJS({
       }
       cb();
     }
-    function push(self2, val) {
+    function push(self, val) {
       if (val !== void 0) {
-        self2.push(val);
+        self.push(val);
       }
     }
     function noop(incoming) {
@@ -35215,4 +35215,7 @@ var require_client = __commonJS({
           value: this.connectionParameters.password
         });
         this.replication = this.connectionParameters.replication;
-        const c = config || {
+        const c = config || {};
+        if (c.Promise) {
+          byoPromiseDeprecationNotice();
+     

@@ -60,11 +60,11 @@ export const VolumeChart: React.FC<VolumeChartProps> = ({ transactions }) => {
   };
 
   return (
-    <div className="bg-white border border-slate-200 rounded-xl p-5 flex flex-col shadow-xs min-h-[360px]">
+    <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl p-5 flex flex-col shadow-xs min-h-[360px]">
       <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
         <div>
-          <h3 className="font-bold text-slate-800 text-base">Settlement Volume</h3>
-          <p className="text-xs text-slate-400 mt-0.5">Monthly value from the transactions in the current view</p>
+          <h3 className="font-bold text-slate-800 dark:text-slate-200 text-base">Settlement Volume</h3>
+          <p className="text-xs text-slate-400 dark:text-slate-500 mt-0.5">Monthly value from the transactions in the current view</p>
         </div>
       </div>
 
@@ -80,7 +80,7 @@ export const VolumeChart: React.FC<VolumeChartProps> = ({ transactions }) => {
             </ComposedChart>
           </ResponsiveContainer>
         ) : (
-          <div className="h-full flex items-center justify-center text-sm text-slate-400">No transaction data in the selected period.</div>
+          <div className="h-full flex items-center justify-center text-sm text-slate-400 dark:text-slate-500">No transaction data in the selected period.</div>
         )}
       </div>
     </div>

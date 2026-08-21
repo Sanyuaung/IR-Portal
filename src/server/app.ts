@@ -1044,6 +1044,29 @@ app.get(['/api/transactions/:id', '/transactions/:id'], async (req, res) => {
 });
 
 /**
+ * GET /api/transactions/:id/audit-log
+ * Fetch the history of status changes for a specific transaction
+ */
+app.get(['/api/transactions/:id/audit-log', '/transactions/:id/audit-log'], async (req, res) => {
+  const { id } = req.params;
+  
+  if (dbAvailable) {
+    try {
+      const logs = await prisma.transactionAuditLog.findMany({
+        where: { transactionId: id },
+        orderBy: { changedAt: 'desc' }
+      });
+      return res.json({ success: true, logs });
+    } catch (err: any) {
+      console.error('Error fetching transaction audit logs from Postgres:', err?.message);
+    }
+  }
+
+  // Fallback if Postgres fails
+  return res.json({ success: true, logs: [] });
+});
+
+/**
  * POST /api/transactions/simulate
  * Create a new simulated inbound transaction in PostgreSQL
  */
@@ -1108,6 +1131,16 @@ app.post(['/api/transactions/simulate', '/transactions/simulate'], async (req, r
         JSON.stringify(simulatedTx.swiftMetadata),
       ]
     );
+
+    // Create initial audit log
+    await prisma.transactionAuditLog.create({
+      data: {
+        transactionId: txId,
+        newStatus: simulatedTx.status,
+        remarks: 'Transaction received via simulation',
+        changedBy: 'SYSTEM'
+      }
+    });
   } catch (err: any) {
     console.warn('[SIMULATE_TRANSACTION_DB_WARN] Saved in memory:', err?.message || err);
   } finally {

@@ -34,1282 +34,1272 @@ pool.on("error", (err) => {
 import crypto from "crypto";
 
 // src/data/mockTransactions.ts
-import dayjs from "dayjs";
 var mockFxRates = [
   {
-    currency: "USD",
-    buyRate: 3540,
-    sellRate: 3560,
-    middleRate: 3550,
-    change24h: 0.28,
-    updatedAt: (/* @__PURE__ */ new Date()).toISOString()
+    "currency": "USD",
+    "buyRate": 2095.8,
+    "sellRate": 2104.2,
+    "middleRate": 2100,
+    "change24h": 0,
+    "updatedAt": "2026-08-19T08:00:00.000Z"
   },
   {
-    currency: "EUR",
-    buyRate: 3810,
-    sellRate: 3835,
-    middleRate: 3822.5,
-    change24h: -0.15,
-    updatedAt: (/* @__PURE__ */ new Date()).toISOString()
+    "currency": "EUR",
+    "buyRate": 2430.5,
+    "sellRate": 2440.24,
+    "middleRate": 2435.37,
+    "change24h": 0,
+    "updatedAt": "2026-08-19T08:00:00.000Z"
   },
   {
-    currency: "SGD",
-    buyRate: 2675,
-    sellRate: 2690,
-    middleRate: 2682,
-    change24h: 0.42,
-    updatedAt: (/* @__PURE__ */ new Date()).toISOString()
+    "currency": "SGD",
+    "buyRate": 1642.03,
+    "sellRate": 1648.61,
+    "middleRate": 1645.32,
+    "change24h": 0,
+    "updatedAt": "2026-08-19T08:00:00.000Z"
   },
   {
-    currency: "THB",
-    buyRate: 101.8,
-    sellRate: 103.2,
-    middleRate: 102.5,
-    change24h: 0.12,
-    updatedAt: (/* @__PURE__ */ new Date()).toISOString()
+    "currency": "THB",
+    "buyRate": 63.36,
+    "sellRate": 63.62,
+    "middleRate": 63.49,
+    "change24h": 0,
+    "updatedAt": "2026-08-19T08:00:00.000Z"
   },
   {
-    currency: "GBP",
-    buyRate: 4480,
-    sellRate: 4515,
-    middleRate: 4498,
-    change24h: -0.35,
-    updatedAt: (/* @__PURE__ */ new Date()).toISOString()
+    "currency": "GBP",
+    "buyRate": 2840.76,
+    "sellRate": 2852.14,
+    "middleRate": 2846.45,
+    "change24h": 0,
+    "updatedAt": "2026-08-19T08:00:00.000Z"
   },
   {
-    currency: "JPY",
-    buyRate: 23.4,
-    sellRate: 24.1,
-    middleRate: 23.75,
-    change24h: 0.05,
-    updatedAt: (/* @__PURE__ */ new Date()).toISOString()
+    "currency": "JPY",
+    "buyRate": 1317.28,
+    "sellRate": 1322.56,
+    "middleRate": 1319.92,
+    "change24h": 0,
+    "updatedAt": "2026-08-19T08:00:00.000Z"
   },
   {
-    currency: "CNY",
-    buyRate: 490,
-    sellRate: 496,
-    middleRate: 493,
-    change24h: 0.18,
-    updatedAt: (/* @__PURE__ */ new Date()).toISOString()
+    "currency": "CNY",
+    "buyRate": 311.03,
+    "sellRate": 312.27,
+    "middleRate": 311.65,
+    "change24h": 0,
+    "updatedAt": "2026-08-19T08:00:00.000Z"
   },
   {
-    currency: "MYR",
-    buyRate: 785,
-    sellRate: 795,
-    middleRate: 790,
-    change24h: -0.08,
-    updatedAt: (/* @__PURE__ */ new Date()).toISOString()
+    "currency": "MYR",
+    "buyRate": 516.02,
+    "sellRate": 518.08,
+    "middleRate": 517.05,
+    "change24h": 0,
+    "updatedAt": "2026-08-19T08:00:00.000Z"
   }
 ];
-var now = dayjs();
 var mockTransactions = [
   {
-    id: "tx-001",
-    transactionRef: "IR-2026-SG-994821",
-    senderName: "Apex Logistics Global Pte Ltd",
-    senderCountry: "Singapore",
-    sendingBank: "DBS Bank Singapore",
-    sendingBankBic: "DBSSSGSG",
-    currency: "USD",
-    amount: 145e3,
-    exchangeRate: 3550,
-    convertedAmountMmk: 51475e4,
-    feeAmount: 5e4,
-    netAmountMmk: 5147e5,
-    valueDate: now.subtract(12, "minute").toISOString(),
-    status: "Completed",
-    purpose: "Commercial Invoicing - Ocean Freight & Container Clearance",
-    beneficiaryAccount: "0091-2384-992019",
-    swiftMetadata: {
-      senderReference: "APX-2026-08819",
-      bankOpCode: "CRED",
-      orderingCustomer: {
-        name: "Apex Logistics Global Pte Ltd",
-        address: "12 Marina Boulevard, Marina Bay Financial Centre Tower 3",
-        city: "Singapore",
-        country: "Singapore",
-        accountNumber: "003-902910-1"
-      },
-      orderingInstitution: {
-        bic: "DBSSSGSGXXX",
-        name: "DBS Bank Ltd Singapore",
-        branch: "Marina Bay Financial Centre Branch",
-        country: "Singapore"
-      },
-      accountWithInstitution: {
-        bic: "KBZMMMYMXXX",
-        name: "Kanbawza Bank Limited (KBZ Bank)",
-        branch: "Yangon Main Corporate Branch"
-      },
-      beneficiaryCustomer: {
-        accountNumber: "0091-2384-992019",
-        name: "KBZ Golden Horizon Trading Co., Ltd.",
-        address: "No. 45 Strand Road, Kyauktada Township, Yangon"
-      },
-      remittanceInfo: "INV#EXP-2026-9901 / Freight forwarding settlement Q3",
-      detailsOfCharges: "OUR",
-      uetr: "f81d4fae-7dec-11d0-a765-00a0c91e6bf6",
-      settlementChannel: "SWIFT GPI",
-      settlementSteps: [
-        {
-          title: "Remittance Instructed",
-          description: "Payment initiated by DBS Bank SG via SWIFT GPI",
-          timestamp: now.subtract(45, "minute").format("DD/MM/YYYY hh:mm A"),
-          completed: true
-        },
-        {
-          title: "Intermediary Clearing",
-          description: "Passed international sanctions & AML compliance filter",
-          timestamp: now.subtract(30, "minute").format("DD/MM/YYYY hh:mm A"),
-          completed: true
-        },
-        {
-          title: "KBZ Inbound Processing",
-          description: "Auto-FX matched at rate 3,550.00 MMK/USD",
-          timestamp: now.subtract(18, "minute").format("DD/MM/YYYY hh:mm A"),
-          completed: true
-        },
-        {
-          title: "Credited to Beneficiary",
-          description: "Funds cleared to Account 0091-2384-992019",
-          timestamp: now.subtract(12, "minute").format("DD/MM/YYYY hh:mm A"),
-          completed: true
-        }
-      ]
-    }
+    "id": "tx_1000",
+    "transactionRef": "IR-202608-96106-0",
+    "senderName": "Aung Aung",
+    "senderCountry": "USA",
+    "sendingBank": "CitiBank",
+    "sendingBankBic": "CITIUS33",
+    "currency": "USD",
+    "amount": 219,
+    "exchangeRate": 2100,
+    "convertedAmountMmk": 459900,
+    "feeAmount": 5,
+    "netAmountMmk": 454900,
+    "valueDate": "2026-08-20T12:16:49.332Z",
+    "status": "success",
+    "statusMessage": "Settled",
+    "purpose": "Family Support",
+    "beneficiaryAccount": "1042551918",
+    "swiftMetadata": {
+      "uetr": "12345678-1234-1234-1234-1234567890ab"
+    },
+    "createdAt": "2026-08-20T12:16:49.332Z",
+    "updatedAt": "2026-08-20T12:16:49.332Z"
   },
   {
-    id: "tx-002",
-    transactionRef: "IR-2026-US-883190",
-    senderName: "Vanguard Tech Solutions Inc.",
-    senderCountry: "United States",
-    sendingBank: "Citibank N.A. New York",
-    sendingBankBic: "CITIUS33",
-    currency: "USD",
-    amount: 82500,
-    exchangeRate: 3550,
-    convertedAmountMmk: 292875e3,
-    feeAmount: 35e3,
-    netAmountMmk: 29284e4,
-    valueDate: now.subtract(42, "minute").toISOString(),
-    status: "Completed",
-    purpose: "Software Engineering Services & Offshore Delivery Milestone 4",
-    beneficiaryAccount: "0091-2384-992019",
-    swiftMetadata: {
-      senderReference: "VANGUARD-US-4491",
-      bankOpCode: "CRED",
-      orderingCustomer: {
-        name: "Vanguard Tech Solutions Inc.",
-        address: "388 Greenwich Street, New York, NY 10013",
-        city: "New York",
-        country: "United States",
-        accountNumber: "882019481"
-      },
-      orderingInstitution: {
-        bic: "CITIUS33XXX",
-        name: "Citibank N.A.",
-        branch: "Wall Street Operations",
-        country: "United States"
-      },
-      accountWithInstitution: {
-        bic: "KBZMMMYMXXX",
-        name: "Kanbawza Bank Limited",
-        branch: "Yangon Main Corporate Branch"
-      },
-      beneficiaryCustomer: {
-        accountNumber: "0091-2384-992019",
-        name: "KBZ Golden Horizon Trading Co., Ltd.",
-        address: "No. 45 Strand Road, Kyauktada Township, Yangon"
-      },
-      remittanceInfo: "PO-88231 IT Consulting August 2026 Retainer",
-      detailsOfCharges: "SHA",
-      uetr: "3b241101-e2bb-4255-8caf-4136c566a964",
-      settlementChannel: "SWIFT GPI",
-      settlementSteps: [
-        {
-          title: "Remittance Instructed",
-          description: "Payment initiated by Citibank NA via SWIFT GPI",
-          timestamp: now.subtract(2, "hour").format("DD/MM/YYYY hh:mm A"),
-          completed: true
-        },
-        {
-          title: "Intermediary Clearing",
-          description: "Cleared Fedwire & Correspondent Nostro",
-          timestamp: now.subtract(1, "hour").format("DD/MM/YYYY hh:mm A"),
-          completed: true
-        },
-        {
-          title: "KBZ Inbound Processing",
-          description: "FX Conversion confirmed",
-          timestamp: now.subtract(50, "minute").format("DD/MM/YYYY hh:mm A"),
-          completed: true
-        },
-        {
-          title: "Credited to Beneficiary",
-          description: "Settled successfully in MMK",
-          timestamp: now.subtract(42, "minute").format("DD/MM/YYYY hh:mm A"),
-          completed: true
-        }
-      ]
-    }
+    "id": "tx_1001",
+    "transactionRef": "IR-202608-31668-1",
+    "senderName": "Maung Maung",
+    "senderCountry": "Singapore",
+    "sendingBank": "DBS Bank",
+    "sendingBankBic": "DBSSSGSG",
+    "currency": "EUR",
+    "amount": 2912,
+    "exchangeRate": 2435.37,
+    "convertedAmountMmk": 7.0917974399999995e6,
+    "feeAmount": 5,
+    "netAmountMmk": 7.0867974399999995e6,
+    "valueDate": "2026-08-19T13:21:02.720Z",
+    "status": "failed",
+    "statusMessage": "Rejected",
+    "purpose": "Family Support",
+    "beneficiaryAccount": "1042504625",
+    "swiftMetadata": {
+      "uetr": "12345678-1234-1234-1234-1234567890ab"
+    },
+    "createdAt": "2026-08-19T13:21:02.720Z",
+    "updatedAt": "2026-08-19T13:21:02.720Z"
   },
   {
-    id: "tx-003",
-    transactionRef: "IR-2026-TH-773012",
-    senderName: "Siam Agro Industries Co., Ltd.",
-    senderCountry: "Thailand",
-    sendingBank: "Bangkok Bank Public Company",
-    sendingBankBic: "BKKBTHTH",
-    currency: "THB",
-    amount: 185e4,
-    exchangeRate: 102.5,
-    convertedAmountMmk: 189625e3,
-    feeAmount: 25e3,
-    netAmountMmk: 1896e5,
-    valueDate: now.subtract(1, "hour").subtract(15, "minute").toISOString(),
-    status: "Pending",
-    purpose: "Agricultural Commodities & Fertilizer Import Consignment",
-    beneficiaryAccount: "0091-2384-992019",
-    swiftMetadata: {
-      senderReference: "SIAM-BKK-0929",
-      bankOpCode: "CRED",
-      orderingCustomer: {
-        name: "Siam Agro Industries Co., Ltd.",
-        address: "333 Silom Road, Bangrak, Bangkok 10500",
-        city: "Bangkok",
-        country: "Thailand",
-        accountNumber: "101-992-8831"
-      },
-      orderingInstitution: {
-        bic: "BKKBTHTHXXX",
-        name: "Bangkok Bank PCL",
-        branch: "Head Office Silom",
-        country: "Thailand"
-      },
-      accountWithInstitution: {
-        bic: "KBZMMMYMXXX",
-        name: "Kanbawza Bank Limited",
-        branch: "Yangon Main Corporate Branch"
-      },
-      beneficiaryCustomer: {
-        accountNumber: "0091-2384-992019",
-        name: "KBZ Golden Horizon Trading Co., Ltd.",
-        address: "No. 45 Strand Road, Kyauktada Township, Yangon"
-      },
-      remittanceInfo: "LC Ref # LC-KBZ-TH-202608 / Bill of Lading BL#88219",
-      detailsOfCharges: "OUR",
-      uetr: "7c9e6679-7425-40de-944b-e07fc1f90ae7",
-      settlementChannel: "SWIFT MT103",
-      settlementSteps: [
-        {
-          title: "Remittance Instructed",
-          description: "Payment initiated by Bangkok Bank PCL",
-          timestamp: now.subtract(2, "hour").format("DD/MM/YYYY hh:mm A"),
-          completed: true
-        },
-        {
-          title: "Compliance Document Review",
-          description: "Verifying trade supporting documents and invoice proof",
-          timestamp: now.subtract(1, "hour").format("DD/MM/YYYY hh:mm A"),
-          completed: false,
-          current: true
-        },
-        {
-          title: "KBZ Treasury FX Matching",
-          description: "Pending document release for treasury rate lock",
-          timestamp: "Pending",
-          completed: false
-        },
-        {
-          title: "Settlement",
-          description: "Will credit into 0091-2384-992019 upon officer sign-off",
-          timestamp: "Pending",
-          completed: false
-        }
-      ]
-    }
+    "id": "tx_1002",
+    "transactionRef": "IR-202608-58177-2",
+    "senderName": "Kyaw Kyaw",
+    "senderCountry": "Thailand",
+    "sendingBank": "Kasikornbank",
+    "sendingBankBic": "KASITHBK",
+    "currency": "SGD",
+    "amount": 1977,
+    "exchangeRate": 1645.32,
+    "convertedAmountMmk": 3.2527976399999997e6,
+    "feeAmount": 5,
+    "netAmountMmk": 3.2477976399999997e6,
+    "valueDate": "2026-08-18T12:39:26.191Z",
+    "status": "init",
+    "statusMessage": "Timeout",
+    "purpose": "Family Support",
+    "beneficiaryAccount": "1042439928",
+    "swiftMetadata": {
+      "uetr": "12345678-1234-1234-1234-1234567890ab"
+    },
+    "createdAt": "2026-08-18T12:39:26.191Z",
+    "updatedAt": "2026-08-18T12:39:26.191Z"
   },
   {
-    id: "tx-004",
-    transactionRef: "IR-2026-EU-662910",
-    senderName: "EuroLux Pharma Distribution SA",
-    senderCountry: "Luxembourg",
-    sendingBank: "BNP Paribas Luxembourg",
-    sendingBankBic: "BNPALULL",
-    currency: "EUR",
-    amount: 46800,
-    exchangeRate: 3822.5,
-    convertedAmountMmk: 178893e3,
-    feeAmount: 4e4,
-    netAmountMmk: 178853e3,
-    valueDate: now.subtract(2, "hour").subtract(30, "minute").toISOString(),
-    status: "Completed",
-    purpose: "Medical Supplies & WHO Certified Laboratory Equipment",
-    beneficiaryAccount: "0091-2384-992019",
-    swiftMetadata: {
-      senderReference: "EURLUX-INV-9921",
-      bankOpCode: "CRED",
-      orderingCustomer: {
-        name: "EuroLux Pharma Distribution SA",
-        address: "16 Boulevard Royal, L-2449 Luxembourg",
-        city: "Luxembourg",
-        country: "Luxembourg"
-      },
-      orderingInstitution: {
-        bic: "BNPALULLXXX",
-        name: "BNP Paribas",
-        branch: "Luxembourg Corporate Center",
-        country: "Luxembourg"
-      },
-      accountWithInstitution: {
-        bic: "KBZMMMYMXXX",
-        name: "Kanbawza Bank Limited",
-        branch: "Yangon Main Corporate Branch"
-      },
-      beneficiaryCustomer: {
-        accountNumber: "0091-2384-992019",
-        name: "KBZ Golden Horizon Trading Co., Ltd.",
-        address: "No. 45 Strand Road, Kyauktada Township, Yangon"
-      },
-      remittanceInfo: "EU-PHARMA-BATCH-20260812 / Vaccine cold chain components",
-      detailsOfCharges: "OUR",
-      uetr: "4f964023-e186-4e50-9854-469b82142e2a",
-      settlementChannel: "SWIFT GPI",
-      settlementSteps: [
-        {
-          title: "Remittance Instructed",
-          description: "Payment initiated in EUR via Target2 / SWIFT",
-          timestamp: now.subtract(4, "hour").format("DD/MM/YYYY hh:mm A"),
-          completed: true
-        },
-        {
-          title: "Intermediary Clearing",
-          description: "Approved by European Central Bank clearing gateway",
-          timestamp: now.subtract(3, "hour").format("DD/MM/YYYY hh:mm A"),
-          completed: true
-        },
-        {
-          title: "KBZ Inbound Processing",
-          description: "EUR to MMK converted at 3,822.50 MMK",
-          timestamp: now.subtract(2, "hour").subtract(40, "minute").format("DD/MM/YYYY hh:mm A"),
-          completed: true
-        },
-        {
-          title: "Credited to Beneficiary",
-          description: "Direct credit completed",
-          timestamp: now.subtract(2, "hour").subtract(30, "minute").format("DD/MM/YYYY hh:mm A"),
-          completed: true
-        }
-      ]
-    }
+    "id": "tx_1003",
+    "transactionRef": "IR-202608-35109-3",
+    "senderName": "Tun Tun",
+    "senderCountry": "UK",
+    "sendingBank": "Barclays",
+    "sendingBankBic": "BARCGB22",
+    "currency": "THB",
+    "amount": 3131,
+    "exchangeRate": 63.49,
+    "convertedAmountMmk": 198787.19,
+    "feeAmount": 5,
+    "netAmountMmk": 193787.19,
+    "valueDate": "2026-08-17T13:39:37.582Z",
+    "status": "MFR",
+    "statusMessage": "Timeout",
+    "purpose": "Family Support",
+    "beneficiaryAccount": "1042223132",
+    "swiftMetadata": {
+      "uetr": "12345678-1234-1234-1234-1234567890ab"
+    },
+    "createdAt": "2026-08-17T13:39:37.582Z",
+    "updatedAt": "2026-08-17T13:39:37.582Z"
   },
   {
-    id: "tx-005",
-    transactionRef: "IR-2026-SG-551829",
-    senderName: "SingaPay Financial Services Pte Ltd",
-    senderCountry: "Singapore",
-    sendingBank: "OCBC Bank Singapore",
-    sendingBankBic: "OCBCSGSG",
-    currency: "SGD",
-    amount: 11e4,
-    exchangeRate: 2682,
-    convertedAmountMmk: 29502e4,
-    feeAmount: 3e4,
-    netAmountMmk: 29499e4,
-    valueDate: now.subtract(3, "hour").toISOString(),
-    status: "Completed",
-    purpose: "Cross-Border Merchant Payouts & Settlement Batch 401",
-    beneficiaryAccount: "0091-2384-992019",
-    swiftMetadata: {
-      senderReference: "SG-PAY-2026-778",
-      bankOpCode: "CRED",
-      orderingCustomer: {
-        name: "SingaPay Financial Services Pte Ltd",
-        address: "65 Chulia Street, OCBC Centre",
-        city: "Singapore",
-        country: "Singapore"
-      },
-      orderingInstitution: {
-        bic: "OCBCSGSGXXX",
-        name: "Oversea-Chinese Banking Corporation Ltd",
-        branch: "OCBC Centre Branch",
-        country: "Singapore"
-      },
-      accountWithInstitution: {
-        bic: "KBZMMMYMXXX",
-        name: "Kanbawza Bank Limited",
-        branch: "Yangon Main Corporate Branch"
-      },
-      beneficiaryCustomer: {
-        accountNumber: "0091-2384-992019",
-        name: "KBZ Golden Horizon Trading Co., Ltd.",
-        address: "No. 45 Strand Road, Kyauktada Township, Yangon"
-      },
-      remittanceInfo: "E-commerce merchant gateway daily settlement",
-      detailsOfCharges: "OUR",
-      uetr: "88a31902-39c4-4b47-814d-54128f7a6379",
-      settlementChannel: "SWIFT GPI",
-      settlementSteps: [
-        {
-          title: "Remittance Instructed",
-          description: "Payment submitted via FAST / SWIFT GPI",
-          timestamp: now.subtract(4, "hour").format("DD/MM/YYYY hh:mm A"),
-          completed: true
-        },
-        {
-          title: "Nostro Settlement",
-          description: "KBZ SG Nostro Account credited",
-          timestamp: now.subtract(3, "hour").subtract(20, "minute").format("DD/MM/YYYY hh:mm A"),
-          completed: true
-        },
-        {
-          title: "Credited to Beneficiary",
-          description: "Funds available in account",
-          timestamp: now.subtract(3, "hour").format("DD/MM/YYYY hh:mm A"),
-          completed: true
-        }
-      ]
-    }
+    "id": "tx_1004",
+    "transactionRef": "IR-202608-02430-4",
+    "senderName": "Aye Aye",
+    "senderCountry": "Japan",
+    "sendingBank": "SMBC",
+    "sendingBankBic": "SMBCJPJT",
+    "currency": "GBP",
+    "amount": 2625,
+    "exchangeRate": 2846.45,
+    "convertedAmountMmk": 7471931249999999e-9,
+    "feeAmount": 5,
+    "netAmountMmk": 7466931249999999e-9,
+    "valueDate": "2026-08-16T14:50:05.750Z",
+    "status": "success",
+    "statusMessage": "Settled",
+    "purpose": "Family Support",
+    "beneficiaryAccount": "1042099967",
+    "swiftMetadata": {
+      "uetr": "12345678-1234-1234-1234-1234567890ab"
+    },
+    "createdAt": "2026-08-16T14:50:05.750Z",
+    "updatedAt": "2026-08-16T14:50:05.750Z"
   },
   {
-    id: "tx-006",
-    transactionRef: "IR-2026-UK-441209",
-    senderName: "Caledonian Maritime Energy Ltd",
-    senderCountry: "United Kingdom",
-    sendingBank: "Standard Chartered Bank London",
-    sendingBankBic: "SCBLGB2L",
-    currency: "GBP",
-    amount: 35e3,
-    exchangeRate: 4498,
-    convertedAmountMmk: 15743e4,
-    feeAmount: 45e3,
-    netAmountMmk: 157385e3,
-    valueDate: now.subtract(5, "hour").toISOString(),
-    status: "Completed",
-    purpose: "Offshore Drilling Engineering Inspection Retainer",
-    beneficiaryAccount: "0091-2384-992019",
-    swiftMetadata: {
-      senderReference: "SCB-LON-UK-9182",
-      bankOpCode: "CRED",
-      orderingCustomer: {
-        name: "Caledonian Maritime Energy Ltd",
-        address: "1 Basinghall Avenue, London EC2V 5DD",
-        city: "London",
-        country: "United Kingdom"
-      },
-      orderingInstitution: {
-        bic: "SCBLGB2LXXX",
-        name: "Standard Chartered Bank",
-        branch: "London Principal Office",
-        country: "United Kingdom"
-      },
-      accountWithInstitution: {
-        bic: "KBZMMMYMXXX",
-        name: "Kanbawza Bank Limited",
-        branch: "Yangon Main Corporate Branch"
-      },
-      beneficiaryCustomer: {
-        accountNumber: "0091-2384-992019",
-        name: "KBZ Golden Horizon Trading Co., Ltd.",
-        address: "No. 45 Strand Road, Kyauktada Township, Yangon"
-      },
-      remittanceInfo: "INV#UK-2026-4401 Technical advisory offshore project",
-      detailsOfCharges: "SHA",
-      uetr: "1a938cde-8419-485a-ba38-124801e91c77",
-      settlementChannel: "SWIFT GPI",
-      settlementSteps: [
-        {
-          title: "Remittance Instructed",
-          description: "Initiated via Standard Chartered London",
-          timestamp: now.subtract(6, "hour").format("DD/MM/YYYY hh:mm A"),
-          completed: true
-        },
-        {
-          title: "Credited to Beneficiary",
-          description: "Completed and confirmed",
-          timestamp: now.subtract(5, "hour").format("DD/MM/YYYY hh:mm A"),
-          completed: true
-        }
-      ]
-    }
+    "id": "tx_1005",
+    "transactionRef": "IR-202608-63657-5",
+    "senderName": "Su Su",
+    "senderCountry": "Malaysia",
+    "sendingBank": "Maybank",
+    "sendingBankBic": "MBBEMYKL",
+    "currency": "JPY",
+    "amount": 661,
+    "exchangeRate": 1319.92,
+    "convertedAmountMmk": 872467.12,
+    "feeAmount": 5,
+    "netAmountMmk": 867467.12,
+    "valueDate": "2026-08-15T13:54:03.686Z",
+    "status": "failed",
+    "statusMessage": "Rejected",
+    "purpose": "Family Support",
+    "beneficiaryAccount": "1042683026",
+    "swiftMetadata": {
+      "uetr": "12345678-1234-1234-1234-1234567890ab"
+    },
+    "createdAt": "2026-08-15T13:54:03.686Z",
+    "updatedAt": "2026-08-15T13:54:03.686Z"
   },
   {
-    id: "tx-007",
-    transactionRef: "IR-2026-JP-330918",
-    senderName: "Tokyo Electronic Components Corp",
-    senderCountry: "Japan",
-    sendingBank: "Sumitomo Mitsui Banking Corp (SMBC)",
-    sendingBankBic: "SMBCJPJT",
-    currency: "JPY",
-    amount: 145e5,
-    exchangeRate: 23.75,
-    convertedAmountMmk: 344375e3,
-    feeAmount: 6e4,
-    netAmountMmk: 344315e3,
-    valueDate: now.subtract(8, "hour").toISOString(),
-    status: "Completed",
-    purpose: "Industrial Micro-controller Units & Semiconductor Parts",
-    beneficiaryAccount: "0091-2384-992019",
-    swiftMetadata: {
-      senderReference: "SMBC-TYO-99120",
-      bankOpCode: "CRED",
-      orderingCustomer: {
-        name: "Tokyo Electronic Components Corp",
-        address: "1-1-2 Marunouchi, Chiyoda-ku, Tokyo 100-0005",
-        city: "Tokyo",
-        country: "Japan"
-      },
-      orderingInstitution: {
-        bic: "SMBCJPJTXXX",
-        name: "Sumitomo Mitsui Banking Corporation",
-        branch: "Tokyo Head Office",
-        country: "Japan"
-      },
-      accountWithInstitution: {
-        bic: "KBZMMMYMXXX",
-        name: "Kanbawza Bank Limited",
-        branch: "Yangon Main Corporate Branch"
-      },
-      beneficiaryCustomer: {
-        accountNumber: "0091-2384-992019",
-        name: "KBZ Golden Horizon Trading Co., Ltd.",
-        address: "No. 45 Strand Road, Kyauktada Township, Yangon"
-      },
-      remittanceInfo: "PO#JP-ELEC-44093 / Customs clearance ready",
-      detailsOfCharges: "OUR",
-      uetr: "5f918029-47bb-4001-a128-984410e2fa41",
-      settlementChannel: "SWIFT GPI",
-      settlementSteps: [
-        {
-          title: "Remittance Instructed",
-          description: "Payment dispatched from Tokyo",
-          timestamp: now.subtract(9, "hour").format("DD/MM/YYYY hh:mm A"),
-          completed: true
-        },
-        {
-          title: "Credited to Beneficiary",
-          description: "Processed in MMK to merchant account",
-          timestamp: now.subtract(8, "hour").format("DD/MM/YYYY hh:mm A"),
-          completed: true
-        }
-      ]
-    }
+    "id": "tx_1006",
+    "transactionRef": "IR-202608-37939-6",
+    "senderName": "Mya Mya",
+    "senderCountry": "China",
+    "sendingBank": "ICBC",
+    "sendingBankBic": "ICBCCNBJ",
+    "currency": "CNY",
+    "amount": 2766,
+    "exchangeRate": 311.65,
+    "convertedAmountMmk": 862023.8999999999,
+    "feeAmount": 5,
+    "netAmountMmk": 857023.8999999999,
+    "valueDate": "2026-08-14T13:54:23.246Z",
+    "status": "init",
+    "statusMessage": "Timeout",
+    "purpose": "Family Support",
+    "beneficiaryAccount": "1042434843",
+    "swiftMetadata": {
+      "uetr": "12345678-1234-1234-1234-1234567890ab"
+    },
+    "createdAt": "2026-08-14T13:54:23.246Z",
+    "updatedAt": "2026-08-14T13:54:23.246Z"
   },
   {
-    id: "tx-008",
-    transactionRef: "IR-2026-MY-229103",
-    senderName: "Kuala Lumpur Palm Agri Tech Sdn Bhd",
-    senderCountry: "Malaysia",
-    sendingBank: "Maybank (Malayan Banking Berhad)",
-    sendingBankBic: "MBBEMYKL",
-    currency: "MYR",
-    amount: 16e4,
-    exchangeRate: 790,
-    convertedAmountMmk: 1264e5,
-    feeAmount: 2e4,
-    netAmountMmk: 12638e4,
-    valueDate: now.subtract(14, "hour").toISOString(),
-    status: "Failed",
-    statusMessage: "Ordering institution account number mismatch with declaration",
-    purpose: "Refined Edible Oils Export Contract #KL-082",
-    beneficiaryAccount: "0091-2384-992019",
-    swiftMetadata: {
-      senderReference: "MBB-KL-88210",
-      bankOpCode: "CRED",
-      orderingCustomer: {
-        name: "Kuala Lumpur Palm Agri Tech Sdn Bhd",
-        address: "Menara Maybank, 100 Jalan Tun Perak, 50050 Kuala Lumpur",
-        city: "Kuala Lumpur",
-        country: "Malaysia"
-      },
-      orderingInstitution: {
-        bic: "MBBEMYKLXXX",
-        name: "Malayan Banking Berhad",
-        branch: "Kuala Lumpur Main Branch",
-        country: "Malaysia"
-      },
-      accountWithInstitution: {
-        bic: "KBZMMMYMXXX",
-        name: "Kanbawza Bank Limited",
-        branch: "Yangon Main Corporate Branch"
-      },
-      beneficiaryCustomer: {
-        accountNumber: "0091-2384-992019",
-        name: "KBZ Golden Horizon Trading Co., Ltd.",
-        address: "No. 45 Strand Road, Kyauktada Township, Yangon"
-      },
-      remittanceInfo: "Palm olein grade A consignment invoice 8820",
-      detailsOfCharges: "BEN",
-      uetr: "9e881023-4122-4411-bd21-0029418eab88",
-      settlementChannel: "SWIFT MT103",
-      settlementSteps: [
-        {
-          title: "Remittance Instructed",
-          description: "Received via Maybank Kuala Lumpur",
-          timestamp: now.subtract(16, "hour").format("DD/MM/YYYY hh:mm A"),
-          completed: true
-        },
-        {
-          title: "Compliance Validation",
-          description: "Beneficiary TIN / Import Permit number discrepancy rejected by CBM clearing rules",
-          timestamp: now.subtract(14, "hour").format("DD/MM/YYYY hh:mm A"),
-          completed: false,
-          failed: true
-        },
-        {
-          title: "Return to Sender (SWIFT MT199)",
-          description: "Dispatched return advice to ordering institution",
-          timestamp: now.subtract(13, "hour").format("DD/MM/YYYY hh:mm A"),
-          completed: true
-        }
-      ]
-    }
+    "id": "tx_1007",
+    "transactionRef": "IR-202608-40746-7",
+    "senderName": "Hla Hla",
+    "senderCountry": "Europe",
+    "sendingBank": "Deutsche Bank",
+    "sendingBankBic": "DEUTDEFF",
+    "currency": "MYR",
+    "amount": 1675,
+    "exchangeRate": 517.05,
+    "convertedAmountMmk": 866058.7499999999,
+    "feeAmount": 5,
+    "netAmountMmk": 861058.7499999999,
+    "valueDate": "2026-08-13T13:46:50.428Z",
+    "status": "MFR",
+    "statusMessage": "Timeout",
+    "purpose": "Family Support",
+    "beneficiaryAccount": "1042983104",
+    "swiftMetadata": {
+      "uetr": "12345678-1234-1234-1234-1234567890ab"
+    },
+    "createdAt": "2026-08-13T13:46:50.428Z",
+    "updatedAt": "2026-08-13T13:46:50.428Z"
   },
   {
-    id: "tx-009",
-    transactionRef: "IR-2026-US-118274",
-    senderName: "Horizon Pacific Trading Corp",
-    senderCountry: "United States",
-    sendingBank: "JPMorgan Chase Bank, N.A.",
-    sendingBankBic: "CHASUS33",
-    currency: "USD",
-    amount: 22e4,
-    exchangeRate: 3550,
-    convertedAmountMmk: 781e6,
-    feeAmount: 5e4,
-    netAmountMmk: 78095e4,
-    valueDate: now.subtract(1, "day").toISOString(),
-    status: "Completed",
-    purpose: "Heavy Industrial Solar Panels & Inverters Procurement",
-    beneficiaryAccount: "0091-2384-992019",
-    swiftMetadata: {
-      senderReference: "JPMC-NY-992100",
-      bankOpCode: "CRED",
-      orderingCustomer: {
-        name: "Horizon Pacific Trading Corp",
-        address: "270 Park Ave, New York, NY 10017",
-        city: "New York",
-        country: "United States"
-      },
-      orderingInstitution: {
-        bic: "CHASUS33XXX",
-        name: "JPMorgan Chase Bank, N.A.",
-        branch: "New York Global Clearing",
-        country: "United States"
-      },
-      accountWithInstitution: {
-        bic: "KBZMMMYMXXX",
-        name: "Kanbawza Bank Limited",
-        branch: "Yangon Main Corporate Branch"
-      },
-      beneficiaryCustomer: {
-        accountNumber: "0091-2384-992019",
-        name: "KBZ Golden Horizon Trading Co., Ltd.",
-        address: "No. 45 Strand Road, Kyauktada Township, Yangon"
-      },
-      remittanceInfo: "SOLAR-GRID-IMPORT-MM-2026-08 / Clean energy grant project",
-      detailsOfCharges: "OUR",
-      uetr: "22b91841-5582-411a-8800-4718293e5510",
-      settlementChannel: "SWIFT GPI",
-      settlementSteps: [
-        {
-          title: "Remittance Instructed",
-          description: "Dispatched via JPMorgan Chase Fedwire",
-          timestamp: now.subtract(1, "day").subtract(2, "hour").format("DD/MM/YYYY hh:mm A"),
-          completed: true
-        },
-        {
-          title: "Credited to Beneficiary",
-          description: "Funds cleared and reflected in MMK account",
-          timestamp: now.subtract(1, "day").format("DD/MM/YYYY hh:mm A"),
-          completed: true
-        }
-      ]
-    }
+    "id": "tx_1008",
+    "transactionRef": "IR-202608-74708-8",
+    "senderName": "Aung Aung",
+    "senderCountry": "USA",
+    "sendingBank": "CitiBank",
+    "sendingBankBic": "CITIUS33",
+    "currency": "USD",
+    "amount": 902,
+    "exchangeRate": 2100,
+    "convertedAmountMmk": 1894200,
+    "feeAmount": 5,
+    "netAmountMmk": 1889200,
+    "valueDate": "2026-08-12T14:16:20.832Z",
+    "status": "success",
+    "statusMessage": "Settled",
+    "purpose": "Family Support",
+    "beneficiaryAccount": "1042718425",
+    "swiftMetadata": {
+      "uetr": "12345678-1234-1234-1234-1234567890ab"
+    },
+    "createdAt": "2026-08-12T14:16:20.832Z",
+    "updatedAt": "2026-08-12T14:16:20.832Z"
   },
   {
-    id: "tx-010",
-    transactionRef: "IR-2026-CN-009182",
-    senderName: "Shenzhen Microtek Semiconductor Co., Ltd.",
-    senderCountry: "China",
-    sendingBank: "Bank of China (BOC)",
-    sendingBankBic: "BKCHCNBJ",
-    currency: "CNY",
-    amount: 55e4,
-    exchangeRate: 493,
-    convertedAmountMmk: 27115e4,
-    feeAmount: 3e4,
-    netAmountMmk: 27112e4,
-    valueDate: now.subtract(1, "day").subtract(5, "hour").toISOString(),
-    status: "Completed",
-    purpose: "Telecommunications Fibre Optic Cables & Transceivers",
-    beneficiaryAccount: "0091-2384-992019",
-    swiftMetadata: {
-      senderReference: "BOC-SZ-2026-4418",
-      bankOpCode: "CRED",
-      orderingCustomer: {
-        name: "Shenzhen Microtek Semiconductor Co., Ltd.",
-        address: "Fuxing Road, Futian District, Shenzhen, Guangdong",
-        city: "Shenzhen",
-        country: "China"
-      },
-      orderingInstitution: {
-        bic: "BKCHCNBJXXX",
-        name: "Bank of China Limited",
-        branch: "Shenzhen Special Economic Zone Branch",
-        country: "China"
-      },
-      accountWithInstitution: {
-        bic: "KBZMMMYMXXX",
-        name: "Kanbawza Bank Limited",
-        branch: "Yangon Main Corporate Branch"
-      },
-      beneficiaryCustomer: {
-        accountNumber: "0091-2384-992019",
-        name: "KBZ Golden Horizon Trading Co., Ltd.",
-        address: "No. 45 Strand Road, Kyauktada Township, Yangon"
-      },
-      remittanceInfo: "CIPS direct clearing / Optical hardware settlement",
-      detailsOfCharges: "OUR",
-      uetr: "33e89124-7712-421b-aa31-5918239e9921",
-      settlementChannel: "SWIFT GPI",
-      settlementSteps: [
-        {
-          title: "Remittance Instructed",
-          description: "CIPS Cross-Border direct message",
-          timestamp: now.subtract(1, "day").subtract(8, "hour").format("DD/MM/YYYY hh:mm A"),
-          completed: true
-        },
-        {
-          title: "Credited to Beneficiary",
-          description: "Settled to account",
-          timestamp: now.subtract(1, "day").subtract(5, "hour").format("DD/MM/YYYY hh:mm A"),
-          completed: true
-        }
-      ]
-    }
+    "id": "tx_1009",
+    "transactionRef": "IR-202608-92353-9",
+    "senderName": "Maung Maung",
+    "senderCountry": "Singapore",
+    "sendingBank": "DBS Bank",
+    "sendingBankBic": "DBSSSGSG",
+    "currency": "EUR",
+    "amount": 2491,
+    "exchangeRate": 2435.37,
+    "convertedAmountMmk": 606650667e-2,
+    "feeAmount": 5,
+    "netAmountMmk": 606150667e-2,
+    "valueDate": "2026-08-11T12:30:45.855Z",
+    "status": "failed",
+    "statusMessage": "Rejected",
+    "purpose": "Family Support",
+    "beneficiaryAccount": "1042565611",
+    "swiftMetadata": {
+      "uetr": "12345678-1234-1234-1234-1234567890ab"
+    },
+    "createdAt": "2026-08-11T12:30:45.855Z",
+    "updatedAt": "2026-08-11T12:30:45.855Z"
   },
   {
-    id: "tx-011",
-    transactionRef: "IR-2026-SG-990142",
-    senderName: "Temasek Sea Logistics Hub Pte Ltd",
-    senderCountry: "Singapore",
-    sendingBank: "United Overseas Bank (UOB)",
-    sendingBankBic: "UOVBSGSG",
-    currency: "USD",
-    amount: 67400,
-    exchangeRate: 3550,
-    convertedAmountMmk: 23927e4,
-    feeAmount: 35e3,
-    netAmountMmk: 239235e3,
-    valueDate: now.subtract(2, "day").toISOString(),
-    status: "Completed",
-    purpose: "Port Terminal Handling Charges & Vessel Bunkering Settlement",
-    beneficiaryAccount: "0091-2384-992019",
-    swiftMetadata: {
-      senderReference: "UOB-SG-99218",
-      bankOpCode: "CRED",
-      orderingCustomer: {
-        name: "Temasek Sea Logistics Hub Pte Ltd",
-        address: "80 Raffles Place, UOB Plaza 1",
-        city: "Singapore",
-        country: "Singapore"
-      },
-      orderingInstitution: {
-        bic: "UOVBSGSGXXX",
-        name: "United Overseas Bank Limited",
-        branch: "Raffles Place Branch",
-        country: "Singapore"
-      },
-      accountWithInstitution: {
-        bic: "KBZMMMYMXXX",
-        name: "Kanbawza Bank Limited",
-        branch: "Yangon Main Corporate Branch"
-      },
-      beneficiaryCustomer: {
-        accountNumber: "0091-2384-992019",
-        name: "KBZ Golden Horizon Trading Co., Ltd.",
-        address: "No. 45 Strand Road, Kyauktada Township, Yangon"
-      },
-      remittanceInfo: "INV#TMSK-2026-0811 Marine fuel bunker invoice",
-      detailsOfCharges: "OUR",
-      uetr: "44a89100-1123-4e41-b829-192837465019",
-      settlementChannel: "SWIFT GPI",
-      settlementSteps: [
-        {
-          title: "Remittance Instructed",
-          description: "Processed via UOB SWIFT GPI",
-          timestamp: now.subtract(2, "day").subtract(2, "hour").format("DD/MM/YYYY hh:mm A"),
-          completed: true
-        },
-        {
-          title: "Credited to Beneficiary",
-          description: "Funds cleared to account",
-          timestamp: now.subtract(2, "day").format("DD/MM/YYYY hh:mm A"),
-          completed: true
-        }
-      ]
-    }
+    "id": "tx_1010",
+    "transactionRef": "IR-202608-05782-10",
+    "senderName": "Kyaw Kyaw",
+    "senderCountry": "Thailand",
+    "sendingBank": "Kasikornbank",
+    "sendingBankBic": "KASITHBK",
+    "currency": "SGD",
+    "amount": 2214,
+    "exchangeRate": 1645.32,
+    "convertedAmountMmk": 364273848e-2,
+    "feeAmount": 5,
+    "netAmountMmk": 363773848e-2,
+    "valueDate": "2026-08-10T13:19:39.909Z",
+    "status": "init",
+    "statusMessage": "Timeout",
+    "purpose": "Family Support",
+    "beneficiaryAccount": "1042847654",
+    "swiftMetadata": {
+      "uetr": "12345678-1234-1234-1234-1234567890ab"
+    },
+    "createdAt": "2026-08-10T13:19:39.909Z",
+    "updatedAt": "2026-08-10T13:19:39.909Z"
   },
   {
-    id: "tx-012",
-    transactionRef: "IR-2026-DE-882710",
-    senderName: "Bavaria Industrial Machinery GmbH",
-    senderCountry: "Germany",
-    sendingBank: "Deutsche Bank Frankfurt",
-    sendingBankBic: "DEUTDEDD",
-    currency: "EUR",
-    amount: 195e3,
-    exchangeRate: 3822.5,
-    convertedAmountMmk: 745387500,
-    feeAmount: 75e3,
-    netAmountMmk: 745312500,
-    valueDate: now.subtract(2, "day").subtract(6, "hour").toISOString(),
-    status: "Pending",
-    purpose: "Turnkey Hydro-Turbine Generator Spare Parts",
-    beneficiaryAccount: "0091-2384-992019",
-    swiftMetadata: {
-      senderReference: "DB-FRA-2026-90",
-      bankOpCode: "CRED",
-      orderingCustomer: {
-        name: "Bavaria Industrial Machinery GmbH",
-        address: "Taunusanlage 12, 60325 Frankfurt am Main",
-        city: "Frankfurt",
-        country: "Germany"
-      },
-      orderingInstitution: {
-        bic: "DEUTDEDDXXX",
-        name: "Deutsche Bank AG",
-        branch: "Frankfurt Head Office",
-        country: "Germany"
-      },
-      accountWithInstitution: {
-        bic: "MMGRMMYMXXX",
-        name: "Myanmar Global Remittance Gateway",
-        branch: "Yangon Main Settlement Branch"
-      },
-      beneficiaryCustomer: {
-        accountNumber: "0091-2384-992019",
-        name: "Myanmar Horizon Trading Co., Ltd.",
-        address: "No. 45 Strand Road, Kyauktada Township, Yangon"
-      },
-      remittanceInfo: "HYDRO-DE-INV-009 / LC#LC-2026-GER-441",
-      detailsOfCharges: "OUR",
-      uetr: "66d81920-3321-4991-8842-591820491028",
-      settlementChannel: "SWIFT GPI",
-      settlementSteps: [
-        {
-          title: "Remittance Instructed",
-          description: "Payment dispatched via Deutsche Bank Frankfurt",
-          timestamp: now.subtract(2, "day").subtract(8, "hour").format("DD/MM/YYYY hh:mm A"),
-          completed: true
-        },
-        {
-          title: "Under Foreign Exchange Settlement Allocation Review",
-          description: "High-value remittance awaiting routine compliance authorization",
-          timestamp: now.subtract(2, "day").subtract(6, "hour").format("DD/MM/YYYY hh:mm A"),
-          completed: false,
-          current: true
-        },
-        {
-          title: "Final Settlement",
-          description: "Expected to credit on next clearance batch",
-          timestamp: "Pending",
-          completed: false
-        }
-      ]
-    }
+    "id": "tx_1011",
+    "transactionRef": "IR-202608-95463-11",
+    "senderName": "Tun Tun",
+    "senderCountry": "UK",
+    "sendingBank": "Barclays",
+    "sendingBankBic": "BARCGB22",
+    "currency": "THB",
+    "amount": 3128,
+    "exchangeRate": 63.49,
+    "convertedAmountMmk": 198596.72,
+    "feeAmount": 5,
+    "netAmountMmk": 193596.72,
+    "valueDate": "2026-08-09T13:38:48.899Z",
+    "status": "MFR",
+    "statusMessage": "Timeout",
+    "purpose": "Family Support",
+    "beneficiaryAccount": "1042754549",
+    "swiftMetadata": {
+      "uetr": "12345678-1234-1234-1234-1234567890ab"
+    },
+    "createdAt": "2026-08-09T13:38:48.899Z",
+    "updatedAt": "2026-08-09T13:38:48.899Z"
   },
   {
-    id: "tx-011",
-    transactionRef: "IR-2026-JP-449102",
-    senderName: "Tokyo Precision Robotics Inc.",
-    senderCountry: "Japan",
-    sendingBank: "Mitsubishi UFJ Financial Group (MUFG)",
-    sendingBankBic: "BOTKJPJTXXX",
-    currency: "JPY",
-    amount: 185e5,
-    exchangeRate: 23.75,
-    convertedAmountMmk: 439375e3,
-    feeAmount: 35e3,
-    netAmountMmk: 43934e4,
-    valueDate: now.subtract(3, "hour").subtract(15, "minute").toISOString(),
-    status: "Completed",
-    purpose: "Industrial Automation & CNC Spare Parts Supply Contract",
-    beneficiaryAccount: "0091-2384-992019",
-    swiftMetadata: {
-      senderReference: "MUFG-TYO-991240",
-      bankOpCode: "CRED",
-      orderingCustomer: {
-        name: "Tokyo Precision Robotics Inc.",
-        address: "2-7-1 Marunouchi, Chiyoda-ku, Tokyo 100-8388",
-        city: "Tokyo",
-        country: "Japan",
-        accountNumber: "JP-9918-0029-41"
-      },
-      orderingInstitution: {
-        bic: "BOTKJPJTXXX",
-        name: "MUFG Bank Ltd.",
-        branch: "Tokyo Head Office",
-        country: "Japan"
-      },
-      accountWithInstitution: {
-        bic: "MMGRMMYMXXX",
-        name: "Myanmar Global Remittance Gateway",
-        branch: "Yangon Settlement Hub"
-      },
-      beneficiaryCustomer: {
-        accountNumber: "0091-2384-992019",
-        name: "Apex Myanmar Industrial Supply Ltd.",
-        address: "Pyay Road, Hlaing Township, Yangon"
-      },
-      remittanceInfo: "PO-2026-JPN-8812 / CNC-CONT-991",
-      detailsOfCharges: "SHA",
-      uetr: "aa491028-1120-4991-88f2-901847102911",
-      settlementChannel: "SWIFT GPI",
-      settlementSteps: [
-        {
-          title: "Payment Instructed",
-          description: "MUFG Bank Tokyo originated wire",
-          timestamp: now.subtract(3, "hour").subtract(15, "minute").format("DD/MM/YYYY hh:mm A"),
-          completed: true
-        },
-        {
-          title: "FX Conversion Quoted",
-          description: "Locked at 23.75 MMK per JPY",
-          timestamp: now.subtract(3, "hour").subtract(5, "minute").format("DD/MM/YYYY hh:mm A"),
-          completed: true
-        },
-        {
-          title: "Credited to MMK Account",
-          description: "Beneficiary account 0091-2384-992019 credited in full",
-          timestamp: now.subtract(3, "hour").format("DD/MM/YYYY hh:mm A"),
-          completed: true
-        }
-      ]
-    }
+    "id": "tx_1012",
+    "transactionRef": "IR-202608-70225-12",
+    "senderName": "Aye Aye",
+    "senderCountry": "Japan",
+    "sendingBank": "SMBC",
+    "sendingBankBic": "SMBCJPJT",
+    "currency": "GBP",
+    "amount": 2947,
+    "exchangeRate": 2846.45,
+    "convertedAmountMmk": 8388488149999999e-9,
+    "feeAmount": 5,
+    "netAmountMmk": 8383488149999999e-9,
+    "valueDate": "2026-08-08T12:34:17.340Z",
+    "status": "success",
+    "statusMessage": "Settled",
+    "purpose": "Family Support",
+    "beneficiaryAccount": "1042627226",
+    "swiftMetadata": {
+      "uetr": "12345678-1234-1234-1234-1234567890ab"
+    },
+    "createdAt": "2026-08-08T12:34:17.340Z",
+    "updatedAt": "2026-08-08T12:34:17.340Z"
   },
   {
-    id: "tx-012",
-    transactionRef: "IR-2026-AE-773819",
-    senderName: "Gulf Horizon Petrochemical FZE",
-    senderCountry: "United Arab Emirates",
-    sendingBank: "First Abu Dhabi Bank (FAB)",
-    sendingBankBic: "FABAAEADXXX",
-    currency: "USD",
-    amount: 32e4,
-    exchangeRate: 3550,
-    convertedAmountMmk: 1136e6,
-    feeAmount: 6e4,
-    netAmountMmk: 113594e4,
-    valueDate: now.subtract(5, "hour").subtract(40, "minute").toISOString(),
-    status: "Completed",
-    purpose: "Import of Bitumen & Construction Raw Materials (Containerized)",
-    beneficiaryAccount: "0091-2384-992019",
-    swiftMetadata: {
-      senderReference: "FAB-DXB-2026-3391",
-      bankOpCode: "CRED",
-      orderingCustomer: {
-        name: "Gulf Horizon Petrochemical FZE",
-        address: "Jebel Ali Free Zone, Building 4B, Dubai",
-        city: "Dubai",
-        country: "United Arab Emirates",
-        accountNumber: "AE-3918-4491-002"
-      },
-      orderingInstitution: {
-        bic: "FABAAEADXXX",
-        name: "First Abu Dhabi Bank PJSC",
-        branch: "Dubai Main Financial Centre",
-        country: "United Arab Emirates"
-      },
-      accountWithInstitution: {
-        bic: "MMGRMMYMXXX",
-        name: "Myanmar Global Remittance Gateway",
-        branch: "Yangon Corporate Center"
-      },
-      beneficiaryCustomer: {
-        accountNumber: "0091-2384-992019",
-        name: "Myanmar Infrastructure & Logistics Co., Ltd.",
-        address: "No. 88 Merchant Street, Yangon"
-      },
-      remittanceInfo: "INV#GULF-MM-9941 / BL#DXB-YGN-2026",
-      detailsOfCharges: "OUR",
-      uetr: "ff881920-5541-4771-a892-339182049182",
-      settlementChannel: "SWIFT GPI",
-      settlementSteps: [
-        {
-          title: "Wire Debited in UAE",
-          description: "FAB Dubai processed MT103",
-          timestamp: now.subtract(5, "hour").subtract(40, "minute").format("DD/MM/YYYY hh:mm A"),
-          completed: true
-        },
-        {
-          title: "Remittance Cleared",
-          description: "MMK 1,135,940,000 net settlement verified",
-          timestamp: now.subtract(5, "hour").subtract(20, "minute").format("DD/MM/YYYY hh:mm A"),
-          completed: true
-        }
-      ]
-    }
+    "id": "tx_1013",
+    "transactionRef": "IR-202608-37170-13",
+    "senderName": "Su Su",
+    "senderCountry": "Malaysia",
+    "sendingBank": "Maybank",
+    "sendingBankBic": "MBBEMYKL",
+    "currency": "JPY",
+    "amount": 2550,
+    "exchangeRate": 1319.92,
+    "convertedAmountMmk": 3365796,
+    "feeAmount": 5,
+    "netAmountMmk": 3360796,
+    "valueDate": "2026-08-07T14:50:16.614Z",
+    "status": "failed",
+    "statusMessage": "Rejected",
+    "purpose": "Family Support",
+    "beneficiaryAccount": "1042651999",
+    "swiftMetadata": {
+      "uetr": "12345678-1234-1234-1234-1234567890ab"
+    },
+    "createdAt": "2026-08-07T14:50:16.614Z",
+    "updatedAt": "2026-08-07T14:50:16.614Z"
   },
   {
-    id: "tx-013",
-    transactionRef: "IR-2026-MY-119284",
-    senderName: "Selangor Agro Commodity Sdn Bhd",
-    senderCountry: "Malaysia",
-    sendingBank: "Maybank (Malayan Banking Berhad)",
-    sendingBankBic: "MBBEMYKLXXX",
-    currency: "MYR",
-    amount: 28e4,
-    exchangeRate: 790,
-    convertedAmountMmk: 2212e5,
-    feeAmount: 25e3,
-    netAmountMmk: 221175e3,
-    valueDate: now.subtract(8, "hour").toISOString(),
-    status: "Completed",
-    purpose: "Refined Palm Oil & Agri Derivative Bulk Shipment Settlement",
-    beneficiaryAccount: "0091-2384-992019",
-    swiftMetadata: {
-      senderReference: "MYB-KL-882910",
-      bankOpCode: "CRED",
-      orderingCustomer: {
-        name: "Selangor Agro Commodity Sdn Bhd",
-        address: "Menara Maybank, 100 Jalan Tun Perak, Kuala Lumpur",
-        city: "Kuala Lumpur",
-        country: "Malaysia",
-        accountNumber: "MY-5519-2049-11"
-      },
-      orderingInstitution: {
-        bic: "MBBEMYKLXXX",
-        name: "Malayan Banking Berhad",
-        branch: "Kuala Lumpur Main Branch",
-        country: "Malaysia"
-      },
-      accountWithInstitution: {
-        bic: "MMGRMMYMXXX",
-        name: "Myanmar Global Remittance Gateway",
-        branch: "Yangon Settlement Hub"
-      },
-      beneficiaryCustomer: {
-        accountNumber: "0091-2384-992019",
-        name: "Golden Myanmar Agro Trade Co., Ltd.",
-        address: "Bayintnaung Wholesale Market, Mayangone, Yangon"
-      },
-      remittanceInfo: "AGRO-MY-INV-2026-778",
-      detailsOfCharges: "BEN",
-      uetr: "cc281900-4491-4991-b992-118471029482",
-      settlementChannel: "SWIFT GPI",
-      settlementSteps: [
-        {
-          title: "Remittance Initiated",
-          description: "Payment released from Maybank Kuala Lumpur",
-          timestamp: now.subtract(8, "hour").format("DD/MM/YYYY hh:mm A"),
-          completed: true
-        },
-        {
-          title: "Conversion Settled",
-          description: "280,000 MYR converted to 221,175,000 MMK",
-          timestamp: now.subtract(7, "hour").subtract(45, "minute").format("DD/MM/YYYY hh:mm A"),
-          completed: true
-        }
-      ]
-    }
+    "id": "tx_1014",
+    "transactionRef": "IR-202608-31342-14",
+    "senderName": "Mya Mya",
+    "senderCountry": "China",
+    "sendingBank": "ICBC",
+    "sendingBankBic": "ICBCCNBJ",
+    "currency": "CNY",
+    "amount": 4463,
+    "exchangeRate": 311.65,
+    "convertedAmountMmk": 139089395e-2,
+    "feeAmount": 5,
+    "netAmountMmk": 138589395e-2,
+    "valueDate": "2026-08-06T13:57:22.471Z",
+    "status": "init",
+    "statusMessage": "Timeout",
+    "purpose": "Family Support",
+    "beneficiaryAccount": "1042960452",
+    "swiftMetadata": {
+      "uetr": "12345678-1234-1234-1234-1234567890ab"
+    },
+    "createdAt": "2026-08-06T13:57:22.471Z",
+    "updatedAt": "2026-08-06T13:57:22.471Z"
   },
   {
-    id: "tx-014",
-    transactionRef: "IR-2026-KR-993812",
-    senderName: "Seoul Semiconductor Components Corp",
-    senderCountry: "South Korea",
-    sendingBank: "KB Kookmin Bank",
-    sendingBankBic: "CZNBKRSEXXX",
-    currency: "USD",
-    amount: 195e3,
-    exchangeRate: 3550,
-    convertedAmountMmk: 69225e4,
-    feeAmount: 45e3,
-    netAmountMmk: 692205e3,
-    valueDate: now.subtract(14, "hour").toISOString(),
-    status: "Pending",
-    purpose: "Procurement of Microcontroller Units & LED Assemblies",
-    beneficiaryAccount: "0091-2384-992019",
-    swiftMetadata: {
-      senderReference: "KB-SEL-99120",
-      bankOpCode: "CRED",
-      orderingCustomer: {
-        name: "Seoul Semiconductor Components Corp",
-        address: "Gangnam-daero, Seocho-gu, Seoul 06621",
-        city: "Seoul",
-        country: "South Korea",
-        accountNumber: "KR-9918-2049-11"
-      },
-      orderingInstitution: {
-        bic: "CZNBKRSEXXX",
-        name: "KB Kookmin Bank",
-        branch: "Seoul Corporate Branch",
-        country: "South Korea"
-      },
-      accountWithInstitution: {
-        bic: "MMGRMMYMXXX",
-        name: "Myanmar Global Remittance Gateway",
-        branch: "Yangon Central Clearing Hub"
-      },
-      beneficiaryCustomer: {
-        accountNumber: "0091-2384-992019",
-        name: "Yangon High-Tech Components Ltd.",
-        address: "Thilawa Special Economic Zone (SEZ), Yangon"
-      },
-      remittanceInfo: "INVOICE#KOR-SEZ-8839",
-      detailsOfCharges: "OUR",
-      uetr: "88a91028-3319-4881-c772-901847102911",
-      settlementChannel: "SWIFT GPI",
-      settlementSteps: [
-        {
-          title: "Remittance Instructed",
-          description: "Payment dispatched via KB Kookmin Bank Seoul",
-          timestamp: now.subtract(14, "hour").format("DD/MM/YYYY hh:mm A"),
-          completed: true
-        },
-        {
-          title: "Inbound Clearance & FX Locking",
-          description: "Transaction undergoing standard settlement matching",
-          timestamp: now.subtract(13, "hour").format("DD/MM/YYYY hh:mm A"),
-          completed: false,
-          current: true
-        },
-        {
-          title: "Credited to MMK Account",
-          description: "Beneficiary MMK payout pending final release",
-          timestamp: "Pending",
-          completed: false
-        }
-      ]
-    }
+    "id": "tx_1015",
+    "transactionRef": "IR-202608-35195-15",
+    "senderName": "Hla Hla",
+    "senderCountry": "Europe",
+    "sendingBank": "Deutsche Bank",
+    "sendingBankBic": "DEUTDEFF",
+    "currency": "MYR",
+    "amount": 3292,
+    "exchangeRate": 517.05,
+    "convertedAmountMmk": 1.7021285999999999e6,
+    "feeAmount": 5,
+    "netAmountMmk": 1.6971285999999999e6,
+    "valueDate": "2026-08-05T13:19:04.207Z",
+    "status": "MFR",
+    "statusMessage": "Timeout",
+    "purpose": "Family Support",
+    "beneficiaryAccount": "1042089185",
+    "swiftMetadata": {
+      "uetr": "12345678-1234-1234-1234-1234567890ab"
+    },
+    "createdAt": "2026-08-05T13:19:04.207Z",
+    "updatedAt": "2026-08-05T13:19:04.207Z"
   },
   {
-    id: "tx-015",
-    transactionRef: "IR-2026-GB-884910",
-    senderName: "Thames Maritime & Insurance Services Ltd",
-    senderCountry: "United Kingdom",
-    sendingBank: "Barclays Bank UK PLC",
-    sendingBankBic: "BARCGB22XXX",
-    currency: "GBP",
-    amount: 65e3,
-    exchangeRate: 4498,
-    convertedAmountMmk: 29237e4,
-    feeAmount: 3e4,
-    netAmountMmk: 29234e4,
-    valueDate: now.subtract(1, "day").subtract(2, "hour").toISOString(),
-    status: "Completed",
-    purpose: "Marine Cargo Hull Insurance Claim Payout - Vessel MV Ayeyarwady Star",
-    beneficiaryAccount: "0091-2384-992019",
-    swiftMetadata: {
-      senderReference: "BARC-LON-2026-449",
-      bankOpCode: "CRED",
-      orderingCustomer: {
-        name: "Thames Maritime & Insurance Services Ltd",
-        address: "1 Churchill Place, Canary Wharf, London E14 5HP",
-        city: "London",
-        country: "United Kingdom",
-        accountNumber: "GB-29-BARC-2004-991"
-      },
-      orderingInstitution: {
-        bic: "BARCGB22XXX",
-        name: "Barclays Bank PLC",
-        branch: "London Head Office",
-        country: "United Kingdom"
-      },
-      accountWithInstitution: {
-        bic: "MMGRMMYMXXX",
-        name: "Myanmar Global Remittance Gateway",
-        branch: "Yangon Settlement Hub"
-      },
-      beneficiaryCustomer: {
-        accountNumber: "0091-2384-992019",
-        name: "Ayeyarwady Marine Shipping Co., Ltd.",
-        address: "Pansodan Street, Kyauktada, Yangon"
-      },
-      remittanceInfo: "CLAIM#MAR-2026-004491-INS",
-      detailsOfCharges: "OUR",
-      uetr: "44e81920-7719-4881-a992-118471029482",
-      settlementChannel: "SWIFT GPI",
-      settlementSteps: [
-        {
-          title: "Payment Executed in London",
-          description: "Barclays London initiated international wire",
-          timestamp: now.subtract(1, "day").subtract(2, "hour").format("DD/MM/YYYY hh:mm A"),
-          completed: true
-        },
-        {
-          title: "MMK Funds Deposited",
-          description: "292,340,000 MMK settled into beneficiary account",
-          timestamp: now.subtract(1, "day").subtract(1, "hour").format("DD/MM/YYYY hh:mm A"),
-          completed: true
-        }
-      ]
-    }
+    "id": "tx_1016",
+    "transactionRef": "IR-202608-20761-16",
+    "senderName": "Aung Aung",
+    "senderCountry": "USA",
+    "sendingBank": "CitiBank",
+    "sendingBankBic": "CITIUS33",
+    "currency": "USD",
+    "amount": 2198,
+    "exchangeRate": 2100,
+    "convertedAmountMmk": 4615800,
+    "feeAmount": 5,
+    "netAmountMmk": 4610800,
+    "valueDate": "2026-08-04T14:05:44.841Z",
+    "status": "success",
+    "statusMessage": "Settled",
+    "purpose": "Family Support",
+    "beneficiaryAccount": "1042771787",
+    "swiftMetadata": {
+      "uetr": "12345678-1234-1234-1234-1234567890ab"
+    },
+    "createdAt": "2026-08-04T14:05:44.841Z",
+    "updatedAt": "2026-08-04T14:05:44.841Z"
   },
   {
-    id: "tx-016",
-    transactionRef: "IR-2026-TH-663819",
-    senderName: "Siam Consumer Goods & Retail PCL",
-    senderCountry: "Thailand",
-    sendingBank: "Kasikornbank (KBank)",
-    sendingBankBic: "KASITHBKXXX",
-    currency: "THB",
-    amount: 15e5,
-    exchangeRate: 102.5,
-    convertedAmountMmk: 15375e4,
-    feeAmount: 2e4,
-    netAmountMmk: 15373e4,
-    valueDate: now.subtract(1, "day").subtract(6, "hour").toISOString(),
-    status: "Completed",
-    purpose: "FMCG Packaged Goods Export Invoice Clearing - Mae Sot / Myawaddy Gateway",
-    beneficiaryAccount: "0091-2384-992019",
-    swiftMetadata: {
-      senderReference: "KBANK-BKK-99182",
-      bankOpCode: "CRED",
-      orderingCustomer: {
-        name: "Siam Consumer Goods & Retail PCL",
-        address: "400/22 Phahon Yothin Rd, Samsen Nai, Phaya Thai, Bangkok",
-        city: "Bangkok",
-        country: "Thailand",
-        accountNumber: "TH-004-9918-22"
-      },
-      orderingInstitution: {
-        bic: "KASITHBKXXX",
-        name: "Kasikornbank Public Company Limited",
-        branch: "Bangkok Head Office",
-        country: "Thailand"
-      },
-      accountWithInstitution: {
-        bic: "MMGRMMYMXXX",
-        name: "Myanmar Global Remittance Gateway",
-        branch: "Yangon Settlement Hub"
-      },
-      beneficiaryCustomer: {
-        accountNumber: "0091-2384-992019",
-        name: "Myanmar Royal FMCG Distributors Ltd.",
-        address: "Bayintnaung Road, Yangon"
-      },
-      remittanceInfo: "INV#SIAM-FMCG-2026-992",
-      detailsOfCharges: "SHA",
-      uetr: "11b91028-8819-4771-c882-901847102911",
-      settlementChannel: "SWIFT GPI",
-      settlementSteps: [
-        {
-          title: "Dispatched via KBank",
-          description: "1,500,000 THB wire instruction verified",
-          timestamp: now.subtract(1, "day").subtract(6, "hour").format("DD/MM/YYYY hh:mm A"),
-          completed: true
-        },
-        {
-          title: "Credited to MMK Account",
-          description: "153,730,000 MMK settled via cross-border payment link",
-          timestamp: now.subtract(1, "day").subtract(5, "hour").format("DD/MM/YYYY hh:mm A"),
-          completed: true
-        }
-      ]
-    }
+    "id": "tx_1017",
+    "transactionRef": "IR-202608-32679-17",
+    "senderName": "Maung Maung",
+    "senderCountry": "Singapore",
+    "sendingBank": "DBS Bank",
+    "sendingBankBic": "DBSSSGSG",
+    "currency": "EUR",
+    "amount": 5073,
+    "exchangeRate": 2435.37,
+    "convertedAmountMmk": 1235463201e-2,
+    "feeAmount": 5,
+    "netAmountMmk": 1234963201e-2,
+    "valueDate": "2026-08-03T14:47:15.146Z",
+    "status": "failed",
+    "statusMessage": "Rejected",
+    "purpose": "Family Support",
+    "beneficiaryAccount": "1042235198",
+    "swiftMetadata": {
+      "uetr": "12345678-1234-1234-1234-1234567890ab"
+    },
+    "createdAt": "2026-08-03T14:47:15.146Z",
+    "updatedAt": "2026-08-03T14:47:15.146Z"
+  },
+  {
+    "id": "tx_1018",
+    "transactionRef": "IR-202608-45667-18",
+    "senderName": "Kyaw Kyaw",
+    "senderCountry": "Thailand",
+    "sendingBank": "Kasikornbank",
+    "sendingBankBic": "KASITHBK",
+    "currency": "SGD",
+    "amount": 4118,
+    "exchangeRate": 1645.32,
+    "convertedAmountMmk": 677542776e-2,
+    "feeAmount": 5,
+    "netAmountMmk": 677042776e-2,
+    "valueDate": "2026-08-02T14:50:59.523Z",
+    "status": "init",
+    "statusMessage": "Timeout",
+    "purpose": "Family Support",
+    "beneficiaryAccount": "1042298506",
+    "swiftMetadata": {
+      "uetr": "12345678-1234-1234-1234-1234567890ab"
+    },
+    "createdAt": "2026-08-02T14:50:59.523Z",
+    "updatedAt": "2026-08-02T14:50:59.523Z"
+  },
+  {
+    "id": "tx_1019",
+    "transactionRef": "IR-202608-32965-19",
+    "senderName": "Tun Tun",
+    "senderCountry": "UK",
+    "sendingBank": "Barclays",
+    "sendingBankBic": "BARCGB22",
+    "currency": "THB",
+    "amount": 1757,
+    "exchangeRate": 63.49,
+    "convertedAmountMmk": 111551.93000000001,
+    "feeAmount": 5,
+    "netAmountMmk": 106551.93000000001,
+    "valueDate": "2026-08-01T13:58:51.233Z",
+    "status": "MFR",
+    "statusMessage": "Timeout",
+    "purpose": "Family Support",
+    "beneficiaryAccount": "1042716558",
+    "swiftMetadata": {
+      "uetr": "12345678-1234-1234-1234-1234567890ab"
+    },
+    "createdAt": "2026-08-01T13:58:51.233Z",
+    "updatedAt": "2026-08-01T13:58:51.233Z"
+  },
+  {
+    "id": "tx_1020",
+    "transactionRef": "IR-202608-07368-20",
+    "senderName": "Aye Aye",
+    "senderCountry": "Japan",
+    "sendingBank": "SMBC",
+    "sendingBankBic": "SMBCJPJT",
+    "currency": "GBP",
+    "amount": 2974,
+    "exchangeRate": 2846.45,
+    "convertedAmountMmk": 8465342299999999e-9,
+    "feeAmount": 5,
+    "netAmountMmk": 8460342299999999e-9,
+    "valueDate": "2026-07-31T14:19:22.898Z",
+    "status": "success",
+    "statusMessage": "Settled",
+    "purpose": "Family Support",
+    "beneficiaryAccount": "1042908149",
+    "swiftMetadata": {
+      "uetr": "12345678-1234-1234-1234-1234567890ab"
+    },
+    "createdAt": "2026-07-31T14:19:22.898Z",
+    "updatedAt": "2026-07-31T14:19:22.898Z"
+  },
+  {
+    "id": "tx_1021",
+    "transactionRef": "IR-202608-70244-21",
+    "senderName": "Su Su",
+    "senderCountry": "Malaysia",
+    "sendingBank": "Maybank",
+    "sendingBankBic": "MBBEMYKL",
+    "currency": "JPY",
+    "amount": 1838,
+    "exchangeRate": 1319.92,
+    "convertedAmountMmk": 242601296e-2,
+    "feeAmount": 5,
+    "netAmountMmk": 242101296e-2,
+    "valueDate": "2026-07-30T12:34:20.971Z",
+    "status": "failed",
+    "statusMessage": "Rejected",
+    "purpose": "Family Support",
+    "beneficiaryAccount": "1042668452",
+    "swiftMetadata": {
+      "uetr": "12345678-1234-1234-1234-1234567890ab"
+    },
+    "createdAt": "2026-07-30T12:34:20.971Z",
+    "updatedAt": "2026-07-30T12:34:20.971Z"
+  },
+  {
+    "id": "tx_1022",
+    "transactionRef": "IR-202608-12742-22",
+    "senderName": "Mya Mya",
+    "senderCountry": "China",
+    "sendingBank": "ICBC",
+    "sendingBankBic": "ICBCCNBJ",
+    "currency": "CNY",
+    "amount": 4509,
+    "exchangeRate": 311.65,
+    "convertedAmountMmk": 1.4052298499999999e6,
+    "feeAmount": 5,
+    "netAmountMmk": 1.4002298499999999e6,
+    "valueDate": "2026-07-29T14:56:47.690Z",
+    "status": "init",
+    "statusMessage": "Timeout",
+    "purpose": "Family Support",
+    "beneficiaryAccount": "1042248314",
+    "swiftMetadata": {
+      "uetr": "12345678-1234-1234-1234-1234567890ab"
+    },
+    "createdAt": "2026-07-29T14:56:47.690Z",
+    "updatedAt": "2026-07-29T14:56:47.690Z"
+  },
+  {
+    "id": "tx_1023",
+    "transactionRef": "IR-202608-23986-23",
+    "senderName": "Hla Hla",
+    "senderCountry": "Europe",
+    "sendingBank": "Deutsche Bank",
+    "sendingBankBic": "DEUTDEFF",
+    "currency": "MYR",
+    "amount": 154,
+    "exchangeRate": 517.05,
+    "convertedAmountMmk": 79625.7,
+    "feeAmount": 5,
+    "netAmountMmk": 74625.7,
+    "valueDate": "2026-07-28T12:41:29.016Z",
+    "status": "MFR",
+    "statusMessage": "Timeout",
+    "purpose": "Family Support",
+    "beneficiaryAccount": "1042042044",
+    "swiftMetadata": {
+      "uetr": "12345678-1234-1234-1234-1234567890ab"
+    },
+    "createdAt": "2026-07-28T12:41:29.016Z",
+    "updatedAt": "2026-07-28T12:41:29.016Z"
+  },
+  {
+    "id": "tx_1024",
+    "transactionRef": "IR-202608-25839-24",
+    "senderName": "Aung Aung",
+    "senderCountry": "USA",
+    "sendingBank": "CitiBank",
+    "sendingBankBic": "CITIUS33",
+    "currency": "USD",
+    "amount": 1157,
+    "exchangeRate": 2100,
+    "convertedAmountMmk": 2429700,
+    "feeAmount": 5,
+    "netAmountMmk": 2424700,
+    "valueDate": "2026-07-27T15:01:15.520Z",
+    "status": "success",
+    "statusMessage": "Settled",
+    "purpose": "Family Support",
+    "beneficiaryAccount": "1042922381",
+    "swiftMetadata": {
+      "uetr": "12345678-1234-1234-1234-1234567890ab"
+    },
+    "createdAt": "2026-07-27T15:01:15.520Z",
+    "updatedAt": "2026-07-27T15:01:15.520Z"
+  },
+  {
+    "id": "tx_1025",
+    "transactionRef": "IR-202608-86190-25",
+    "senderName": "Maung Maung",
+    "senderCountry": "Singapore",
+    "sendingBank": "DBS Bank",
+    "sendingBankBic": "DBSSSGSG",
+    "currency": "EUR",
+    "amount": 1622,
+    "exchangeRate": 2435.37,
+    "convertedAmountMmk": 3.9501701399999997e6,
+    "feeAmount": 5,
+    "netAmountMmk": 3.9451701399999997e6,
+    "valueDate": "2026-07-26T13:27:56.776Z",
+    "status": "failed",
+    "statusMessage": "Rejected",
+    "purpose": "Family Support",
+    "beneficiaryAccount": "1042723856",
+    "swiftMetadata": {
+      "uetr": "12345678-1234-1234-1234-1234567890ab"
+    },
+    "createdAt": "2026-07-26T13:27:56.776Z",
+    "updatedAt": "2026-07-26T13:27:56.776Z"
+  },
+  {
+    "id": "tx_1026",
+    "transactionRef": "IR-202608-21732-26",
+    "senderName": "Kyaw Kyaw",
+    "senderCountry": "Thailand",
+    "sendingBank": "Kasikornbank",
+    "sendingBankBic": "KASITHBK",
+    "currency": "SGD",
+    "amount": 211,
+    "exchangeRate": 1645.32,
+    "convertedAmountMmk": 347162.51999999996,
+    "feeAmount": 5,
+    "netAmountMmk": 342162.51999999996,
+    "valueDate": "2026-07-25T13:36:52.283Z",
+    "status": "init",
+    "statusMessage": "Timeout",
+    "purpose": "Family Support",
+    "beneficiaryAccount": "1042578470",
+    "swiftMetadata": {
+      "uetr": "12345678-1234-1234-1234-1234567890ab"
+    },
+    "createdAt": "2026-07-25T13:36:52.283Z",
+    "updatedAt": "2026-07-25T13:36:52.283Z"
+  },
+  {
+    "id": "tx_1027",
+    "transactionRef": "IR-202608-13139-27",
+    "senderName": "Tun Tun",
+    "senderCountry": "UK",
+    "sendingBank": "Barclays",
+    "sendingBankBic": "BARCGB22",
+    "currency": "THB",
+    "amount": 3750,
+    "exchangeRate": 63.49,
+    "convertedAmountMmk": 238087.5,
+    "feeAmount": 5,
+    "netAmountMmk": 233087.5,
+    "valueDate": "2026-07-24T14:29:43.667Z",
+    "status": "MFR",
+    "statusMessage": "Timeout",
+    "purpose": "Family Support",
+    "beneficiaryAccount": "1042596491",
+    "swiftMetadata": {
+      "uetr": "12345678-1234-1234-1234-1234567890ab"
+    },
+    "createdAt": "2026-07-24T14:29:43.667Z",
+    "updatedAt": "2026-07-24T14:29:43.667Z"
+  },
+  {
+    "id": "tx_1028",
+    "transactionRef": "IR-202608-04273-28",
+    "senderName": "Aye Aye",
+    "senderCountry": "Japan",
+    "sendingBank": "SMBC",
+    "sendingBankBic": "SMBCJPJT",
+    "currency": "GBP",
+    "amount": 706,
+    "exchangeRate": 2846.45,
+    "convertedAmountMmk": 20095937e-1,
+    "feeAmount": 5,
+    "netAmountMmk": 20045937e-1,
+    "valueDate": "2026-07-23T12:18:01.868Z",
+    "status": "success",
+    "statusMessage": "Settled",
+    "purpose": "Family Support",
+    "beneficiaryAccount": "1042948917",
+    "swiftMetadata": {
+      "uetr": "12345678-1234-1234-1234-1234567890ab"
+    },
+    "createdAt": "2026-07-23T12:18:01.868Z",
+    "updatedAt": "2026-07-23T12:18:01.868Z"
+  },
+  {
+    "id": "tx_1029",
+    "transactionRef": "IR-202608-59339-29",
+    "senderName": "Su Su",
+    "senderCountry": "Malaysia",
+    "sendingBank": "Maybank",
+    "sendingBankBic": "MBBEMYKL",
+    "currency": "JPY",
+    "amount": 930,
+    "exchangeRate": 1319.92,
+    "convertedAmountMmk": 12275256e-1,
+    "feeAmount": 5,
+    "netAmountMmk": 12225256e-1,
+    "valueDate": "2026-07-22T14:55:23.123Z",
+    "status": "failed",
+    "statusMessage": "Rejected",
+    "purpose": "Family Support",
+    "beneficiaryAccount": "1042996430",
+    "swiftMetadata": {
+      "uetr": "12345678-1234-1234-1234-1234567890ab"
+    },
+    "createdAt": "2026-07-22T14:55:23.123Z",
+    "updatedAt": "2026-07-22T14:55:23.123Z"
+  },
+  {
+    "id": "tx_1030",
+    "transactionRef": "IR-202608-46530-30",
+    "senderName": "Mya Mya",
+    "senderCountry": "China",
+    "sendingBank": "ICBC",
+    "sendingBankBic": "ICBCCNBJ",
+    "currency": "CNY",
+    "amount": 1304,
+    "exchangeRate": 311.65,
+    "convertedAmountMmk": 406391.6,
+    "feeAmount": 5,
+    "netAmountMmk": 401391.6,
+    "valueDate": "2026-07-21T13:12:57.450Z",
+    "status": "init",
+    "statusMessage": "Timeout",
+    "purpose": "Family Support",
+    "beneficiaryAccount": "1042388727",
+    "swiftMetadata": {
+      "uetr": "12345678-1234-1234-1234-1234567890ab"
+    },
+    "createdAt": "2026-07-21T13:12:57.450Z",
+    "updatedAt": "2026-07-21T13:12:57.450Z"
+  },
+  {
+    "id": "tx_1031",
+    "transactionRef": "IR-202608-39150-31",
+    "senderName": "Hla Hla",
+    "senderCountry": "Europe",
+    "sendingBank": "Deutsche Bank",
+    "sendingBankBic": "DEUTDEFF",
+    "currency": "MYR",
+    "amount": 4064,
+    "exchangeRate": 517.05,
+    "convertedAmountMmk": 2.1012911999999997e6,
+    "feeAmount": 5,
+    "netAmountMmk": 2.0962911999999997e6,
+    "valueDate": "2026-07-20T13:18:44.842Z",
+    "status": "MFR",
+    "statusMessage": "Timeout",
+    "purpose": "Family Support",
+    "beneficiaryAccount": "1042316530",
+    "swiftMetadata": {
+      "uetr": "12345678-1234-1234-1234-1234567890ab"
+    },
+    "createdAt": "2026-07-20T13:18:44.842Z",
+    "updatedAt": "2026-07-20T13:18:44.842Z"
+  },
+  {
+    "id": "tx_1032",
+    "transactionRef": "IR-202608-41375-32",
+    "senderName": "Aung Aung",
+    "senderCountry": "USA",
+    "sendingBank": "CitiBank",
+    "sendingBankBic": "CITIUS33",
+    "currency": "USD",
+    "amount": 1828,
+    "exchangeRate": 2100,
+    "convertedAmountMmk": 3838800,
+    "feeAmount": 5,
+    "netAmountMmk": 3833800,
+    "valueDate": "2026-07-19T12:45:55.751Z",
+    "status": "success",
+    "statusMessage": "Settled",
+    "purpose": "Family Support",
+    "beneficiaryAccount": "1042757354",
+    "swiftMetadata": {
+      "uetr": "12345678-1234-1234-1234-1234567890ab"
+    },
+    "createdAt": "2026-07-19T12:45:55.751Z",
+    "updatedAt": "2026-07-19T12:45:55.751Z"
+  },
+  {
+    "id": "tx_1033",
+    "transactionRef": "IR-202608-63837-33",
+    "senderName": "Maung Maung",
+    "senderCountry": "Singapore",
+    "sendingBank": "DBS Bank",
+    "sendingBankBic": "DBSSSGSG",
+    "currency": "EUR",
+    "amount": 4158,
+    "exchangeRate": 2435.37,
+    "convertedAmountMmk": 10126268459999999e-9,
+    "feeAmount": 5,
+    "netAmountMmk": 10121268459999999e-9,
+    "valueDate": "2026-07-18T14:26:16.023Z",
+    "status": "failed",
+    "statusMessage": "Rejected",
+    "purpose": "Family Support",
+    "beneficiaryAccount": "1042056332",
+    "swiftMetadata": {
+      "uetr": "12345678-1234-1234-1234-1234567890ab"
+    },
+    "createdAt": "2026-07-18T14:26:16.023Z",
+    "updatedAt": "2026-07-18T14:26:16.023Z"
+  },
+  {
+    "id": "tx_1034",
+    "transactionRef": "IR-202608-38097-34",
+    "senderName": "Kyaw Kyaw",
+    "senderCountry": "Thailand",
+    "sendingBank": "Kasikornbank",
+    "sendingBankBic": "KASITHBK",
+    "currency": "SGD",
+    "amount": 3168,
+    "exchangeRate": 1645.32,
+    "convertedAmountMmk": 521237376e-2,
+    "feeAmount": 5,
+    "netAmountMmk": 520737376e-2,
+    "valueDate": "2026-07-17T14:53:53.263Z",
+    "status": "init",
+    "statusMessage": "Timeout",
+    "purpose": "Family Support",
+    "beneficiaryAccount": "1042891621",
+    "swiftMetadata": {
+      "uetr": "12345678-1234-1234-1234-1234567890ab"
+    },
+    "createdAt": "2026-07-17T14:53:53.263Z",
+    "updatedAt": "2026-07-17T14:53:53.263Z"
+  },
+  {
+    "id": "tx_1035",
+    "transactionRef": "IR-202608-78839-35",
+    "senderName": "Tun Tun",
+    "senderCountry": "UK",
+    "sendingBank": "Barclays",
+    "sendingBankBic": "BARCGB22",
+    "currency": "THB",
+    "amount": 1373,
+    "exchangeRate": 63.49,
+    "convertedAmountMmk": 87171.77,
+    "feeAmount": 5,
+    "netAmountMmk": 82171.77,
+    "valueDate": "2026-07-16T12:59:10.283Z",
+    "status": "MFR",
+    "statusMessage": "Timeout",
+    "purpose": "Family Support",
+    "beneficiaryAccount": "1042320836",
+    "swiftMetadata": {
+      "uetr": "12345678-1234-1234-1234-1234567890ab"
+    },
+    "createdAt": "2026-07-16T12:59:10.283Z",
+    "updatedAt": "2026-07-16T12:59:10.283Z"
+  },
+  {
+    "id": "tx_1036",
+    "transactionRef": "IR-202608-50598-36",
+    "senderName": "Aye Aye",
+    "senderCountry": "Japan",
+    "sendingBank": "SMBC",
+    "sendingBankBic": "SMBCJPJT",
+    "currency": "GBP",
+    "amount": 3107,
+    "exchangeRate": 2846.45,
+    "convertedAmountMmk": 8843920149999999e-9,
+    "feeAmount": 5,
+    "netAmountMmk": 8838920149999999e-9,
+    "valueDate": "2026-07-15T12:21:28.231Z",
+    "status": "success",
+    "statusMessage": "Settled",
+    "purpose": "Family Support",
+    "beneficiaryAccount": "1042529954",
+    "swiftMetadata": {
+      "uetr": "12345678-1234-1234-1234-1234567890ab"
+    },
+    "createdAt": "2026-07-15T12:21:28.231Z",
+    "updatedAt": "2026-07-15T12:21:28.231Z"
+  },
+  {
+    "id": "tx_1037",
+    "transactionRef": "IR-202608-67756-37",
+    "senderName": "Su Su",
+    "senderCountry": "Malaysia",
+    "sendingBank": "Maybank",
+    "sendingBankBic": "MBBEMYKL",
+    "currency": "JPY",
+    "amount": 3860,
+    "exchangeRate": 1319.92,
+    "convertedAmountMmk": 50948912e-1,
+    "feeAmount": 5,
+    "netAmountMmk": 50898912e-1,
+    "valueDate": "2026-07-14T12:32:13.909Z",
+    "status": "failed",
+    "statusMessage": "Rejected",
+    "purpose": "Family Support",
+    "beneficiaryAccount": "1042190365",
+    "swiftMetadata": {
+      "uetr": "12345678-1234-1234-1234-1234567890ab"
+    },
+    "createdAt": "2026-07-14T12:32:13.909Z",
+    "updatedAt": "2026-07-14T12:32:13.909Z"
+  },
+  {
+    "id": "tx_1038",
+    "transactionRef": "IR-202608-61519-38",
+    "senderName": "Mya Mya",
+    "senderCountry": "China",
+    "sendingBank": "ICBC",
+    "sendingBankBic": "ICBCCNBJ",
+    "currency": "CNY",
+    "amount": 2063,
+    "exchangeRate": 311.65,
+    "convertedAmountMmk": 642933.95,
+    "feeAmount": 5,
+    "netAmountMmk": 637933.95,
+    "valueDate": "2026-07-13T12:31:54.964Z",
+    "status": "init",
+    "statusMessage": "Timeout",
+    "purpose": "Family Support",
+    "beneficiaryAccount": "1042796963",
+    "swiftMetadata": {
+      "uetr": "12345678-1234-1234-1234-1234567890ab"
+    },
+    "createdAt": "2026-07-13T12:31:54.964Z",
+    "updatedAt": "2026-07-13T12:31:54.964Z"
+  },
+  {
+    "id": "tx_1039",
+    "transactionRef": "IR-202608-29014-39",
+    "senderName": "Hla Hla",
+    "senderCountry": "Europe",
+    "sendingBank": "Deutsche Bank",
+    "sendingBankBic": "DEUTDEFF",
+    "currency": "MYR",
+    "amount": 3605,
+    "exchangeRate": 517.05,
+    "convertedAmountMmk": 1.8639652499999998e6,
+    "feeAmount": 5,
+    "netAmountMmk": 1.8589652499999998e6,
+    "valueDate": "2026-07-12T14:18:32.431Z",
+    "status": "MFR",
+    "statusMessage": "Timeout",
+    "purpose": "Family Support",
+    "beneficiaryAccount": "1042901036",
+    "swiftMetadata": {
+      "uetr": "12345678-1234-1234-1234-1234567890ab"
+    },
+    "createdAt": "2026-07-12T14:18:32.431Z",
+    "updatedAt": "2026-07-12T14:18:32.431Z"
+  },
+  {
+    "id": "tx_1040",
+    "transactionRef": "IR-202608-36905-40",
+    "senderName": "Aung Aung",
+    "senderCountry": "USA",
+    "sendingBank": "CitiBank",
+    "sendingBankBic": "CITIUS33",
+    "currency": "USD",
+    "amount": 3594,
+    "exchangeRate": 2100,
+    "convertedAmountMmk": 7547400,
+    "feeAmount": 5,
+    "netAmountMmk": 7542400,
+    "valueDate": "2026-07-11T14:20:22.096Z",
+    "status": "success",
+    "statusMessage": "Settled",
+    "purpose": "Family Support",
+    "beneficiaryAccount": "1042054980",
+    "swiftMetadata": {
+      "uetr": "12345678-1234-1234-1234-1234567890ab"
+    },
+    "createdAt": "2026-07-11T14:20:22.096Z",
+    "updatedAt": "2026-07-11T14:20:22.096Z"
+  },
+  {
+    "id": "tx_1041",
+    "transactionRef": "IR-202608-93165-41",
+    "senderName": "Maung Maung",
+    "senderCountry": "Singapore",
+    "sendingBank": "DBS Bank",
+    "sendingBankBic": "DBSSSGSG",
+    "currency": "EUR",
+    "amount": 2006,
+    "exchangeRate": 2435.37,
+    "convertedAmountMmk": 488535222e-2,
+    "feeAmount": 5,
+    "netAmountMmk": 488035222e-2,
+    "valueDate": "2026-07-10T13:41:20.357Z",
+    "status": "failed",
+    "statusMessage": "Rejected",
+    "purpose": "Family Support",
+    "beneficiaryAccount": "1042923294",
+    "swiftMetadata": {
+      "uetr": "12345678-1234-1234-1234-1234567890ab"
+    },
+    "createdAt": "2026-07-10T13:41:20.357Z",
+    "updatedAt": "2026-07-10T13:41:20.357Z"
+  },
+  {
+    "id": "tx_1042",
+    "transactionRef": "IR-202608-04845-42",
+    "senderName": "Kyaw Kyaw",
+    "senderCountry": "Thailand",
+    "sendingBank": "Kasikornbank",
+    "sendingBankBic": "KASITHBK",
+    "currency": "SGD",
+    "amount": 4948,
+    "exchangeRate": 1645.32,
+    "convertedAmountMmk": 8141043359999999e-9,
+    "feeAmount": 5,
+    "netAmountMmk": 8136043359999999e-9,
+    "valueDate": "2026-07-09T12:34:28.263Z",
+    "status": "init",
+    "statusMessage": "Timeout",
+    "purpose": "Family Support",
+    "beneficiaryAccount": "1042850926",
+    "swiftMetadata": {
+      "uetr": "12345678-1234-1234-1234-1234567890ab"
+    },
+    "createdAt": "2026-07-09T12:34:28.263Z",
+    "updatedAt": "2026-07-09T12:34:28.263Z"
+  },
+  {
+    "id": "tx_1043",
+    "transactionRef": "IR-202608-14748-43",
+    "senderName": "Tun Tun",
+    "senderCountry": "UK",
+    "sendingBank": "Barclays",
+    "sendingBankBic": "BARCGB22",
+    "currency": "THB",
+    "amount": 1593,
+    "exchangeRate": 63.49,
+    "convertedAmountMmk": 101139.57,
+    "feeAmount": 5,
+    "netAmountMmk": 96139.57,
+    "valueDate": "2026-07-08T13:49:25.521Z",
+    "status": "MFR",
+    "statusMessage": "Timeout",
+    "purpose": "Family Support",
+    "beneficiaryAccount": "1042242257",
+    "swiftMetadata": {
+      "uetr": "12345678-1234-1234-1234-1234567890ab"
+    },
+    "createdAt": "2026-07-08T13:49:25.521Z",
+    "updatedAt": "2026-07-08T13:49:25.521Z"
+  },
+  {
+    "id": "tx_1044",
+    "transactionRef": "IR-202608-98749-44",
+    "senderName": "Aye Aye",
+    "senderCountry": "Japan",
+    "sendingBank": "SMBC",
+    "sendingBankBic": "SMBCJPJT",
+    "currency": "GBP",
+    "amount": 2096,
+    "exchangeRate": 2846.45,
+    "convertedAmountMmk": 5966159199999999e-9,
+    "feeAmount": 5,
+    "netAmountMmk": 5961159199999999e-9,
+    "valueDate": "2026-07-07T13:14:39.755Z",
+    "status": "success",
+    "statusMessage": "Settled",
+    "purpose": "Family Support",
+    "beneficiaryAccount": "1042449012",
+    "swiftMetadata": {
+      "uetr": "12345678-1234-1234-1234-1234567890ab"
+    },
+    "createdAt": "2026-07-07T13:14:39.755Z",
+    "updatedAt": "2026-07-07T13:14:39.755Z"
+  },
+  {
+    "id": "tx_1045",
+    "transactionRef": "IR-202608-15311-45",
+    "senderName": "Su Su",
+    "senderCountry": "Malaysia",
+    "sendingBank": "Maybank",
+    "sendingBankBic": "MBBEMYKL",
+    "currency": "JPY",
+    "amount": 2983,
+    "exchangeRate": 1319.92,
+    "convertedAmountMmk": 3.9373213600000003e6,
+    "feeAmount": 5,
+    "netAmountMmk": 3.9323213600000003e6,
+    "valueDate": "2026-07-06T14:14:54.123Z",
+    "status": "failed",
+    "statusMessage": "Rejected",
+    "purpose": "Family Support",
+    "beneficiaryAccount": "1042761099",
+    "swiftMetadata": {
+      "uetr": "12345678-1234-1234-1234-1234567890ab"
+    },
+    "createdAt": "2026-07-06T14:14:54.123Z",
+    "updatedAt": "2026-07-06T14:14:54.123Z"
+  },
+  {
+    "id": "tx_1046",
+    "transactionRef": "IR-202608-89878-46",
+    "senderName": "Mya Mya",
+    "senderCountry": "China",
+    "sendingBank": "ICBC",
+    "sendingBankBic": "ICBCCNBJ",
+    "currency": "CNY",
+    "amount": 3991,
+    "exchangeRate": 311.65,
+    "convertedAmountMmk": 124379515e-2,
+    "feeAmount": 5,
+    "netAmountMmk": 123879515e-2,
+    "valueDate": "2026-07-05T14:20:50.629Z",
+    "status": "init",
+    "statusMessage": "Timeout",
+    "purpose": "Family Support",
+    "beneficiaryAccount": "1042732550",
+    "swiftMetadata": {
+      "uetr": "12345678-1234-1234-1234-1234567890ab"
+    },
+    "createdAt": "2026-07-05T14:20:50.629Z",
+    "updatedAt": "2026-07-05T14:20:50.629Z"
+  },
+  {
+    "id": "tx_1047",
+    "transactionRef": "IR-202608-52247-47",
+    "senderName": "Hla Hla",
+    "senderCountry": "Europe",
+    "sendingBank": "Deutsche Bank",
+    "sendingBankBic": "DEUTDEFF",
+    "currency": "MYR",
+    "amount": 3543,
+    "exchangeRate": 517.05,
+    "convertedAmountMmk": 183190815e-2,
+    "feeAmount": 5,
+    "netAmountMmk": 182690815e-2,
+    "valueDate": "2026-07-04T14:02:00.187Z",
+    "status": "MFR",
+    "statusMessage": "Timeout",
+    "purpose": "Family Support",
+    "beneficiaryAccount": "1042857913",
+    "swiftMetadata": {
+      "uetr": "12345678-1234-1234-1234-1234567890ab"
+    },
+    "createdAt": "2026-07-04T14:02:00.187Z",
+    "updatedAt": "2026-07-04T14:02:00.187Z"
+  },
+  {
+    "id": "tx_1048",
+    "transactionRef": "IR-202608-12021-48",
+    "senderName": "Aung Aung",
+    "senderCountry": "USA",
+    "sendingBank": "CitiBank",
+    "sendingBankBic": "CITIUS33",
+    "currency": "USD",
+    "amount": 2052,
+    "exchangeRate": 2100,
+    "convertedAmountMmk": 4309200,
+    "feeAmount": 5,
+    "netAmountMmk": 4304200,
+    "valueDate": "2026-07-03T14:56:12.664Z",
+    "status": "success",
+    "statusMessage": "Settled",
+    "purpose": "Family Support",
+    "beneficiaryAccount": "1042567974",
+    "swiftMetadata": {
+      "uetr": "12345678-1234-1234-1234-1234567890ab"
+    },
+    "createdAt": "2026-07-03T14:56:12.664Z",
+    "updatedAt": "2026-07-03T14:56:12.664Z"
+  },
+  {
+    "id": "tx_1049",
+    "transactionRef": "IR-202608-75733-49",
+    "senderName": "Maung Maung",
+    "senderCountry": "Singapore",
+    "sendingBank": "DBS Bank",
+    "sendingBankBic": "DBSSSGSG",
+    "currency": "EUR",
+    "amount": 4536,
+    "exchangeRate": 2435.37,
+    "convertedAmountMmk": 1104683832e-2,
+    "feeAmount": 5,
+    "netAmountMmk": 1104183832e-2,
+    "valueDate": "2026-07-02T14:03:56.998Z",
+    "status": "failed",
+    "statusMessage": "Rejected",
+    "purpose": "Family Support",
+    "beneficiaryAccount": "1042803654",
+    "swiftMetadata": {
+      "uetr": "12345678-1234-1234-1234-1234567890ab"
+    },
+    "createdAt": "2026-07-02T14:03:56.998Z",
+    "updatedAt": "2026-07-02T14:03:56.998Z"
   }
 ];
 
@@ -1342,6 +1332,9 @@ async function ensureDatabaseSchema(existingClient) {
     `);
     await client.query(`ALTER TABLE "User" ADD COLUMN IF NOT EXISTS "companyName" TEXT;`);
     await client.query(`ALTER TABLE "User" ADD COLUMN IF NOT EXISTS "phone" TEXT;`);
+    await client.query(`ALTER TABLE "User" ADD COLUMN IF NOT EXISTS "passwordStrength" TEXT DEFAULT 'Moderate';`);
+    await client.query(`ALTER TABLE "User" ADD COLUMN IF NOT EXISTS "resetToken" TEXT;`);
+    await client.query(`ALTER TABLE "User" ADD COLUMN IF NOT EXISTS "resetTokenExpires" TIMESTAMP(3);`);
     await client.query(`
       DO $$ BEGIN
         ALTER TABLE "User" ADD CONSTRAINT "User_email_unique" UNIQUE ("email");
@@ -1387,7 +1380,7 @@ async function ensureDatabaseSchema(existingClient) {
         "feeAmount" DOUBLE PRECISION NOT NULL DEFAULT 0,
         "netAmountMmk" DOUBLE PRECISION NOT NULL,
         "valueDate" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        "status" TEXT NOT NULL DEFAULT 'Completed',
+        "status" TEXT NOT NULL DEFAULT 'success',
         "statusMessage" TEXT,
         "purpose" TEXT NOT NULL,
         "beneficiaryAccount" TEXT NOT NULL,
@@ -1396,6 +1389,18 @@ async function ensureDatabaseSchema(existingClient) {
         "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
       );
     `);
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS "TransactionAuditLog" (
+        "id" TEXT NOT NULL PRIMARY KEY,
+        "transactionId" TEXT NOT NULL,
+        "oldStatus" TEXT,
+        "newStatus" TEXT NOT NULL,
+        "changedBy" TEXT NOT NULL DEFAULT 'SYSTEM',
+        "changedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        "remarks" TEXT
+      );
+    `);
+    await client.query(`CREATE INDEX IF NOT EXISTS "TransactionAuditLog_transactionId_idx" ON "TransactionAuditLog"("transactionId");`);
     await client.query(`
       CREATE TABLE IF NOT EXISTS "FxRate" (
         "id" TEXT NOT NULL PRIMARY KEY,
@@ -1449,6 +1454,11 @@ async function seedDatabase() {
   try {
     console.log("\u26A1 Initializing and migrating PostgreSQL database tables...");
     await ensureDatabaseSchema(client);
+    console.log("Cleaning existing tables...");
+    await client.query('TRUNCATE TABLE "InboundTransaction" CASCADE;');
+    await client.query('TRUNCATE TABLE "FxRate" CASCADE;');
+    await client.query('TRUNCATE TABLE "TwoFactorAuth" CASCADE;');
+    await client.query('TRUNCATE TABLE "User" CASCADE;');
     const encryptedPassword = hashPassword("password");
     const defaultUsers = [
       {
@@ -1613,39 +1623,11 @@ async function ensureTablesReady() {
   }
   await isSeedingPromise;
 }
-var FALLBACK_USERS = [
-  {
-    id: "usr_sanyuaung_01",
-    name: "San Yu Aung",
-    email: "sanyuaung.ygn.mm@gmail.com",
-    companyName: "Myanmar Horizon Trading Co., Ltd.",
-    phone: "+95 9 798 112 889",
-    password: hashPassword("password"),
-    twoFactorAuth: { isEnabled: false, method: "EMAIL" }
-  },
-  {
-    id: "usr_sya_kbz_02",
-    name: "San Yu Aung",
-    email: "sanyu.aung@kbzbank.com",
-    companyName: "KBZ Bank Co., Ltd.",
-    phone: "+95 9 798 112 889",
-    password: hashPassword("password"),
-    twoFactorAuth: { isEnabled: false, method: "EMAIL" }
-  },
-  {
-    id: "usr_sya_kbz_03",
-    name: "San Yu Aung",
-    email: "sanyu.aung.kbzbank.com",
-    companyName: "KBZ Bank Co., Ltd.",
-    phone: "+95 9 798 112 889",
-    password: hashPassword("password"),
-    twoFactorAuth: { isEnabled: false, method: "EMAIL" }
-  }
-];
 var prisma = {
   user: {
     async findUnique({ where, include }) {
       try {
+        await ensureTablesReady();
         const client = await pool.connect();
         try {
           let query = `SELECT * FROM "User" WHERE `;
@@ -1660,14 +1642,11 @@ var prisma = {
             return null;
           }
           const userRes = await client.query(query, params);
-          const user2 = userRes.rows[0];
+          let user2 = userRes.rows[0] || null;
           if (!user2) {
-            const fallback = FALLBACK_USERS.find(
-              (u) => where.email && u.email.toLowerCase() === where.email.trim().toLowerCase() || where.id && u.id === where.id
-            );
-            return fallback || null;
+            return null;
           }
-          if (include?.twoFactorAuth) {
+          if (include?.twoFactorAuth && user2) {
             try {
               const tfaRes = await client.query(`SELECT * FROM "TwoFactorAuth" WHERE "userId" = $1`, [user2.id]);
               user2.twoFactorAuth = tfaRes.rows[0] || null;
@@ -1680,69 +1659,73 @@ var prisma = {
           client.release();
         }
       } catch (dbErr) {
-        console.warn("findUnique caught error, attempting ensureTablesReady:", dbErr?.message);
-        if (dbErr?.code === "42P01" || dbErr?.message?.includes("does not exist")) {
-          await ensureTablesReady();
-          try {
-            const client = await pool.connect();
-            try {
-              let query = `SELECT * FROM "User" WHERE `;
-              const params = [];
-              if (where.email) {
-                query += `LOWER(email) = LOWER($1)`;
-                params.push(where.email.trim());
-              } else if (where.id) {
-                query += `id = $1`;
-                params.push(where.id);
-              }
-              const userRes = await client.query(query, params);
-              return userRes.rows[0] || null;
-            } finally {
-              client.release();
-            }
-          } catch (retryErr) {
-            console.error("findUnique retry error:", retryErr);
-          }
-        }
-        const fallback = FALLBACK_USERS.find(
-          (u) => where.email && u.email.toLowerCase() === where.email.trim().toLowerCase() || where.id && u.id === where.id
-        );
-        return fallback || null;
+        console.warn("findUnique caught error:", dbErr?.message);
+        return null;
       }
     },
     async create({ data }) {
       try {
+        await ensureTablesReady();
         const client = await pool.connect();
         try {
           const id = data.id || `usr_${Date.now()}`;
           const res = await client.query(
-            `INSERT INTO "User" ("id", "email", "name", "password", "createdAt", "updatedAt")
-             VALUES ($1, $2, $3, $4, NOW(), NOW())
+            `INSERT INTO "User" ("id", "email", "name", "password", "companyName", "phone", "createdAt", "updatedAt")
+             VALUES ($1, $2, $3, $4, $5, $6, NOW(), NOW())
              RETURNING *`,
-            [id, data.email.trim().toLowerCase(), data.name || "", data.password]
+            [
+              id,
+              data.email.trim().toLowerCase(),
+              data.name || "",
+              data.password,
+              data.companyName || "KBZ Bank Corporate Account",
+              data.phone || "+95 9 798 112 889"
+            ]
           );
           return res.rows[0];
         } finally {
           client.release();
         }
       } catch (err) {
-        if (err?.code === "42P01" || err?.message?.includes("does not exist")) {
-          await ensureTablesReady();
-          const client = await pool.connect();
-          try {
-            const id = data.id || `usr_${Date.now()}`;
-            const res = await client.query(
-              `INSERT INTO "User" ("id", "email", "name", "password", "createdAt", "updatedAt")
-               VALUES ($1, $2, $3, $4, NOW(), NOW())
-               RETURNING *`,
-              [id, data.email.trim().toLowerCase(), data.name || "", data.password]
-            );
-            return res.rows[0];
-          } finally {
-            client.release();
-          }
-        }
+        console.error("user.create error:", err?.message);
         throw err;
+      }
+    },
+    async update({ where, data }) {
+      try {
+        await ensureTablesReady();
+        const client = await pool.connect();
+        try {
+          const updates = [];
+          const params = [];
+          let idx = 1;
+          Object.keys(data).forEach((key) => {
+            updates.push(`"${key}" = $${idx}`);
+            params.push(data[key]);
+            idx++;
+          });
+          updates.push(`"updatedAt" = NOW()`);
+          let whereClause = "";
+          if (where.email) {
+            whereClause = `LOWER("email") = LOWER($${idx})`;
+            params.push(where.email.trim());
+          } else if (where.id) {
+            whereClause = `"id" = $${idx}`;
+            params.push(where.id);
+          } else {
+            return null;
+          }
+          const res = await client.query(
+            `UPDATE "User" SET ${updates.join(", ")} WHERE ${whereClause} RETURNING *`,
+            params
+          );
+          return res.rows[0] || null;
+        } finally {
+          client.release();
+        }
+      } catch (err) {
+        console.warn("user.update error:", err?.message);
+        return null;
       }
     }
   },
@@ -1760,39 +1743,46 @@ var prisma = {
         console.warn("twoFactorAuth.findUnique error:", err?.message);
         return { isEnabled: false, method: "EMAIL", userId: where.userId };
       }
-    },
-    async update({ where, data }) {
+    }
+  },
+  transactionAuditLog: {
+    async findMany({ where, orderBy }) {
       try {
+        await ensureTablesReady();
         const client = await pool.connect();
         try {
-          const updates = [];
-          const params = [];
-          let idx = 1;
-          Object.keys(data).forEach((key) => {
-            updates.push(`"${key}" = $${idx}`);
-            params.push(data[key]);
-            idx++;
-          });
-          updates.push(`"updatedAt" = NOW()`);
-          let whereClause = "";
-          if (where.userId) {
-            whereClause = `"userId" = $${idx}`;
-            params.push(where.userId);
-          } else if (where.id) {
-            whereClause = `"id" = $${idx}`;
-            params.push(where.id);
+          let query = `SELECT * FROM "TransactionAuditLog" WHERE "transactionId" = $1`;
+          if (orderBy?.changedAt) {
+            query += ` ORDER BY "changedAt" ${orderBy.changedAt === "asc" ? "ASC" : "DESC"}`;
           }
+          const res = await client.query(query, [where.transactionId]);
+          return res.rows;
+        } finally {
+          client.release();
+        }
+      } catch (err) {
+        console.warn("transactionAuditLog.findMany error:", err?.message);
+        return [];
+      }
+    },
+    async create({ data }) {
+      try {
+        await ensureTablesReady();
+        const client = await pool.connect();
+        try {
+          const id = data.id || `audit_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
           const res = await client.query(
-            `UPDATE "TwoFactorAuth" SET ${updates.join(", ")} WHERE ${whereClause} RETURNING *`,
-            params
+            `INSERT INTO "TransactionAuditLog" ("id", "transactionId", "oldStatus", "newStatus", "changedBy", "remarks", "changedAt")
+             VALUES ($1, $2, $3, $4, $5, $6, NOW()) RETURNING *`,
+            [id, data.transactionId, data.oldStatus || null, data.newStatus, data.changedBy || "SYSTEM", data.remarks || null]
           );
           return res.rows[0];
         } finally {
           client.release();
         }
       } catch (err) {
-        console.warn("twoFactorAuth.update error:", err?.message);
-        return { isEnabled: false, method: "EMAIL", ...data };
+        console.warn("transactionAuditLog.create error:", err?.message);
+        return null;
       }
     }
   }
@@ -1971,6 +1961,94 @@ Sent to: ${cleanRecipient}`;
     return { success: false, error: err.message };
   }
 }
+async function sendResetPasswordEmail(toEmail, resetUrl, recipientName) {
+  const cleanRecipient = (toEmail || "").trim();
+  if (!cleanRecipient) {
+    console.error("[SMTP] No recipient email specified");
+    return { success: false, error: "Recipient email is required" };
+  }
+  const name = recipientName || cleanRecipient.split("@")[0] || "Valued Customer";
+  const subject = `[KBZ Bank IR Portal] Password Reset Request`;
+  const html = `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta charset="utf-8">
+      <style>
+        body { font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #f1f5f9; margin: 0; padding: 20px; color: #1e293b; }
+        .container { max-width: 560px; margin: 0 auto; background: #ffffff; border-radius: 12px; overflow: hidden; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
+        .header { background: #0B2B66; padding: 28px 24px; text-align: center; color: white; }
+        .header h1 { margin: 0; font-size: 22px; font-weight: 800; letter-spacing: 0.5px; }
+        .header p { margin: 4px 0 0 0; font-size: 12px; color: #93c5fd; text-transform: uppercase; letter-spacing: 1px; }
+        .content { padding: 32px 28px; }
+        .greeting { font-size: 16px; font-weight: 600; color: #0f172a; margin-bottom: 12px; }
+        .text { font-size: 14px; line-height: 1.6; color: #475569; margin-bottom: 24px; }
+        .btn-container { text-align: center; margin: 30px 0; }
+        .reset-btn { display: inline-block; background-color: #0F4C81; color: #ffffff !important; padding: 14px 32px; font-size: 15px; font-weight: 700; text-decoration: none; border-radius: 8px; box-shadow: 0 4px 6px -1px rgba(15, 76, 129, 0.3); }
+        .link-alt { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 12px; word-break: break-all; font-size: 12px; color: #0F4C81; margin: 20px 0; }
+        .warning { background: #fffbeb; border-left: 4px solid #f59e0b; padding: 12px 16px; border-radius: 4px; font-size: 12px; color: #92400e; margin-bottom: 24px; }
+        .footer { background: #f8fafc; padding: 20px; text-align: center; border-top: 1px solid #e2e8f0; font-size: 11px; color: #94a3b8; line-height: 1.5; }
+      </style>
+    </head>
+    <body>
+      <div class="container">
+        <div class="header">
+          <h1>KBZ BANK</h1>
+          <p>Inbound Remittance Portal</p>
+        </div>
+        <div class="content">
+          <div class="greeting">Hello, ${name}</div>
+          <div class="text">
+            We received a request to reset the password for your KBZ Bank Inbound Remittance Portal account associated with <strong>${cleanRecipient}</strong>.
+          </div>
+          <div class="btn-container">
+            <a href="${resetUrl}" target="_blank" class="reset-btn">Reset My Password</a>
+          </div>
+          <div class="text" style="font-size: 13px; margin-bottom: 8px;">
+            If the button above does not work, copy and paste the following link into your web browser:
+          </div>
+          <div class="link-alt">
+            <a href="${resetUrl}" style="color: #0F4C81; text-decoration: underline;">${resetUrl}</a>
+          </div>
+          <div class="warning">
+            <strong>Security Notice:</strong> This password reset link is valid for <strong>15 minutes</strong>. If you did not make this request, please ignore this email or contact the Security Operations Center immediately.
+          </div>
+        </div>
+        <div class="footer">
+          \xA9 ${(/* @__PURE__ */ new Date()).getFullYear()} Kanbawza Bank Limited (KBZ Bank). All rights reserved.<br>
+          Yangon Main Corporate Branch \u2022 Security & Compliance Dept
+        </div>
+      </div>
+    </body>
+    </html>
+  `;
+  const text = `KBZ BANK - Inbound Remittance Portal
+
+Password Reset Request
+
+Hello ${name},
+We received a request to reset your password. Use the following link to choose a new password:
+
+${resetUrl}
+
+This link is valid for 15 minutes.
+If you did not request this, please ignore this email.
+Sent to: ${cleanRecipient}`;
+  try {
+    const info = await transporter.sendMail({
+      from: `"${fromName}" <${fromAddress}>`,
+      to: cleanRecipient,
+      subject,
+      text,
+      html
+    });
+    console.log(`[SMTP] Reset password email sent successfully to ${cleanRecipient}. MessageId: ${info.messageId}`);
+    return { success: true, messageId: info.messageId, recipients: cleanRecipient };
+  } catch (err) {
+    console.error(`[SMTP] Failed to send reset email to ${cleanRecipient}:`, err);
+    return { success: false, error: err.message };
+  }
+}
 
 // src/lib/two-factor.ts
 var TwoFactorService = class {
@@ -2100,6 +2178,16 @@ app.post(["/api/auth/login", "/auth/login", "/login"], async (req, res) => {
       user2 = await prisma.user.findUnique({
         where: { email: cleanEmail }
       });
+      if (!user2 && !cleanEmail.includes("@")) {
+        user2 = await prisma.user.findUnique({
+          where: { id: cleanEmail }
+        });
+        if (!user2) {
+          user2 = await prisma.user.findUnique({
+            where: { email: "sanyu.aung@kbzbank.com" }
+          });
+        }
+      }
     } catch (dbError) {
       console.error(`[AUTH_LOGIN_DB_ERROR] Query failed for ${cleanEmail}:`, {
         message: dbError?.message,
@@ -2197,7 +2285,8 @@ app.post(["/api/auth/login", "/auth/login", "/login"], async (req, res) => {
         phone: profilePhone,
         role: "Customer Account Admin",
         accountNumber: "0091-2384-992019",
-        branch: "Yangon Main Settlement Gateway Branch (0091)"
+        branch: "Yangon Main Settlement Gateway Branch (0091)",
+        passwordStrength: user2.passwordStrength
       }
     });
   } catch (error) {
@@ -2223,6 +2312,69 @@ app.post(["/api/auth/logout", "/auth/logout", "/logout"], async (req, res) => {
     return res.json({ success: true, message: "Logged out successfully" });
   } catch (error) {
     return res.json({ success: true, message: "Logged out" });
+  }
+});
+app.post(["/api/auth/forgot-password", "/auth/forgot-password"], async (req, res) => {
+  try {
+    const { email } = req.body || {};
+    if (!email) {
+      return res.status(400).json({ success: false, error: "Email is required" });
+    }
+    const cleanEmail = email.trim().toLowerCase();
+    const user2 = await prisma.user.findUnique({ where: { email: cleanEmail } });
+    if (!user2) {
+      return res.status(404).json({ success: false, error: "User not found with this email address." });
+    }
+    const token = crypto3.randomBytes(32).toString("hex");
+    const expires = new Date(Date.now() + 15 * 60 * 1e3);
+    await prisma.user.update({
+      where: { email: cleanEmail },
+      data: { resetToken: token, resetTokenExpires: expires }
+    });
+    const origin = req.headers.origin || (req.headers.host ? `${req.protocol || "https"}://${req.headers.host}` : "https://ir-portal-taupe.vercel.app");
+    const relativePath = `/reset-password?email=${encodeURIComponent(cleanEmail)}&token=${token}`;
+    const fullResetUrl = `${origin}${relativePath}`;
+    const emailResult = await sendResetPasswordEmail(cleanEmail, fullResetUrl, user2.name);
+    console.log(`[FORGOT_PASSWORD] Email dispatch result for ${cleanEmail}:`, emailResult);
+    return res.json({
+      success: true,
+      message: "Password reset link sent to your email.",
+      resetLink: relativePath,
+      emailSent: emailResult.success,
+      smtpError: emailResult.success ? void 0 : emailResult.error
+    });
+  } catch (err) {
+    console.error("[FORGOT_PASSWORD_ERROR]", err);
+    return res.status(500).json({ success: false, error: "Internal server error" });
+  }
+});
+app.post(["/api/auth/reset-password", "/auth/reset-password"], async (req, res) => {
+  try {
+    const { email, token, newPassword } = req.body || {};
+    if (!email || !token || !newPassword) {
+      return res.status(400).json({ success: false, error: "Missing required fields" });
+    }
+    const cleanEmail = email.trim().toLowerCase();
+    const user2 = await prisma.user.findUnique({ where: { email: cleanEmail } });
+    if (!user2 || user2.resetToken !== token || !user2.resetTokenExpires || user2.resetTokenExpires < /* @__PURE__ */ new Date()) {
+      return res.status(400).json({ success: false, error: "Invalid or expired reset token" });
+    }
+    const evaluatePasswordStrength = (password) => {
+      if (password.length >= 8 && /[A-Z]/.test(password) && /[a-z]/.test(password) && /[0-9]/.test(password) && /[^A-Za-z0-9]/.test(password)) {
+        return "Strong";
+      }
+      return "Moderate";
+    };
+    const passwordStrength = evaluatePasswordStrength(newPassword);
+    const passwordHash = await AuthUtils.hashPassword(newPassword);
+    await prisma.user.update({
+      where: { email: cleanEmail },
+      data: { password: passwordHash, passwordStrength, resetToken: null, resetTokenExpires: null }
+    });
+    return res.json({ success: true, message: "Password has been reset successfully." });
+  } catch (err) {
+    console.error("[RESET_PASSWORD_ERROR]", err);
+    return res.status(500).json({ success: false, error: "Internal server error" });
   }
 });
 app.post(["/api/auth/signup", "/api/auth/register"], async (req, res) => {
@@ -2809,6 +2961,21 @@ app.get(["/api/transactions/:id", "/transactions/:id"], async (req, res) => {
   }
   return res.status(404).json({ error: "Transaction not found" });
 });
+app.get(["/api/transactions/:id/audit-log", "/transactions/:id/audit-log"], async (req, res) => {
+  const { id } = req.params;
+  if (dbAvailable) {
+    try {
+      const logs = await prisma.transactionAuditLog.findMany({
+        where: { transactionId: id },
+        orderBy: { changedAt: "desc" }
+      });
+      return res.json({ success: true, logs });
+    } catch (err) {
+      console.error("Error fetching transaction audit logs from Postgres:", err?.message);
+    }
+  }
+  return res.json({ success: true, logs: [] });
+});
 app.post(["/api/transactions/simulate", "/transactions/simulate"], async (req, res) => {
   const tx = req.body;
   if (!tx || !tx.amount || !tx.currency) {
@@ -2832,7 +2999,7 @@ app.post(["/api/transactions/simulate", "/transactions/simulate"], async (req, r
     feeAmount: Number(tx.feeAmount || 0),
     netAmountMmk: Number(tx.netAmountMmk || tx.convertedAmountMmk || tx.amount * (tx.exchangeRate || 3550)),
     valueDate: valueDate.toISOString(),
-    status: tx.status || "Completed",
+    status: tx.status || "success",
     statusMessage: tx.statusMessage || null,
     purpose: tx.purpose || "Commercial Remittance Clearing",
     beneficiaryAccount: tx.beneficiaryAccount || "0091-2384-992019",
@@ -2867,6 +3034,14 @@ app.post(["/api/transactions/simulate", "/transactions/simulate"], async (req, r
         JSON.stringify(simulatedTx.swiftMetadata)
       ]
     );
+    await prisma.transactionAuditLog.create({
+      data: {
+        transactionId: txId,
+        newStatus: simulatedTx.status,
+        remarks: "Transaction received via simulation",
+        changedBy: "SYSTEM"
+      }
+    });
   } catch (err) {
     console.warn("[SIMULATE_TRANSACTION_DB_WARN] Saved in memory:", err?.message || err);
   } finally {

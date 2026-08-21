@@ -54,6 +54,8 @@ import {
   ChevronSelectorVerticalIcon,
   ChevronUpIcon,
   XIcon,
+  Moon01Icon,
+  SunIcon,
 } from '@untitledui/icons-react/outline';
 
 type UiIconProps = React.SVGProps<SVGSVGElement> & { size?: number };
@@ -92,6 +94,8 @@ export const CheckCircle2 = asUiIcon(CheckCircleIcon);
 export const Clock = asUiIcon(ClockIcon);
 export const Sparkles = asUiIcon(Stars01Icon);
 export const Calculator = asUiIcon(CalculatorIcon);
+export const Moon = asUiIcon(Moon01Icon);
+export const Sun = asUiIcon(SunIcon);
 export const ArrowRight = asUiIcon(ArrowRightIcon);
 export const ArrowLeft = asUiIcon(ArrowLeftIcon);
 export const LogIn = asUiIcon(LogIn01Icon);

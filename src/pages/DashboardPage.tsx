@@ -156,12 +156,12 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onNavigate }) => {
       {/* Top Header & Action Controls */}
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900 tracking-tight">
+          <h1 className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">
             Dashboard Overview
           </h1>
-          <p className="text-sm text-slate-500 mt-0.5">
+          <p className="text-sm text-slate-500 dark:text-slate-400 mt-0.5">
             Welcome back,{" "}
-            <span className="font-semibold text-slate-700">
+            <span className="font-semibold text-slate-700 dark:text-slate-300">
               {user?.name || "Customer"}
             </span>
             . Track inbound transfers in a simple, clear view.
@@ -174,7 +174,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onNavigate }) => {
             placeholder="Select date range"
             value={dateValue}
             onChange={handleDateRangeChange as any}
-            leftSection={<Calendar size={16} className="text-slate-500" />}
+            leftSection={<Calendar size={16} className="text-slate-500 dark:text-slate-400" />}
             className="w-full"
             radius="md"
             size="sm"
@@ -185,11 +185,11 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onNavigate }) => {
       </div>
 
       {/* Quick Actions */}
-      <section className="bg-white rounded-xl border border-slate-200 shadow-xs p-4 sm:p-5">
+      <section className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 shadow-xs p-4 sm:p-5">
         <div className="flex items-center justify-between flex-wrap gap-3">
           <div>
-            <h3 className="text-sm font-bold text-slate-900">Quick Actions</h3>
-            <p className="text-xs text-slate-500 mt-0.5">
+            <h3 className="text-sm font-bold text-slate-900 dark:text-white">Quick Actions</h3>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
               Most-used actions for daily remittance operations.
             </p>
           </div>
@@ -203,14 +203,14 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onNavigate }) => {
             </button>
             <button
               onClick={() => onNavigate("ir-transactions")}
-              className="px-3.5 py-2 bg-white border border-slate-200 text-slate-700 text-xs font-semibold rounded-lg hover:bg-slate-50 transition-colors inline-flex items-center gap-1.5"
+              className="px-3.5 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 text-xs font-semibold rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors inline-flex items-center gap-1.5"
             >
               <ArrowDownLeft size={14} />
               Open Transactions
             </button>
             {/* <button
               onClick={handleExportReport}
-              className="px-3.5 py-2 bg-white border border-slate-200 text-slate-700 text-xs font-semibold rounded-lg hover:bg-slate-50 transition-colors inline-flex items-center gap-1.5"
+              className="px-3.5 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 text-xs font-semibold rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors inline-flex items-center gap-1.5"
             >
               <Download size={14} />
               Download CSV
@@ -326,17 +326,17 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onNavigate }) => {
         </section>
       </div>
 
-      <section className="bg-white rounded-xl border border-slate-200 shadow-xs p-5 sm:p-6">
+      <section className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 shadow-xs p-5 sm:p-6">
         <div className="flex flex-wrap items-start justify-between gap-3 mb-5">
           <div>
-            <h2 className="text-base font-bold text-slate-900">
+            <h2 className="text-base font-bold text-slate-900 dark:text-white">
               Remittance Map
             </h2>
-            <p className="text-xs text-slate-500 mt-0.5">
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
               Most 10 sender countries, calculated from transactions in the selected view.
             </p>
           </div>
-          <div className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#0F4C81]">
+          <div className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#0F4C81] dark:text-blue-300">
             <Globe2 size={15} /> {Math.min(analysis.countryCounts.length, 10)} sending countr
             {analysis.countryCounts.length === 1 ? "y" : "ies"}
           </div>

@@ -151,7 +151,47 @@ export const prisma = {
         return { isEnabled: false, method: 'EMAIL', userId: where.userId };
       }
     },
+  },
 
-
+  transactionAuditLog: {
+    async findMany({ where, orderBy }: { where: { transactionId: string }; orderBy?: { changedAt: 'asc' | 'desc' } }) {
+      try {
+        await ensureTablesReady();
+        const client = await pool.connect();
+        try {
+          let query = `SELECT * FROM "TransactionAuditLog" WHERE "transactionId" = $1`;
+          if (orderBy?.changedAt) {
+            query += ` ORDER BY "changedAt" ${orderBy.changedAt === 'asc' ? 'ASC' : 'DESC'}`;
+          }
+          const res = await client.query(query, [where.transactionId]);
+          return res.rows;
+        } finally {
+          client.release();
+        }
+      } catch (err: any) {
+        console.warn('transactionAuditLog.findMany error:', err?.message);
+        return [];
+      }
+    },
+    async create({ data }: { data: any }) {
+      try {
+        await ensureTablesReady();
+        const client = await pool.connect();
+        try {
+          const id = data.id || `audit_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
+          const res = await client.query(
+            `INSERT INTO "TransactionAuditLog" ("id", "transactionId", "oldStatus", "newStatus", "changedBy", "remarks", "changedAt")
+             VALUES ($1, $2, $3, $4, $5, $6, NOW()) RETURNING *`,
+            [id, data.transactionId, data.oldStatus || null, data.newStatus, data.changedBy || 'SYSTEM', data.remarks || null]
+          );
+          return res.rows[0];
+        } finally {
+          client.release();
+        }
+      } catch (err: any) {
+        console.warn('transactionAuditLog.create error:', err?.message);
+        return null;
+      }
+    }
   },
 };

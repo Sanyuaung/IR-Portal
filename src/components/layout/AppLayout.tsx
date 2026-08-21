@@ -64,7 +64,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
   const activeMeta = pageTitleMap[activePage] || pageTitleMap.dashboard;
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#F8FAFC] to-[#F1F5F9] flex flex-col font-sans text-[#1E293B] overflow-x-hidden">
+    <div className="min-h-screen bg-gradient-to-b from-[#F8FAFC] to-[#F1F5F9] dark:from-slate-900 dark:to-slate-950 flex flex-col font-sans text-[#1E293B] dark:text-slate-200 overflow-x-hidden transition-colors">
       {/* Header Bar */}
       <Header
         sidebarOpen={sidebarOpen}
@@ -87,15 +87,15 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
         <main className="flex-1 p-3 sm:p-6 lg:p-8 overflow-y-auto w-full min-w-0">
           <div className="w-full space-y-5">
             {!settings.is2FaEnabled && (
-              <section className="bg-amber-50 border border-amber-300 rounded-xl px-4 py-3.5 shadow-xs">
+              <section className="bg-amber-50 dark:bg-amber-900/20 border border-amber-300 dark:border-amber-700/50 rounded-xl px-4 py-3.5 shadow-xs">
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                   <div className="flex items-start gap-2.5">
-                    <span className="mt-0.5 text-amber-700">
+                    <span className="mt-0.5 text-amber-700 dark:text-amber-500">
                       <ShieldAlert size={18} />
                     </span>
                     <div>
-                      <h3 className="text-sm font-bold text-amber-900 tracking-tight">2FA Not Enabled</h3>
-                      <p className="text-xs sm:text-sm text-amber-800 mt-0.5">
+                      <h3 className="text-sm font-bold text-amber-900 dark:text-amber-400 tracking-tight">2FA Not Enabled</h3>
+                      <p className="text-xs sm:text-sm text-amber-800 dark:text-amber-200 mt-0.5">
                         Please enable Two-Factor Authentication to secure your account and remittance access.
                       </p>
                     </div>

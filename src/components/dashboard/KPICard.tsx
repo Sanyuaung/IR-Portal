@@ -27,14 +27,14 @@ export const KPICard: React.FC<KPICardProps> = ({
   badge,
 }) => {
   const iconBgMap = {
-    blue: 'bg-blue-50 text-[#0B2B66]',
+    blue: 'bg-blue-50 dark:bg-blue-900/30 text-[#0B2B66] dark:text-blue-300',
     purple: 'bg-purple-50 text-purple-600',
     orange: 'bg-orange-50 text-orange-600',
     emerald: 'bg-emerald-50 text-emerald-600',
   };
 
   return (
-    <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-xs hover:shadow-md hover:-translate-y-0.5 transition-all duration-200">
+    <div className="bg-white dark:bg-slate-900 p-5 rounded-xl border border-slate-200 dark:border-slate-700 shadow-xs hover:shadow-md hover:-translate-y-0.5 transition-all duration-200">
       <div className="flex justify-between items-start mb-3">
         <div className={`p-2.5 rounded-xl ${iconBgMap[iconVariant]}`}>
           {icon}
@@ -53,15 +53,15 @@ export const KPICard: React.FC<KPICardProps> = ({
             {badge.text}
           </span>
         ) : (
-          <span className="text-xs text-slate-400 font-medium">Live</span>
+          <span className="text-xs text-slate-400 dark:text-slate-500 font-medium">Live</span>
         )}
       </div>
 
-      <p className="text-xs text-slate-500 font-semibold uppercase tracking-wide">{title}</p>
-      <p className="text-2xl font-extrabold text-slate-900 mt-1 tracking-tight font-mono sm:font-sans">{value}</p>
+      <p className="text-xs text-slate-500 dark:text-slate-400 font-semibold uppercase tracking-wide">{title}</p>
+      <p className="text-2xl font-extrabold text-slate-900 dark:text-white mt-1 tracking-tight font-mono sm:font-sans">{value}</p>
 
       {subValue && (
-        <p className="text-[11px] text-slate-400 mt-1 font-medium truncate">
+        <p className="text-[11px] text-slate-400 dark:text-slate-500 mt-1 font-medium truncate">
           {subValue}
         </p>
       )}

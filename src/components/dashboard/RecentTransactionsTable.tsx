@@ -26,12 +26,12 @@ export const RecentTransactionsTable: React.FC<RecentTransactionsTableProps> = (
   };
 
   return (
-    <div className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-xs">
-      <div className="px-5 py-4 border-b border-slate-100 flex justify-between items-center">
-        <h3 className="font-bold text-slate-800 text-base">Recent Inbound Transactions</h3>
+    <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden shadow-xs">
+      <div className="px-5 py-4 border-b border-slate-100 dark:border-slate-700/50 flex justify-between items-center">
+        <h3 className="font-bold text-slate-800 dark:text-slate-200 text-base">Recent Inbound Transactions</h3>
         <button
           onClick={onNavigateToTransactions}
-          className="text-xs font-bold text-[#0B2B66] hover:underline cursor-pointer"
+          className="text-xs font-bold text-[#0B2B66] dark:text-blue-300 hover:underline cursor-pointer"
         >
           View All Transactions
         </button>
@@ -39,83 +39,83 @@ export const RecentTransactionsTable: React.FC<RecentTransactionsTableProps> = (
 
       <div className="overflow-x-auto">
         <table className="w-full text-left border-separate border-spacing-0 whitespace-nowrap">
-          <thead className="bg-slate-50 text-[10px] uppercase font-bold text-slate-500">
+          <thead className="bg-slate-50 dark:bg-slate-800/50 text-[10px] uppercase font-bold text-slate-500 dark:text-slate-400">
             <tr>
-              <th className="px-4 py-3.5 border border-slate-200 text-center w-[40px]">#</th>
-              <th className="px-4 py-3.5 border border-slate-200">Transaction Ref</th>
-              <th className="px-4 py-3.5 border border-slate-200">Sender Name</th>
-              <th className="px-4 py-3.5 border border-slate-200">Sending Bank</th>
-              <th className="px-4 py-3.5 border border-slate-200">Currency</th>
-              <th className="px-4 py-3.5 border border-slate-200">Amount</th>
-              <th className="px-4 py-3.5 border border-slate-200">Exchange Rate</th>
-              <th className="px-4 py-3.5 border border-slate-200">Converted (MMK)</th>
-              <th className="px-4 py-3.5 border border-slate-200">Value Date</th>
-              <th className="px-4 py-3.5 border border-slate-200 text-center">Status</th>
-              <th className="px-4 py-3.5 border border-slate-200 text-right sticky right-0 z-20 bg-slate-50">Action</th>
+              <th className="px-4 py-3.5 border border-slate-200 dark:border-slate-700 text-center w-[40px]">#</th>
+              <th className="px-4 py-3.5 border border-slate-200 dark:border-slate-700">Transaction Ref</th>
+              <th className="px-4 py-3.5 border border-slate-200 dark:border-slate-700">Sender Name</th>
+              <th className="px-4 py-3.5 border border-slate-200 dark:border-slate-700">Sending Bank</th>
+              <th className="px-4 py-3.5 border border-slate-200 dark:border-slate-700">Currency</th>
+              <th className="px-4 py-3.5 border border-slate-200 dark:border-slate-700">Amount</th>
+              <th className="px-4 py-3.5 border border-slate-200 dark:border-slate-700">Exchange Rate</th>
+              <th className="px-4 py-3.5 border border-slate-200 dark:border-slate-700">Converted (MMK)</th>
+              <th className="px-4 py-3.5 border border-slate-200 dark:border-slate-700">Value Date</th>
+              <th className="px-4 py-3.5 border border-slate-200 dark:border-slate-700 text-center">Status</th>
+              <th className="px-4 py-3.5 border border-slate-200 dark:border-slate-700 text-right sticky right-0 z-20 bg-slate-50 dark:bg-slate-800/50">Action</th>
             </tr>
           </thead>
           <tbody className="text-xs">
             {recent.map((tx, idx) => {
               const rowIndex = idx + 1;
               return (
-                <tr key={tx.id} className="group hover:bg-slate-50/80 transition-colors">
-                  <td className="px-4 py-3.5 border border-slate-200 text-center font-mono text-slate-400 font-medium">
+                <tr key={tx.id} className="group hover:bg-slate-50/80 dark:hover:bg-slate-800/50 transition-colors">
+                  <td className="px-4 py-3.5 border border-slate-200 dark:border-slate-700 text-center font-mono text-slate-400 dark:text-slate-500 font-medium">
                     {rowIndex}
                   </td>
 
-                  <td className="px-4 py-3.5 border border-slate-200">
-                    <span className="font-mono font-semibold text-[#0B2B66]">{tx.transactionRef}</span>
-                    <div className="text-[10px] text-slate-400 font-mono flex items-center gap-1 mt-0.5 truncate max-w-[130px]" title={tx.swiftMetadata.uetr}>
+                  <td className="px-4 py-3.5 border border-slate-200 dark:border-slate-700">
+                    <span className="font-mono font-semibold text-[#0B2B66] dark:text-blue-300">{tx.transactionRef}</span>
+                    <div className="text-[10px] text-slate-400 dark:text-slate-500 font-mono flex items-center gap-1 mt-0.5 truncate max-w-[130px]" title={tx.swiftMetadata.uetr}>
                       <ShieldCheck size={10} className="text-blue-500 shrink-0" />
                       <span>{tx.swiftMetadata.uetr.slice(0, 13)}...</span>
                     </div>
                   </td>
 
-                  <td className="px-4 py-3.5 border border-slate-200">
-                    <div className="font-medium text-slate-800 max-w-[180px] truncate" title={tx.senderName}>
+                  <td className="px-4 py-3.5 border border-slate-200 dark:border-slate-700">
+                    <div className="font-medium text-slate-800 dark:text-slate-200 max-w-[180px] truncate" title={tx.senderName}>
                       {tx.senderName}
                     </div>
-                    <div className="text-[10px] text-slate-400">{tx.senderCountry}</div>
+                    <div className="text-[10px] text-slate-400 dark:text-slate-500">{tx.senderCountry}</div>
                   </td>
 
-                  <td className="px-4 py-3.5 border border-slate-200">
-                    <div className="text-slate-700 max-w-[160px] truncate" title={tx.sendingBank}>
+                  <td className="px-4 py-3.5 border border-slate-200 dark:border-slate-700">
+                    <div className="text-slate-700 dark:text-slate-300 max-w-[160px] truncate" title={tx.sendingBank}>
                       {tx.sendingBank}
                     </div>
-                    <div className="text-[10px] font-mono text-slate-400">{tx.sendingBankBic}</div>
+                    <div className="text-[10px] font-mono text-slate-400 dark:text-slate-500">{tx.sendingBankBic}</div>
                   </td>
 
-                  <td className="px-4 py-3.5 border border-slate-200">
-                    <span className="inline-flex items-center px-2 py-0.5 bg-blue-50 text-[#0B2B66] font-bold font-mono rounded text-[11px] border border-blue-100">
+                  <td className="px-4 py-3.5 border border-slate-200 dark:border-slate-700">
+                    <span className="inline-flex items-center px-2 py-0.5 bg-blue-50 dark:bg-blue-900/30 text-[#0B2B66] dark:text-blue-300 font-bold font-mono rounded text-[11px] border border-blue-100 dark:border-blue-800/50">
                       {tx.currency}
                     </span>
                   </td>
 
-                  <td className="px-4 py-3.5 border border-slate-200 font-bold font-mono text-slate-900">
-                    {formatNumber(tx.amount)} <span className="text-slate-400 font-normal">{tx.currency}</span>
+                  <td className="px-4 py-3.5 border border-slate-200 dark:border-slate-700 font-bold font-mono text-slate-900 dark:text-white">
+                    {formatNumber(tx.amount)} <span className="text-slate-400 dark:text-slate-500 font-normal">{tx.currency}</span>
                   </td>
 
-                  <td className="px-4 py-3.5 border border-slate-200 font-mono text-slate-600">
+                  <td className="px-4 py-3.5 border border-slate-200 dark:border-slate-700 font-mono text-slate-600 dark:text-slate-400">
                     {formatNumber(tx.exchangeRate)}
                   </td>
 
-                  <td className="px-4 py-3.5 border border-slate-200 font-bold font-mono text-emerald-700">
+                  <td className="px-4 py-3.5 border border-slate-200 dark:border-slate-700 font-bold font-mono text-emerald-700 dark:text-emerald-400">
                     {formatNumber(tx.convertedAmountMmk)} MMK
                   </td>
 
-                  <td className="px-4 py-3.5 border border-slate-200">
-                    <div className="text-slate-700 font-medium">{formatDate(tx.valueDate, 'DD/MM/YYYY')}</div>
-                    <div className="text-[10px] text-slate-400">{formatDate(tx.valueDate, 'hh:mm A')}</div>
+                  <td className="px-4 py-3.5 border border-slate-200 dark:border-slate-700">
+                    <div className="text-slate-700 dark:text-slate-300 font-medium">{formatDate(tx.valueDate, 'DD/MM/YYYY')}</div>
+                    <div className="text-[10px] text-slate-400 dark:text-slate-500">{formatDate(tx.valueDate, 'hh:mm A')}</div>
                   </td>
 
-                  <td className="px-4 py-3.5 border border-slate-200 text-center">
+                  <td className="px-4 py-3.5 border border-slate-200 dark:border-slate-700 text-center">
                     <StatusBadge status={tx.status} />
                   </td>
 
-                  <td className="px-4 py-3.5 border border-slate-200 text-right sticky right-0 z-10 bg-white group-hover:bg-slate-50/80">
+                  <td className="px-4 py-3.5 border border-slate-200 dark:border-slate-700 text-right sticky right-0 z-10 bg-white dark:bg-slate-900 group-hover:bg-slate-50/80 dark:group-hover:bg-slate-800/50">
                     <button
                       onClick={() => handleViewDetails(tx)}
-                      className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold text-[#0B2B66] bg-blue-50 hover:bg-blue-100 rounded-md transition-colors cursor-pointer"
+                      className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold text-[#0B2B66] dark:text-blue-300 bg-blue-50 dark:bg-blue-900/30 hover:bg-blue-100 dark:hover:bg-blue-800/40 rounded-md transition-colors cursor-pointer"
                     >
                       <Eye size={12} />
                       <span>Details</span>

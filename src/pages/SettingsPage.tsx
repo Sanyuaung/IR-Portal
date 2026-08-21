@@ -312,19 +312,19 @@ export const SettingsPage: React.FC = () => {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-extrabold text-[#0F4C81] tracking-tight">
+        <h1 className="text-2xl font-extrabold text-[#0F4C81] dark:text-blue-300 tracking-tight">
           Portal Settings & Security
         </h1>
-        <p className="text-xs text-slate-500 mt-1">
+        <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
           Manage account protection and profile settings in one simple place.
         </p>
       </div>
 
       {/* At-a-glance status cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Paper withBorder p="md" radius="md" className="bg-white border-slate-200 shadow-xs">
+        <Paper withBorder p="md" radius="md" className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 shadow-xs">
           <div className="flex items-start gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-blue-50 text-[#0F4C81] flex items-center justify-center">
+            <div className="w-8 h-8 rounded-lg bg-blue-50 dark:bg-blue-900/30 text-[#0F4C81] dark:text-blue-300 flex items-center justify-center">
               <User size={16} />
             </div>
             <div>
@@ -341,11 +341,11 @@ export const SettingsPage: React.FC = () => {
           </div>
         </Paper>
 
-        <Paper withBorder p="md" radius="md" className="bg-white border-slate-200 shadow-xs">
+        <Paper withBorder p="md" radius="md" className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 shadow-xs">
           <div className="flex items-start gap-2.5">
             <div
               className={`w-8 h-8 rounded-lg flex items-center justify-center ${
-                settings.is2FaEnabled ? 'bg-emerald-50 text-emerald-700' : 'bg-amber-50 text-amber-700'
+                settings.is2FaEnabled ? 'bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400' : 'bg-amber-50 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400'
               }`}
             >
               {settings.is2FaEnabled ? <ShieldCheck size={16} /> : <ShieldAlert size={16} />}
@@ -366,9 +366,9 @@ export const SettingsPage: React.FC = () => {
           </div>
         </Paper>
 
-        <Paper withBorder p="md" radius="md" className="bg-white border-slate-200 shadow-xs">
+        <Paper withBorder p="md" radius="md" className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 shadow-xs">
           <div className="flex items-start gap-2.5">
-            <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${displayPasswordStrength === 'Strong' ? 'bg-emerald-50 text-emerald-700' : displayPasswordStrength === 'Moderate' ? 'bg-amber-50 text-amber-700' : 'bg-red-50 text-red-700'}`}>
+            <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${displayPasswordStrength === 'Strong' ? 'bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400' : displayPasswordStrength === 'Moderate' ? 'bg-amber-50 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400' : 'bg-red-50 dark:bg-red-900/30 text-red-700 dark:text-red-400'}`}>
               <Lock size={16} />
             </div>
             <div>
@@ -416,9 +416,9 @@ export const SettingsPage: React.FC = () => {
         </Alert>
       )} */}
 
-      <Tabs value={activeTab} onChange={setActiveTab}>
+      <Tabs value={activeTab} onChange={setActiveTab} variant="pills" classNames={{ root: "w-full", tab: "data-[active]:bg-blue-50 dark:data-[active]:bg-blue-900/30 data-[active]:text-[#0F4C81] dark:data-[active]:text-blue-300 hover:bg-slate-50 dark:hover:bg-slate-800/50 text-slate-600 dark:text-slate-400 transition-colors font-semibold" }}>
         <div className="overflow-x-auto pb-1 mb-6">
-          <Tabs.List className="bg-white p-1 rounded-lg border border-slate-200 flex-nowrap min-w-max">
+          <Tabs.List className="bg-white dark:bg-slate-900 p-1 rounded-lg border border-slate-200 dark:border-slate-700 flex-nowrap min-w-max">
             <Tabs.Tab value="security" leftSection={<ShieldCheck size={16} />}>
               Security & 2FA
             </Tabs.Tab>
@@ -438,17 +438,17 @@ export const SettingsPage: React.FC = () => {
               {/* CLEAN LIGHT THEME 2FA CARD MATCHING USER SPECIFICATIONS */}
               {!settings.is2FaEnabled ? (
                 /* STATE 1: 2FA Disabled / Setup View */
-                <Paper withBorder p="lg" radius="md" className="bg-white border-slate-200 shadow-xs">
+                <Paper withBorder p="lg" radius="md" className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 shadow-xs">
                   {/* Header */}
                   <div className="flex items-start gap-3 mb-5">
-                    <div className="text-[#0F4C81] mt-0.5">
+                    <div className="text-[#0F4C81] dark:text-blue-300 mt-0.5">
                       <Shield size={26} strokeWidth={2.2} />
                     </div>
                     <div>
-                      <h2 className="text-xl font-bold text-[#0F4C81] tracking-tight leading-tight">
+                      <h2 className="text-xl font-bold text-[#0F4C81] dark:text-blue-300 tracking-tight leading-tight">
                         Two-Factor Authentication
                       </h2>
-                      <p className="text-slate-500 text-xs sm:text-sm mt-0.5">
+                      <p className="text-slate-500 dark:text-slate-400 text-xs sm:text-sm mt-0.5">
                         Add an extra layer of security to your account
                       </p>
                     </div>
@@ -456,7 +456,7 @@ export const SettingsPage: React.FC = () => {
 
                   {/* Method Selection */}
                   <div className="mb-6">
-                    <p className="text-slate-700 text-xs sm:text-sm font-semibold mb-3">
+                    <p className="text-slate-700 dark:text-slate-300 text-xs sm:text-sm font-semibold mb-3">
                       Choose your 2FA method:
                     </p>
 
@@ -468,7 +468,7 @@ export const SettingsPage: React.FC = () => {
                         className={`flex items-center gap-2 px-5 py-2.5 rounded-lg text-xs sm:text-sm font-semibold transition-all cursor-pointer ${
                           settings.twoFactorMethod === 'email'
                             ? 'bg-[#0F4C81] text-white shadow-xs'
-                            : 'bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200'
+                            : 'bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700'
                         }`}
                       >
                         <Mail size={16} />
@@ -482,7 +482,7 @@ export const SettingsPage: React.FC = () => {
                         className={`flex items-center gap-2 px-5 py-2.5 rounded-lg text-xs sm:text-sm font-semibold transition-all cursor-pointer ${
                           settings.twoFactorMethod === 'totp'
                             ? 'bg-[#0F4C81] text-white shadow-xs'
-                            : 'bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200'
+                            : 'bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700'
                         }`}
                       >
                         <Shield size={16} />
@@ -503,18 +503,18 @@ export const SettingsPage: React.FC = () => {
                 </Paper>
               ) : (
                 /* STATE 2: 2FA Enabled View */
-                <Paper withBorder p="lg" radius="md" className="bg-white border-slate-200 shadow-xs space-y-5">
+                <Paper withBorder p="lg" radius="md" className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 shadow-xs space-y-5">
                   {/* Header with Enabled Badge */}
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex items-start gap-3">
-                      <div className="text-[#0F4C81] mt-0.5">
+                      <div className="text-[#0F4C81] dark:text-blue-300 mt-0.5">
                         <Shield size={26} strokeWidth={2.2} />
                       </div>
                       <div>
-                        <h2 className="text-xl font-bold text-[#0F4C81] tracking-tight leading-tight">
+                        <h2 className="text-xl font-bold text-[#0F4C81] dark:text-blue-300 tracking-tight leading-tight">
                           Two-Factor Authentication
                         </h2>
-                        <p className="text-slate-500 text-xs sm:text-sm mt-0.5">
+                        <p className="text-slate-500 dark:text-slate-400 text-xs sm:text-sm mt-0.5">
                           Add an extra layer of security to your account
                         </p>
                       </div>
@@ -529,8 +529,8 @@ export const SettingsPage: React.FC = () => {
 
                   {/* Method Display */}
                   <div className="flex items-center gap-2.5 pt-1">
-                    <span className="text-slate-600 text-sm font-medium">Method:</span>
-                    <span className="bg-blue-50 text-[#0F4C81] border border-blue-200 px-3.5 py-1 rounded-full text-xs font-bold uppercase tracking-wide font-mono">
+                    <span className="text-slate-600 dark:text-slate-400 text-sm font-medium">Method:</span>
+                    <span className="bg-blue-50 dark:bg-blue-900/30 text-[#0F4C81] dark:text-blue-300 border border-blue-200 px-3.5 py-1 rounded-full text-xs font-bold uppercase tracking-wide font-mono">
                       {settings.twoFactorMethod === 'totp' ? 'GOOGLE AUTHENTICATOR' : 'EMAIL'}
                     </span>
                   </div>
@@ -552,12 +552,12 @@ export const SettingsPage: React.FC = () => {
 
             {/* Right Column: Security Checklist */}
             <div className="space-y-4">
-              <Paper withBorder p="md" radius="md" className="bg-slate-50 border-slate-200">
-                <div className="flex items-center gap-2 text-[#0F4C81] font-bold text-sm mb-2">
+              <Paper withBorder p="md" radius="md" className="bg-slate-50 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700">
+                <div className="flex items-center gap-2 text-[#0F4C81] dark:text-blue-300 font-bold text-sm mb-2">
                   <ShieldCheck size={18} />
                   <span>Security Checklist</span>
                 </div>
-                <div className="space-y-2.5 text-xs text-slate-600">
+                <div className="space-y-2.5 text-xs text-slate-600 dark:text-slate-400">
                   <p>
                     • Keep 2FA enabled to protect remittance access from unauthorized login attempts.
                   </p>
@@ -580,7 +580,7 @@ export const SettingsPage: React.FC = () => {
         <Tabs.Panel value="password">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
             <div className="lg:col-span-2">
-              <Paper withBorder p="lg" radius="md" className="bg-white border-slate-200 h-full">
+              <Paper withBorder p="lg" radius="md" className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 h-full">
                 <form onSubmit={handlePasswordSubmit} className="space-y-4">
                   <div>
                     <Text fw={700} size="md" c="#0F4C81">
@@ -614,9 +614,9 @@ export const SettingsPage: React.FC = () => {
 
                     {/* Real-time Password Strength Meter */}
                     {newPassword && (
-                      <div className="mt-2 space-y-1.5 bg-slate-50 p-2.5 rounded-md border border-slate-200">
+                      <div className="mt-2 space-y-1.5 bg-slate-50 dark:bg-slate-800/50 p-2.5 rounded-md border border-slate-200 dark:border-slate-700">
                         <div className="flex justify-between items-center text-xs">
-                          <span className="text-slate-500 font-medium">Password Strength:</span>
+                          <span className="text-slate-500 dark:text-slate-400 font-medium">Password Strength:</span>
                           <Badge size="xs" variant="light" color={strengthInfo.color} className="font-semibold">
                             {strengthInfo.label} ({strength}%)
                           </Badge>
@@ -657,33 +657,33 @@ export const SettingsPage: React.FC = () => {
             </div>
 
             <div className="lg:col-span-1">
-              <Paper withBorder p="md" radius="md" className="bg-slate-50 border-slate-200">
-                <div className="flex items-center gap-2 text-[#0F4C81] font-bold text-sm mb-2">
+              <Paper withBorder p="md" radius="md" className="bg-slate-50 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700">
+                <div className="flex items-center gap-2 text-[#0F4C81] dark:text-blue-300 font-bold text-sm mb-2">
                   <ShieldCheck size={18} />
                   <span>Password Requirements</span>
                 </div>
                 <div className="space-y-2 text-xs">
-                  <div className={`flex items-center gap-1.5 ${hasMinLength ? 'text-emerald-600 font-medium' : 'text-slate-500'}`}>
+                  <div className={`flex items-center gap-1.5 ${hasMinLength ? 'text-emerald-600 font-medium' : 'text-slate-500 dark:text-slate-400'}`}>
                     {hasMinLength ? <CheckCircle2 size={14} /> : <span className="w-3.5 h-3.5 rounded-full border border-slate-300 inline-block" />}
                     <span>At least 8 characters</span>
                   </div>
-                  <div className={`flex items-center gap-1.5 ${hasUppercase ? 'text-emerald-600 font-medium' : 'text-slate-500'}`}>
+                  <div className={`flex items-center gap-1.5 ${hasUppercase ? 'text-emerald-600 font-medium' : 'text-slate-500 dark:text-slate-400'}`}>
                     {hasUppercase ? <CheckCircle2 size={14} /> : <span className="w-3.5 h-3.5 rounded-full border border-slate-300 inline-block" />}
                     <span>1 uppercase letter (A-Z)</span>
                   </div>
-                  <div className={`flex items-center gap-1.5 ${hasLowercase ? 'text-emerald-600 font-medium' : 'text-slate-500'}`}>
+                  <div className={`flex items-center gap-1.5 ${hasLowercase ? 'text-emerald-600 font-medium' : 'text-slate-500 dark:text-slate-400'}`}>
                     {hasLowercase ? <CheckCircle2 size={14} /> : <span className="w-3.5 h-3.5 rounded-full border border-slate-300 inline-block" />}
                     <span>1 lowercase letter (a-z)</span>
                   </div>
-                  <div className={`flex items-center gap-1.5 ${hasNumber ? 'text-emerald-600 font-medium' : 'text-slate-500'}`}>
+                  <div className={`flex items-center gap-1.5 ${hasNumber ? 'text-emerald-600 font-medium' : 'text-slate-500 dark:text-slate-400'}`}>
                     {hasNumber ? <CheckCircle2 size={14} /> : <span className="w-3.5 h-3.5 rounded-full border border-slate-300 inline-block" />}
                     <span>1 number (0-9)</span>
                   </div>
-                  <div className={`flex items-center gap-1.5 ${hasSpecial ? 'text-emerald-600 font-medium' : 'text-slate-500'}`}>
+                  <div className={`flex items-center gap-1.5 ${hasSpecial ? 'text-emerald-600 font-medium' : 'text-slate-500 dark:text-slate-400'}`}>
                     {hasSpecial ? <CheckCircle2 size={14} /> : <span className="w-3.5 h-3.5 rounded-full border border-slate-300 inline-block" />}
                     <span>1 special symbol (!@#$%^&*)</span>
                   </div>
-                  <div className={`flex items-center gap-1.5 ${passwordsMatch ? 'text-emerald-600 font-medium' : 'text-slate-500'}`}>
+                  <div className={`flex items-center gap-1.5 ${passwordsMatch ? 'text-emerald-600 font-medium' : 'text-slate-500 dark:text-slate-400'}`}>
                     {passwordsMatch ? <CheckCircle2 size={14} /> : <span className="w-3.5 h-3.5 rounded-full border border-slate-300 inline-block" />}
                     <span>Confirm password matches</span>
                   </div>
@@ -696,7 +696,7 @@ export const SettingsPage: React.FC = () => {
         {/* Tab 3: Customer Account Profile (Strictly Matching Sign Up Registration Fields) */}
         <Tabs.Panel value="merchant">
           <div className="w-full">
-            <Paper withBorder p="lg" radius="md" className="bg-white border-slate-200 space-y-5">
+            <Paper withBorder p="lg" radius="md" className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 space-y-5">
               <div className="flex items-center justify-between">
                 <div>
                   <Text fw={700} size="md" c="#0F4C81">
@@ -713,17 +713,17 @@ export const SettingsPage: React.FC = () => {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
                 {/* 1. Full Name */}
-                <div className="p-3.5 bg-slate-50 rounded-lg border border-slate-200/80">
-                  <span className="text-slate-500 block font-medium">Full Name</span>
-                  <span className="font-bold text-slate-800 text-sm mt-0.5 block">
+                <div className="p-3.5 bg-slate-50 dark:bg-slate-800/50 rounded-lg border border-slate-200 dark:border-slate-700/80">
+                  <span className="text-slate-500 dark:text-slate-400 block font-medium">Full Name</span>
+                  <span className="font-bold text-slate-800 dark:text-slate-200 text-sm mt-0.5 block">
                     {user?.name || 'San Yu Aung'}
                   </span>
                 </div>
 
                 {/* 2. Authorized Email Address */}
-                <div className="p-3.5 bg-slate-50 rounded-lg border border-slate-200/80">
-                  <span className="text-slate-500 block font-medium">Authorized Email Address</span>
-                  <span className="font-medium text-slate-800 text-sm mt-0.5 block font-mono">
+                <div className="p-3.5 bg-slate-50 dark:bg-slate-800/50 rounded-lg border border-slate-200 dark:border-slate-700/80">
+                  <span className="text-slate-500 dark:text-slate-400 block font-medium">Authorized Email Address</span>
+                  <span className="font-medium text-slate-800 dark:text-slate-200 text-sm mt-0.5 block font-mono">
                     {user?.email || 'sanyuaung.ygn.mm@gmail.com'}
                   </span>
                 </div>
@@ -738,7 +738,7 @@ export const SettingsPage: React.FC = () => {
         opened={showQrModal}
         onClose={() => setShowQrModal(false)}
         title={
-          <div className="flex items-center gap-2 font-bold text-[#0F4C81]">
+          <div className="flex items-center gap-2 font-bold text-[#0F4C81] dark:text-blue-300">
             <QrCode size={20} />
             <span>Setup Google Authenticator (TOTP)</span>
           </div>
@@ -751,9 +751,9 @@ export const SettingsPage: React.FC = () => {
             Scan the QR code below using Google Authenticator on your phone.
           </Text>
 
-          <div className="flex flex-col items-center justify-center p-4 bg-slate-50 rounded-lg border border-slate-200">
+          <div className="flex flex-col items-center justify-center p-4 bg-slate-50 dark:bg-slate-800/50 rounded-lg border border-slate-200 dark:border-slate-700">
             {/* Native Vector SVG QR Code */}
-            <div className="p-3 bg-white rounded-md shadow-xs border border-slate-200 flex items-center justify-center">
+            <div className="p-3 bg-white dark:bg-slate-900 rounded-md shadow-xs border border-slate-200 dark:border-slate-700 flex items-center justify-center">
               <QRCodeSVG
                 value={`otpauth://totp/${encodeURIComponent(`MM Global Remit:${user?.email || settings.emailForOtp || 'customer@mmglobalremit.com'}`)}?secret=${tempTotpSecret}&issuer=${encodeURIComponent('MM Global Remit')}`}
                 size={180}
@@ -762,9 +762,9 @@ export const SettingsPage: React.FC = () => {
               />
             </div>
             <div className="mt-3 text-center">
-              <span className="text-[11px] text-slate-500 block">Manual Key:</span>
+              <span className="text-[11px] text-slate-500 dark:text-slate-400 block">Manual Key:</span>
               <div className="flex items-center justify-center gap-1.5 mt-0.5">
-                <span className="font-mono font-bold text-xs bg-white px-2.5 py-1 rounded border border-slate-300 tracking-wider text-slate-800 select-all">
+                <span className="font-mono font-bold text-xs bg-white dark:bg-slate-900 px-2.5 py-1 rounded border border-slate-300 tracking-wider text-slate-800 dark:text-slate-200 select-all">
                   {tempTotpSecret}
                 </span>
                 <CopyButton value={tempTotpSecret || ''} timeout={2000}>
@@ -824,7 +824,7 @@ export const SettingsPage: React.FC = () => {
         opened={showEmailModal}
         onClose={() => setShowEmailModal(false)}
         title={
-          <div className="flex items-center gap-2 font-bold text-[#0F4C81]">
+          <div className="flex items-center gap-2 font-bold text-[#0F4C81] dark:text-blue-300">
             <Mail size={20} />
             <span>Verify Email Security Code</span>
           </div>
@@ -848,10 +848,10 @@ export const SettingsPage: React.FC = () => {
               <span
                 className={`text-xs font-mono font-bold px-2 py-0.5 rounded-full ${
                   emailOtpSecondsLeft > 15
-                    ? 'bg-blue-50 text-blue-700 border border-blue-200'
+                    ? 'bg-blue-50 dark:bg-blue-900/30 text-blue-700 border border-blue-200'
                     : emailOtpSecondsLeft > 0
-                    ? 'bg-amber-50 text-amber-700 border border-amber-200 animate-pulse'
-                    : 'bg-red-50 text-red-700 border border-red-200'
+                    ? 'bg-amber-50 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 border border-amber-200 animate-pulse'
+                    : 'bg-red-50 dark:bg-red-900/30 text-red-700 dark:text-red-400 border border-red-200'
                 }`}
               >
                 {emailOtpSecondsLeft > 0
@@ -880,7 +880,7 @@ export const SettingsPage: React.FC = () => {
               <button
                 type="button"
                 onClick={handleStartEmailOtp}
-                className="text-xs text-[#0B2B66] hover:underline font-semibold flex items-center gap-1 cursor-pointer transition-colors"
+                className="text-xs text-[#0B2B66] dark:text-blue-300 hover:underline font-semibold flex items-center gap-1 cursor-pointer transition-colors"
               >
                 <RefreshCw size={12} className={emailOtpSecondsLeft === 0 ? 'animate-spin' : ''} />
                 <span>

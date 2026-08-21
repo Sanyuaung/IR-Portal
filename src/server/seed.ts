@@ -102,6 +102,23 @@ export async function ensureDatabaseSchema(existingClient?: any) {
       );
     `);
 
+    // 5. TransactionAuditLog table
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS "TransactionAuditLog" (
+        "id" TEXT NOT NULL PRIMARY KEY,
+        "transactionId" TEXT NOT NULL,
+        "oldStatus" TEXT,
+        "newStatus" TEXT NOT NULL,
+        "changedBy" TEXT NOT NULL DEFAULT 'SYSTEM',
+        "changedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        "remarks" TEXT
+      );
+    `);
+
+    // We do not enforce fkey to avoid potential issues with simple seed data dropping, but it's good practice.
+    // Ensure index on transactionId
+    await client.query(`CREATE INDEX IF NOT EXISTS "TransactionAuditLog_transactionId_idx" ON "TransactionAuditLog"("transactionId");`);
+
     // 5. FxRate table
     await client.query(`
       CREATE TABLE IF NOT EXISTS "FxRate" (

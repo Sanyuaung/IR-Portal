@@ -68,7 +68,7 @@ export const TransactionDetailsModal: React.FC = () => {
       onClose={() => setIsDetailsModalOpen(false)}
       title={
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-lg bg-[#0B2B66]/10 flex items-center justify-center text-[#0B2B66]">
+          <div className="w-9 h-9 rounded-lg bg-[#0B2B66]/10 flex items-center justify-center text-[#0B2B66] dark:text-blue-300">
             <FileText size={20} />
           </div>
           <div>
@@ -79,7 +79,7 @@ export const TransactionDetailsModal: React.FC = () => {
               <StatusBadge status={tx.status} size="sm" />
             </div>
             <Text size="xs" c="dimmed">
-              Reference: <span className="font-mono font-medium text-slate-700">{tx.transactionRef}</span>
+              Reference: <span className="font-mono font-medium text-slate-700 dark:text-slate-300">{tx.transactionRef}</span>
             </Text>
           </div>
         </div>
@@ -90,7 +90,7 @@ export const TransactionDetailsModal: React.FC = () => {
     >
       <div id="swift-advice-print-area">
         {/* Header Summary Banner */}
-        <Paper p="md" radius="md" className="bg-slate-50 border border-slate-200 mb-4">
+        <Paper p="md" radius="md" className="bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 mb-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <Text size="xs" c="dimmed" fw={600}>
@@ -105,18 +105,18 @@ export const TransactionDetailsModal: React.FC = () => {
                 </Badge>
               </div>
               <Text size="xs" c="dimmed" mt={1}>
-                Exchange Rate: 1 {tx.currency} = <span className="font-semibold text-slate-700">{formatNumber(tx.exchangeRate)} MMK</span>
+                Exchange Rate: 1 {tx.currency} = <span className="font-semibold text-slate-700 dark:text-slate-300">{formatNumber(tx.exchangeRate)} MMK</span>
               </Text>
             </div>
 
-            <div className="sm:border-l sm:border-slate-200 sm:pl-4">
+            <div className="sm:border-l sm:border-slate-200 dark:border-slate-700 sm:pl-4">
               <Text size="xs" c="dimmed" fw={600}>
                 NET SETTLEMENT CREDITED
               </Text>
               <Text size="xl" fw={800} c="emerald.8" className="tracking-tight mt-0.5 text-emerald-700">
                 {formatCurrency(tx.netAmountMmk, 'MMK')}
               </Text>
-              <div className="flex items-center gap-2 text-xs text-slate-500 mt-1">
+              <div className="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400 mt-1">
                 <span>Fee: {formatNumber(tx.feeAmount)} MMK</span>
                 <span>•</span>
                 <span>Value Date: {formatDate(tx.valueDate, 'DD/MM/YYYY')}</span>
@@ -138,47 +138,47 @@ export const TransactionDetailsModal: React.FC = () => {
           {/* Sender & Beneficiary Tab */}
           <Tabs.Panel value="parties">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <Paper withBorder p="md" radius="md" className="border-slate-200 bg-white">
-                <div className="flex items-center gap-2 mb-3 text-[#0B2B66] font-semibold text-sm">
+              <Paper withBorder p="md" radius="md" className="border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900">
+                <div className="flex items-center gap-2 mb-3 text-[#0B2B66] dark:text-blue-300 font-semibold text-sm">
                   <Building2 size={18} />
                   <span>Ordering Party (Sender)</span>
                 </div>
                 <div className="space-y-2 text-xs">
                   <div>
                     <Text c="dimmed">Company / Individual Name</Text>
-                    <Text fw={600} className="text-slate-800">{orderingCustomer?.name || tx.senderName || 'Not available'}</Text>
+                    <Text fw={600} className="text-slate-800 dark:text-slate-200">{orderingCustomer?.name || tx.senderName || 'Not available'}</Text>
                   </div>
                   <div>
                     <Text c="dimmed">Originating Bank</Text>
-                    <Text fw={600} className="text-slate-800">{tx.sendingBank}</Text>
+                    <Text fw={600} className="text-slate-800 dark:text-slate-200">{tx.sendingBank}</Text>
                     <Text size="xs" c="dimmed">BIC: {tx.sendingBankBic}</Text>
                   </div>
                   <div>
                     <Text c="dimmed">Sender Address</Text>
-                    <Text className="text-slate-700">
+                    <Text className="text-slate-700 dark:text-slate-300">
                       {orderingCustomer?.address || 'Not available'}{tx.senderCountry ? `, ${tx.senderCountry}` : ''}
                     </Text>
                   </div>
                 </div>
               </Paper>
 
-              <Paper withBorder p="md" radius="md" className="border-slate-200 bg-white">
-                <div className="flex items-center gap-2 mb-3 text-[#0B2B66] font-semibold text-sm">
+              <Paper withBorder p="md" radius="md" className="border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900">
+                <div className="flex items-center gap-2 mb-3 text-[#0B2B66] dark:text-blue-300 font-semibold text-sm">
                   <ShieldCheck size={18} />
                   <span>Beneficiary Customer (Recipient)</span>
                 </div>
                 <div className="space-y-2 text-xs">
                   <div>
                     <Text c="dimmed">Beneficiary Corporate Name</Text>
-                    <Text fw={600} className="text-slate-800">{beneficiaryCustomer?.name || 'Not available'}</Text>
+                    <Text fw={600} className="text-slate-800 dark:text-slate-200">{beneficiaryCustomer?.name || 'Not available'}</Text>
                   </div>
                   <div>
                     <Text c="dimmed">KBZ Settlement Account</Text>
-                    <Text fw={700} className="text-[#0B2B66] font-mono text-sm">{tx.beneficiaryAccount}</Text>
+                    <Text fw={700} className="text-[#0B2B66] dark:text-blue-300 font-mono text-sm">{tx.beneficiaryAccount}</Text>
                   </div>
                   <div>
                     <Text c="dimmed">Receiving Institution</Text>
-                    <Text fw={600} className="text-slate-800">Kanbawza Bank Limited (KBZ Bank)</Text>
+                    <Text fw={600} className="text-slate-800 dark:text-slate-200">Kanbawza Bank Limited (KBZ Bank)</Text>
                     <Text size="xs" c="dimmed">Yangon Main Corporate Branch • BIC: KBZMMMYM</Text>
                   </div>
                 </div>
@@ -188,7 +188,7 @@ export const TransactionDetailsModal: React.FC = () => {
 
           {/* Settlement Tracking Timeline Tab */}
           <Tabs.Panel value="timeline">
-            <Paper withBorder p="md" radius="md" className="border-slate-200 bg-white">
+            <Paper withBorder p="md" radius="md" className="border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900">
               <Text size="sm" fw={600} c="slate.8" mb="md">
                 End-to-End SWIFT GPI Milestone Status
               </Text>

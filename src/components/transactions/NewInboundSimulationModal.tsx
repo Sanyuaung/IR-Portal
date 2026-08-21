@@ -123,7 +123,7 @@ export const NewInboundSimulationModal: React.FC = () => {
       opened={isSimulateModalOpen}
       onClose={() => setIsSimulateModalOpen(false)}
       title={
-        <div className="flex items-center gap-2 font-bold text-[#0B2B66]">
+        <div className="flex items-center gap-2 font-bold text-[#0B2B66] dark:text-blue-300">
           <Sparkles size={20} className="text-amber-500" />
           <span>Simulate Incoming International Remittance</span>
         </div>
@@ -136,9 +136,9 @@ export const NewInboundSimulationModal: React.FC = () => {
           Create a realistic inbound remittance using an existing transaction corridor. The new record is posted to the transaction table and updates the dashboard.
         </Text>
 
-        <Paper p="sm" radius="md" withBorder className="border-blue-100 bg-blue-50/60">
+        <Paper p="sm" radius="md" withBorder className="border-blue-100 dark:border-blue-800/50 bg-blue-50 dark:bg-blue-900/30/60">
           <div className="flex items-center gap-2">
-            <Building2 size={17} className="text-[#0B2B66]" />
+            <Building2 size={17} className="text-[#0B2B66] dark:text-blue-300" />
             <div>
               <Text size="sm" fw={700} c="#0B2B66">Incoming corridor</Text>
               <Text size="xs" c="dimmed">Bank, BIC, and currency are prefilled from existing transaction data.</Text>
@@ -233,7 +233,7 @@ export const NewInboundSimulationModal: React.FC = () => {
           required
         />
 
-        <Paper p="sm" radius="md" className="border border-slate-200 bg-slate-50">
+        <Paper p="sm" radius="md" className="border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50">
           <div className="flex items-center justify-between gap-3">
             <div>
               <Text size="xs" fw={700} c="dark.8">Settlement preview</Text>

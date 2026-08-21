@@ -46,9 +46,9 @@ export const CountrySettlementPieChart: React.FC<CountrySettlementPieChartProps>
   };
 
   return (
-    <div className="rounded-lg border border-slate-100 bg-slate-50/70 p-3">
-      <p className="text-xs font-bold text-slate-800">Settlement Value by Country</p>
-      <p className="mt-0.5 text-[11px] text-slate-500">Top sender countries by credited value in the selected view</p>
+    <div className="rounded-lg border border-slate-100 dark:border-slate-700/50 bg-slate-50 dark:bg-slate-800/50/70 p-3">
+      <p className="text-xs font-bold text-slate-800 dark:text-slate-200">Settlement Value by Country</p>
+      <p className="mt-0.5 text-[11px] text-slate-500 dark:text-slate-400">Top sender countries by credited value in the selected view</p>
       {chartData.length ? (
         <>
           <div className="relative mt-2 h-[185px]">
@@ -84,18 +84,18 @@ export const CountrySettlementPieChart: React.FC<CountrySettlementPieChartProps>
               </PieChart>
             </ResponsiveContainer>
             <div className="pointer-events-none absolute left-1/2 top-[58%] flex -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center">
-              <span className="text-sm font-bold text-slate-800">{chartData.length}</span>
-              <span className="text-[10px] uppercase tracking-wide text-slate-400">Countries</span>
+              <span className="text-sm font-bold text-slate-800 dark:text-slate-200">{chartData.length}</span>
+              <span className="text-[10px] uppercase tracking-wide text-slate-400 dark:text-slate-500">Countries</span>
             </div>
           </div>
-          <div className="space-y-1.5 border-t border-slate-200 pt-2">
+          <div className="space-y-1.5 border-t border-slate-200 dark:border-slate-700 pt-2">
             {chartData.map((item) => (
               <div key={item.country} className="flex items-center justify-between gap-2 text-[11px]">
-                <span className="flex min-w-0 items-center gap-1.5 text-slate-600">
+                <span className="flex min-w-0 items-center gap-1.5 text-slate-600 dark:text-slate-400">
                   <span className="h-2 w-2 shrink-0 rounded-full" style={{ backgroundColor: item.color }} />
                   <span className="truncate">{item.country}</span>
                 </span>
-                <span className="shrink-0 font-semibold text-slate-700">
+                <span className="shrink-0 font-semibold text-slate-700 dark:text-slate-300">
                   {totalSettlementValue ? Math.round((item.amountMmk / totalSettlementValue) * 100) : 0}%
                 </span>
               </div>
@@ -103,7 +103,7 @@ export const CountrySettlementPieChart: React.FC<CountrySettlementPieChartProps>
           </div>
         </>
       ) : (
-        <div className="flex h-[220px] items-center justify-center text-xs text-slate-500">
+        <div className="flex h-[220px] items-center justify-center text-xs text-slate-500 dark:text-slate-400">
           No settlement data in the selected period.
         </div>
       )}
